@@ -6,4 +6,4 @@ mod:
 	./qs
 
 clean:
-	$(RM) gen/*
+	$(RM) gen/* *.o *.hi
