@@ -1,0 +1,208 @@
+--- /opt/drive_c/Program Files/SEGA/Medieval II Total War/data/world/maps/campaign/imperial_campaign/descr_strat.txt	2006-10-05 19:36:52.000000000 -0700
++++ descr_strat.txt	2011-03-25 16:09:56.000000000 -0700
+@@ -41,8 +41,8 @@
+ gladiator_uprising_disabled
+ night_battles_enabled
+ show_date_as_turns
+-brigand_spawn_value 20
+-pirate_spawn_value 28
++brigand_spawn_value 200
++pirate_spawn_value 280
+ 
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ; >>>> start of resources section <<<<
+@@ -304,7 +304,7 @@
+ faction	england, balanced smith
+ ai_label		 catholic 
+ denari	10000
+-denari_kings_purse	2500
++denari_kings_purse	5000
+ settlement
+ {
+ 	level large_town
+@@ -455,7 +455,7 @@
+ faction	france, balanced smith
+ ai_label		 catholic 
+ denari	8000
+-denari_kings_purse	1500
++denari_kings_purse	3000
+ settlement
+ {
+ 	level large_town
+@@ -657,7 +657,7 @@
+ faction	hre, balanced smith
+ ai_label		 catholic 
+ denari	6000
+-denari_kings_purse	1500
++denari_kings_purse	3000
+ settlement
+ {
+ 	level large_town
+@@ -888,7 +888,7 @@
+ faction	spain, balanced smith
+ ai_label		 catholic 
+ denari	9000
+-denari_kings_purse	2500
++denari_kings_purse	5000
+ settlement
+ {
+ 	level large_town
+@@ -992,7 +992,7 @@
+ faction	venice, balanced smith
+ ai_label		 catholic 
+ denari	8000
+-denari_kings_purse	2500
++denari_kings_purse	5000
+ settlement
+ {
+ 	level city
+@@ -1170,7 +1170,7 @@
+ faction	sicily, balanced smith
+ ai_label		 catholic 
+ denari	9000
+-denari_kings_purse	1500
++denari_kings_purse	3000
+ settlement castle
+ {
+ 	level large_town
+@@ -1298,7 +1298,7 @@
+ faction	milan, balanced smith
+ ai_label		 catholic 
+ denari	6000
+-denari_kings_purse	2000
++denari_kings_purse	4000
+ settlement
+ {
+ 	level city
+@@ -1427,7 +1427,7 @@
+ faction	scotland, balanced smith
+ ai_label		 catholic 
+ denari 8000
+-denari_kings_purse	1500
++denari_kings_purse	3000
+ settlement
+ {
+ 	level large_town
+@@ -1518,7 +1518,7 @@
+ faction	byzantium, balanced smith
+ ai_label	default 
+ denari	6000
+-denari_kings_purse	2000
++denari_kings_purse	4000
+ settlement
+ {
+ 	level large_city
+@@ -1721,7 +1721,7 @@
+ faction	russia, balanced smith
+ ai_label	default 
+ denari	11000
+-denari_kings_purse	2500
++denari_kings_purse	5000
+ settlement
+ {
+ 	level city
+@@ -1805,7 +1805,7 @@
+ faction	moors, balanced smith
+ ai_label	default 
+ denari	7000
+-denari_kings_purse	1500
++denari_kings_purse	3000
+ settlement
+ {
+ 	level city
+@@ -1961,7 +1961,7 @@
+ faction	turks, balanced smith
+ ai_label	default 
+ denari	8000
+-denari_kings_purse	2000
++denari_kings_purse	4000
+ settlement
+ {
+ 	level large_town
+@@ -2108,7 +2108,7 @@
+ faction	egypt, balanced smith
+ ai_label	default 
+ denari	8000
+-denari_kings_purse	1500
++denari_kings_purse	3000
+ settlement
+ {
+ 	level city
+@@ -2248,7 +2248,7 @@
+ faction	denmark, balanced smith
+ ai_label		 catholic 
+ denari	10000
+-denari_kings_purse	2000
++denari_kings_purse	4000
+ settlement
+ {
+ 	level large_town
+@@ -2339,7 +2339,7 @@
+ faction	portugal, balanced smith
+ ai_label		 catholic 
+ denari	9000
+-denari_kings_purse	2000
++denari_kings_purse	4000
+ settlement
+ {
+ 	level large_town
+@@ -2467,7 +2467,7 @@
+ faction	poland, balanced smith
+ ai_label		 catholic 
+ denari	12000
+-denari_kings_purse	2500
++denari_kings_purse	5000
+ settlement
+ {
+ 	level large_town
+@@ -2567,7 +2567,7 @@
+ faction	hungary, balanced smith
+ ai_label		 catholic 
+ denari	11000
+-denari_kings_purse	2500
++denari_kings_purse	5000
+ settlement
+ {
+ 	level large_town
+@@ -2677,7 +2677,7 @@
+ faction	papal_states, balanced smith
+ ai_label	papal_faction 
+ denari	5000
+-denari_kings_purse	1500
++denari_kings_purse	3000
+ settlement
+ {
+ 	level city
+@@ -2746,7 +2746,7 @@
+ ai_label	default 
+ undiscovered
+ denari	50000
+-denari_kings_purse	10000
++denari_kings_purse	20000
+ settlement
+ {
+ 	level city
+@@ -2967,20 +2967,20 @@
+ ai_label	default 
+ dead_until_resurrected
+ denari	10000
+-denari_kings_purse	3000
++denari_kings_purse	6000
+ 
+ 
+ faction	timurids, balanced smith
+ ai_label	default 
+ dead_until_resurrected
+ denari	10000
+-denari_kings_purse	3000
++denari_kings_purse	6000
+ 
+ 
+ faction	slave, balanced smith
+ ai_label	slave_faction 
+ denari	5000
+-denari_kings_purse	500
++denari_kings_purse	1000
+ settlement
+ {
+ 	level town

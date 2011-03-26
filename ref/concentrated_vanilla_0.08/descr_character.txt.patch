@@ -1,0 +1,120 @@
+--- /mnt/b4/GAMES/m2tw/unpacked/data/descr_character.txt	2011-03-25 16:49:35.000000000 -0700
++++ descr_character.txt	2011-03-25 16:09:56.000000000 -0700
+@@ -41,14 +41,14 @@
+ ;
+ ;
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+-starting_action_points	80	; default value for all characters and pathfinding calculations
++starting_action_points	140	; default value for all characters and pathfinding calculations
+ 
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ type			named character
+ 
+ actions			moving_normal, moving_quickmarch, garrison, assault, attack, besiege, entrench, ambush, diplomacy, bribe, exchange, building_fort, building_watchtower
+ wage_base		200
+-starting_action_points	80
++starting_action_points	140
+ 
+ faction			venice
+ dictionary		15
+@@ -200,7 +200,7 @@
+ 
+ actions	moving_normal, moving_quickmarch, garrison, assault, attack, besiege, entrench, ambush, exchange
+ wage_base		0
+-starting_action_points	80
++starting_action_points	140
+ 
+ faction			venice
+ dictionary		15
+@@ -351,8 +351,8 @@
+ type			spy
+ 
+ actions			moving_normal, spying
+-wage_base		100
+-starting_action_points	112
++wage_base		200
++starting_action_points	196
+ 
+ faction			venice
+ dictionary		15
+@@ -456,7 +456,7 @@
+ 
+ actions			moving_normal, assassinate, sabotage
+ wage_base		200
+-starting_action_points	112
++starting_action_points	196
+ 
+ faction			venice
+ dictionary		15
+@@ -561,7 +561,7 @@
+ 
+ actions			moving_normal, diplomacy, bribe
+ wage_base		50
+-starting_action_points	80
++starting_action_points	140
+ 
+ faction			venice
+ dictionary		15
+@@ -664,7 +664,7 @@
+ 
+ actions			moving_normal, quick_sail, blockade, disembark, exchange
+ wage_base		50
+-starting_action_points	80
++starting_action_points	140
+ 
+ faction			venice
+ dictionary		15
+@@ -768,7 +768,7 @@
+ 
+ actions			moving_normal, diplomacy, bribe, marry
+ wage_base		250
+-starting_action_points	80
++starting_action_points	140
+ 
+ faction			venice
+ dictionary		15
+@@ -871,7 +871,7 @@
+ 
+ actions			moving_normal, acquire
+ wage_base		0
+-starting_action_points	100
++starting_action_points	175
+ 
+ faction			venice
+ dictionary		15
+@@ -974,7 +974,7 @@
+ 
+ actions			moving_normal, denounce
+ wage_base		100
+-starting_action_points	80
++starting_action_points	140
+ 
+ faction			venice
+ dictionary		15
+@@ -1125,7 +1125,7 @@
+ 
+ actions			moving_normal
+ wage_base		0
+-starting_action_points	80
++starting_action_points	140
+ 
+ faction			slave
+ dictionary		2
+@@ -1136,7 +1136,7 @@
+ 
+ actions			moving_normal
+ wage_base		0
+-starting_action_points	80
++starting_action_points	140
+ 
+ faction			slave
+ dictionary		2
+@@ -1147,7 +1147,7 @@
+ 
+ actions			moving_normal, denounce
+ wage_base		0
+-starting_action_points	80
++starting_action_points	140
+ 
+ faction			papal_states
+ dictionary		15
