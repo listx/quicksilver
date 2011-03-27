@@ -11,7 +11,8 @@ import System.Environment
 import System.Exit
 import System.IO
 import Text.Regex.PCRE hiding (match)
-import Data.Array((!))
+import Data.Array
+import Text.Show.Pretty
 
 _QS_NAME = "quicksilver"
 _QS_VERSION = "0.01"
@@ -182,25 +183,62 @@ writeDC :: String -> FilePath -> IO ()
 writeDC fname sourceFpath = do
     putStr $ "Writing new `" ++ fname ++ "' ... "
     src <- readFile sourceFpath
-
-    -- Give ships +50% movement speed.
-    let (arr:[]) = match re1 src
-        (num,_) = arr!2
-        navalSpeedUp = mult num 1.5
-        src1 = reSub src re1 ("\\1" ++ navalSpeedUp)
-        contents = src1
-    writeFile ("gen/" ++ _DC) contents
-    putStrLn "\n"
-    putStrLn $ show num
+    writeFile ("gen/" ++ _DC) (process src)
     putStrLn "done"
     where
-        re1 = "(type\\s+admiral.+?points.+?)(\\d+)"
+        process = rep2 . rep1
+        same = (\str -> str)
+        -- Base: Ship movement speed +50%
+        rep1 =  grpGsub    [ ("type\\s+admiral.+?starting_action_points\\s+", same)
+                           , ("\\d+", mult 1.5)
+                           ]
+        -- Global: Campaign movement speed +75%
+        rep2 =  grpGsub    [ ("starting_action_points\\s+", same)
+                           , ("\\d+", mult 1.75)
+                           ]
+
+-- takes a list of strings and functions, such as [("aaa", foo), ("bbb", bar)] and performs a global
+-- substitution on them, as follows:
+--      1. create a regex "(aaa)(bbb)"
+--      2. replace "aaa"'s match by applying foo on it
+--      3. replace "bbb"'s match by applying bar on it
+--      4. etc. etc.
+grpGsub :: [(String, (String -> String))] -> String -> String
+grpGsub grps src =
+    sub cnt re funcs src
+    where
+        parenthesize s = "(" ++ s ++ ")"
+        re = concatMap (parenthesize . fst) grps
+        funcs = zip [1..] $ map snd grps
+        cnt = (length $ match re src) - 1
+
+-- process the results of a matchAllText with an association list of functions
+sub :: Int -> String -> [(Int, (String -> String))] -> String -> String
+sub (-1) _ _ src = src
+sub cnt re funcs src =
+    sub (cnt - 1) re funcs (sub' minfo funcs src)
+    where
+        minfos = match re src
+        minfo = minfos!!cnt
+
+-- manually replaces text using MatchText info, but intelligently with an association list of string
+-- manipulation functions (where key corresponds to the group that this function will act on)
+sub' :: MatchText String -> [(Int, (String -> String))] -> String -> String
+sub' matchInfo assocFuncs src =
+    take pos src ++ replacement ++ drop (pos + bytes) src
+    where
+        kvs = assocs matchInfo
+        (fullMatchStr, (pos, bytes)) = matchInfo!0
+        replacement = concatMap replaceGrps kvs
+        replaceGrps (k, v@(str, (_, _))) = case lookup k assocFuncs of
+            Just func -> func str
+            _ -> ""
 
 match :: String -> String -> [MatchText String]
 match re src = matchAllText (makeRegexDef re) src
 
-mult :: String -> Double -> String
-mult i d = show . round $ (fromIntegral (read i::Int)) * d
+mult :: Double -> String -> String
+mult d i = show . round $ (fromIntegral (read i::Int)) * d
 
 abort :: (String, Int) -> IO ()
 abort (msg, eid) = do
@@ -219,33 +257,39 @@ subRegex :: Regex                          -- ^ Search pattern
          -> String                         -- ^ Output string
 subRegex _ "" _ = ""
 subRegex regexp inp repl =
-  let compile _i str [] = \ _m ->  (str++)
-      compile i str (("\\",(off,len)):rest) =
-        let i' = off+len
-            pre = take (off-i) str
-            str' = drop (i'-i) str
-        in if null str' then \ _m -> (pre ++) . ('\\':)
-             else \  m -> (pre ++) . ('\\' :) . compile i' str' rest m
-      compile i str ((xstr,(off,len)):rest) =
-        let i' = off+len
-            pre = take (off-i) str
-            str' = drop (i'-i) str
-            x = read xstr
-        in if null str' then \ m -> (pre++) . ((fst (m!x))++)
-             else \ m -> (pre++) . ((fst (m!x))++) . compile i' str' rest m
-      compiled :: MatchText String -> String -> String
-      compiled = compile 0 repl findrefs where
-        bre = makeRegexOpts defaultCompOpt execBlank "\\\\(\\\\|[0-9])"
-        findrefs = map (\m -> (fst (m!1),snd (m!0))) (matchAllText bre repl)
-      go _i str [] = str
-      go i str (m:ms) =
-        let (_,(off,len)) = m!0
-            i' = off+len
-            pre = take (off-i) str
-            str' = drop (i'-i) str
-        in if null str' then pre ++ (compiled m "")
-             else pre ++ (compiled m (go i' str' ms))
-  in go 0 inp (matchAllText regexp inp)
+    let compile _i str [] = \ _m ->  (str++)
+        compile i str (("\\",(off,len)):rest) =
+            let i' = off+len
+                pre = take (off-i) str
+                str' = drop (i'-i) str
+            in  if null str'
+                    then \ _m -> (pre ++) . ('\\':)
+                    else \  m -> (pre ++) . ('\\' :) . compile i' str' rest m
+        compile i str ((xstr,(off,len)):rest) =
+            let i' = off+len
+                pre = take (off-i) str
+                str' = drop (i'-i) str
+                x = read xstr
+            in  if null str'
+                    then \ m -> (pre++) . ((fst (m!x))++)
+                    else \ m -> (pre++) . ((fst (m!x))++) . compile i' str' rest m
+
+        compiled :: MatchText String -> String -> String
+        compiled = compile 0 repl findrefs
+            where
+                bre = makeRegexOpts defaultCompOpt execBlank "\\\\(\\\\|[0-9])"
+                findrefs = map (\m -> (fst (m!1),snd (m!0))) (matchAllText bre repl)
+
+        go _i str [] = str
+        go i str (m:ms) =
+            let (_,(off,len)) = m!0
+                i' = off+len
+                pre = take (off-i) str
+                str' = drop (i'-i) str
+            in  if null str'
+                    then pre ++ (compiled m "")
+                    else pre ++ (compiled m (go i' str' ms))
+    in go 0 inp (matchAllText regexp inp)
 
 -- Substitue re with repl in src using options copts and eopts.
 reSub :: String -> String -> String -> String
@@ -253,6 +297,11 @@ reSub inp re repl = subRegex (makeRegexOpts copts eopts re) inp repl
     where
         copts = sum [compDotAll, compMultiline]
         eopts = sum [execBlank]
+
+gsub :: String -> (String -> String) -> String -> String
+gsub re f inp = case inp =~ re :: (Int,Int) of
+    (-1,_)    -> inp
+    (begin,n) -> (take begin inp) ++ f (take n (drop begin inp)) ++ gsub re f (drop n (drop begin inp))
 
 makeRegexDef :: String -> Regex
 makeRegexDef re = makeRegexOpts copts eopts re
