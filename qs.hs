@@ -245,12 +245,8 @@ write fname sourceFpath funcs = do
     putStrLn "done"
 
 -- Function composition over a list; see http://www.haskell.org/haskellwiki/Compose
---
--- Here, we do just (.) instead of (flip (.)) so that we can more naturally order functions inside
--- the list as [f1, f2, f3, f4, ... , fN] in left-to-right application order (thus avoiding the
--- somewhat unseemly (fN . ... . f4 . f3 . f2 . f1) theme of regular function composition).
 compose :: [a -> a] -> a -> a
-compose funcs = foldl (.) id funcs
+compose funcs = foldl (.) id (reverse funcs)
 
 -- takes a list of strings and functions, such as [("aaa", foo), ("bbb", bar)] and performs a global
 -- substitution on them, as follows:
