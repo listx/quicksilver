@@ -181,7 +181,7 @@ _EDCT_FUNCS = [rN]
         rN =    [ ("^Trigger corruption.+?;-+", nil)
                 ]
 
-_EDB_FUNCS = [r1, r2, r3, rN]
+_EDB_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
     where
         -- Mines give 5x profits
         r1 =    [ ("^\\s+mine_resource\\s+", id)
@@ -197,9 +197,36 @@ _EDB_FUNCS = [r1, r2, r3, rN]
                 , ("\\d+", (\s -> "1"))
                 ]
         -- All building costs 1.33x
-        rN =    [ ("^\\s+cost\\s+", id)
+        r4 =    [ ("^\\s+cost\\s+", id)
                 , ("\\d+", mult 1.33)
                 ]
+        -- Give free upkeep slots to castles (vanilla cities are 2, 3, 4, 5, 6)
+        r5 =    [ ("^\\s{8}motte_and_bailey.+?", id)
+                , ("wall_level.+?", id)
+                , ("\\d+", up "1")
+                ]
+        r6 =    [ ("^\\s{8}wooden_castle.+?", id)
+                , ("wall_level.+?", id)
+                , ("\\d+", up "2")
+                ]
+        r7 =    [ ("^\\s{8}castle.+?", id)
+                , ("wall_level.+?", id)
+                , ("\\d+", up "3")
+                ]
+        r8 =    [ ("^\\s{8}fortress.+?", id)
+                , ("wall_level.+?", id)
+                , ("\\d+", up "4")
+                ]
+        r9 =    [ ("^\\s{8}citadel.+?", id)
+                , ("wall_level.+?", id)
+                , ("\\d+", up "5")
+                ]
+        -- All free upkeep slots 2.5x
+        rN =    [ ("^\\s+free_upkeep\\s+bonus\\s+", id)
+                , ("\\d+", mult 2.5)
+                ]
+        up :: String -> (String -> String)
+        up amt = (\d -> d ++ "\r\n" ++ (take 16 $ repeat ' ') ++ "free_upkeep bonus " ++ amt)
 
 nil :: String -> String
 nil str = ""
