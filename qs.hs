@@ -2,7 +2,7 @@
 
 import Control.Monad (when)
 import Data.Digest.Pure.SHA
-import qualified Data.ByteString.Lazy as BS
+import qualified Data.ByteString.Lazy as BL
 import IO
 import System.Console.CmdArgs.Implicit
 import System.Console.CmdArgs.Verbosity
@@ -10,7 +10,8 @@ import System.Directory
 import System.Environment
 import System.Exit
 import System.IO
-import Text.Regex
+import Text.Regex.PCRE hiding (match)
+import Data.Array((!))
 
 _QS_NAME = "quicksilver"
 _QS_VERSION = "0.01"
@@ -117,19 +118,32 @@ checkExists fname fpath = do
 checkSum :: String -> FilePath -> Integer -> IO ()
 checkSum fname fpath cksum = do
     putStr $ "checking SHA-1 sum of `" ++ fname ++ "' ... "
-    fBytes <- BS.readFile fpath
+    fBytes <- BL.readFile fpath
     when (integerDigest (sha1 fBytes) /= cksum) $ abort (fname ++ ": SHA-1 mismatch", 2)
     putStrLn "OK"
 
 qs :: Opts -> IO ()
-qs Opts{..} = do
+qs opts@Opts{..} = do
     putStrLn "\nStarting mod generation ... "
     createGenDir
     createBat
     createCfg
     putStrLn $ "unpacked data path is: `" ++ unpacked_data_path ++ "'"
     putStrLn $ "data path is: `" ++ data_path ++ "'"
+    writeDC _DC _DC_PATH
     putStrLn $ "\nquicksilver mod version " ++ _QS_VERSION ++ " successfully generated."
+    where
+        _DC_PATH   = (udp ++ "/" ++ _DC)
+        _DCL_PATH  = (udp ++ "/" ++ _DCL)
+        _DFS_PATH  = (udp ++ "/" ++ _DFS)
+        _DP_PATH   = (udp ++ "/" ++ _DP)
+        _DS_PATH   = (dp  ++ "/" ++ _DS)
+        _DW_PATH   = (udp ++ "/" ++ _DW)
+        _EDB_PATH  = (udp ++ "/" ++ _EDB)
+        _EDCT_PATH = (udp ++ "/" ++ _EDCT)
+        _EDU_PATH  = (udp ++ "/" ++ _EDU)
+        udp = unpacked_data_path
+        dp = data_path
 
 createGenDir :: IO ()
 createGenDir = do
@@ -164,6 +178,30 @@ createCfg = do
                     \[misc]\n\
                     \unlock_campaign = true"
 
+writeDC :: String -> FilePath -> IO ()
+writeDC fname sourceFpath = do
+    putStr $ "Writing new `" ++ fname ++ "' ... "
+    src <- readFile sourceFpath
+
+    -- Give ships +50% movement speed.
+    let (arr:[]) = match re1 src
+        (num,_) = arr!2
+        navalSpeedUp = mult num 1.5
+        src1 = reSub src re1 ("\\1" ++ navalSpeedUp)
+        contents = src1
+    writeFile ("gen/" ++ _DC) contents
+    putStrLn "\n"
+    putStrLn $ show num
+    putStrLn "done"
+    where
+        re1 = "(type\\s+admiral.+?points.+?)(\\d+)"
+
+match :: String -> String -> [MatchText String]
+match re src = matchAllText (makeRegexDef re) src
+
+mult :: String -> Double -> String
+mult i d = show . round $ (fromIntegral (read i::Int)) * d
+
 abort :: (String, Int) -> IO ()
 abort (msg, eid) = do
     errMsg msg
@@ -172,3 +210,52 @@ abort (msg, eid) = do
 
 errMsg :: String -> IO ()
 errMsg msg = hPutStrLn stderr $ "error: " ++ msg
+
+-- only support backreferences \0 through \9, so that we can do "\19034" to mean "backreference \1,
+-- followed by '9034'"
+subRegex :: Regex                          -- ^ Search pattern
+         -> String                         -- ^ Input string
+         -> String                         -- ^ Replacement text
+         -> String                         -- ^ Output string
+subRegex _ "" _ = ""
+subRegex regexp inp repl =
+  let compile _i str [] = \ _m ->  (str++)
+      compile i str (("\\",(off,len)):rest) =
+        let i' = off+len
+            pre = take (off-i) str
+            str' = drop (i'-i) str
+        in if null str' then \ _m -> (pre ++) . ('\\':)
+             else \  m -> (pre ++) . ('\\' :) . compile i' str' rest m
+      compile i str ((xstr,(off,len)):rest) =
+        let i' = off+len
+            pre = take (off-i) str
+            str' = drop (i'-i) str
+            x = read xstr
+        in if null str' then \ m -> (pre++) . ((fst (m!x))++)
+             else \ m -> (pre++) . ((fst (m!x))++) . compile i' str' rest m
+      compiled :: MatchText String -> String -> String
+      compiled = compile 0 repl findrefs where
+        bre = makeRegexOpts defaultCompOpt execBlank "\\\\(\\\\|[0-9])"
+        findrefs = map (\m -> (fst (m!1),snd (m!0))) (matchAllText bre repl)
+      go _i str [] = str
+      go i str (m:ms) =
+        let (_,(off,len)) = m!0
+            i' = off+len
+            pre = take (off-i) str
+            str' = drop (i'-i) str
+        in if null str' then pre ++ (compiled m "")
+             else pre ++ (compiled m (go i' str' ms))
+  in go 0 inp (matchAllText regexp inp)
+
+-- Substitue re with repl in src using options copts and eopts.
+reSub :: String -> String -> String -> String
+reSub inp re repl = subRegex (makeRegexOpts copts eopts re) inp repl
+    where
+        copts = sum [compDotAll, compMultiline]
+        eopts = sum [execBlank]
+
+makeRegexDef :: String -> Regex
+makeRegexDef re = makeRegexOpts copts eopts re
+    where
+        copts = sum [compDotAll, compMultiline]
+        eopts = sum [execBlank]
