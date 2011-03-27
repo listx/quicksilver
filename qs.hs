@@ -183,19 +183,35 @@ writeDC :: String -> FilePath -> IO ()
 writeDC fname sourceFpath = do
     putStr $ "Writing new `" ++ fname ++ "' ... "
     src <- readFile sourceFpath
-    writeFile ("gen/" ++ _DC) (process src)
+    writeFile ("gen/" ++ _DC) (process' src)
     putStrLn "done"
     where
-        process = rep2 . rep1
+        process' = compose (map grpGsub [r1, r2, r3, rN])
         same str = str
         -- Base: Ship movement speed +50%
-        rep1 =  grpGsub    [ ("type\\s+admiral.+?starting_action_points\\s+", same)
-                           , ("\\d+", mult 1.5)
-                           ]
+        r1 =    [ ("type\\s+admiral.+?starting_action_points\\s+", same)
+                , ("\\d+", mult 1.5)
+                ]
+        -- Base: Diplomat movement speed +100%
+        r2 =    [ ("type\\s+diplomat.+?starting_action_points\\s+", same)
+                , ("\\d+", mult 2)
+                ]
+        -- Base: Princess movement speed +75%
+        r3 =    [ ("type\\s+princess.+?starting_action_points\\s+", same)
+                , ("\\d+", mult 1.75)
+                ]
         -- Global: Campaign movement speed +75%
-        rep2 =  grpGsub    [ ("starting_action_points\\s+", same)
-                           , ("\\d+", mult 1.75)
-                           ]
+        rN =    [ ("starting_action_points\\s+", same)
+                , ("\\d+", mult 1.75)
+                ]
+
+-- Function composition over a list; see http://www.haskell.org/haskellwiki/Compose
+--
+-- Here, we do just (.) instead of (flip (.)) so that we can more naturally order functions inside
+-- the list as [f1, f2, f3, f4, ... , fN] in left-to-right application order (thus avoiding the
+-- somewhat unseemly (fN . ... . f4 . f3 . f2 . f1) theme of regular function composition).
+compose :: [a -> a] -> a -> a
+compose funcs = foldl (.) id funcs
 
 -- takes a list of strings and functions, such as [("aaa", foo), ("bbb", bar)] and performs a global
 -- substitution on them, as follows:

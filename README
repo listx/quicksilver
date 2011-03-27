@@ -1,4 +1,6 @@
-Changes from vanilla M2TW (with 1.3 patch):
+* Changes from vanilla M2TW (with 1.3 patch):
 
 - Base: Ship movement speed +50%
+- Base: Diplomat movement speed +100%
+- Base: Princess movement speed +75%
 - Global: Campaign movement speed +75%
