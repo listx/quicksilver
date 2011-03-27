@@ -133,6 +133,7 @@ qs opts@Opts{..} = do
     putStrLn $ "data path is: `" ++ data_path ++ "'"
     write   _DC     _DC_PATH    _DC_FUNCS
     write   _DCL    _DCL_PATH   _DCL_FUNCS
+    write   _DS     _DS_PATH    _DS_FUNCS
     write   _EDCT   _EDCT_PATH  _EDCT_FUNCS
     write   _EDB    _EDB_PATH   _EDB_FUNCS
     putStrLn $ "\nquicksilver mod version " ++ _QS_VERSION ++ " successfully generated."
@@ -173,6 +174,21 @@ _DCL_FUNCS = [rN]
         -- Spy recruitment cost 3x
         rN =    [ ("^spy.+?spy\\.tga\\s+", id)
                 , ("\\d+", mult 3)
+                ]
+
+_DS_FUNCS = [r1, r2, rN]
+    where
+        -- Rebel spawn rate 10x lower
+        r1 =    [ ("^brigand_spawn_value\\s+", id)
+                , ("\\d+", mult 10)
+                ]
+        -- Pirate spawn rate 10x lower
+        r2 =    [ ("^pirate_spawn_value\\s+", id)
+                , ("\\d+", mult 10)
+                ]
+        -- King's purse 2x
+        rN =    [ ("^denari_kings_purse\\s+", id)
+                , ("\\d+", mult 2)
                 ]
 
 _EDCT_FUNCS = [rN]
@@ -234,7 +250,10 @@ nil str = ""
 createGenDir :: IO ()
 createGenDir = do
     putStr "Ensuring that directory `./gen' exists ... "
-    doesDirectoryExist "gen" >>= (\exist -> when (not exist) $ createDirectory "gen")
+    createDirectoryIfMissing True "gen"
+    putStrLn "OK"
+    putStr "Ensuring that directory `./gen/world/maps/campaign/imperial_campaign' exists ... "
+    createDirectoryIfMissing True "gen/world/maps/campaign/imperial_campaign"
     putStrLn "OK"
 
 createBat :: IO ()
