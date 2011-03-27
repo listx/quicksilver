@@ -4,3 +4,5 @@
 - Base: Diplomat movement speed +100%
 - Base: Princess movement speed +75%
 - Global: Campaign movement speed +75%
+- Global: Spy recruitment cost 3x
+- Global: Remove corruption trigger based on high treasury

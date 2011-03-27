@@ -131,7 +131,9 @@ qs opts@Opts{..} = do
     createCfg
     putStrLn $ "unpacked data path is: `" ++ unpacked_data_path ++ "'"
     putStrLn $ "data path is: `" ++ data_path ++ "'"
-    writeDC _DC _DC_PATH
+    write   _DC     _DC_PATH    _DC_FUNCS
+    write   _DCL    _DCL_PATH   _DCL_FUNCS
+    write   _EDCT   _EDCT_PATH  _EDCT_FUNCS
     putStrLn $ "\nquicksilver mod version " ++ _QS_VERSION ++ " successfully generated."
     where
         _DC_PATH   = udp ++ "/" ++ _DC
@@ -145,6 +147,41 @@ qs opts@Opts{..} = do
         _EDU_PATH  = udp ++ "/" ++ _EDU
         udp = unpacked_data_path
         dp = data_path
+
+_DC_FUNCS = [r1, r2, r3, rN]
+    where
+        -- Base: Ship movement speed +50%
+        r1 =    [ ("^type\\s+admiral.+?starting_action_points\\s+", id)
+                , ("\\d+", mult 1.5)
+                ]
+        -- Base: Diplomat movement speed +100%
+        r2 =    [ ("^type\\s+diplomat.+?starting_action_points\\s+", id)
+                , ("\\d+", mult 2)
+                ]
+        -- Base: Princess movement speed +75%
+        r3 =    [ ("^type\\s+princess.+?starting_action_points\\s+", id)
+                , ("\\d+", mult 1.75)
+                ]
+        -- Global: Campaign movement speed +75%
+        rN =    [ ("^starting_action_points\\s+", id)
+                , ("\\d+", mult 1.75)
+                ]
+
+_DCL_FUNCS = [rN]
+    where
+        -- Global: Spy recruitment cost 3x
+        rN =    [ ("^spy.+?spy\\.tga\\s+", id)
+                , ("\\d+", mult 3)
+                ]
+
+_EDCT_FUNCS = [rN]
+    where
+        -- Global: Remove corruption trigger based on high treasury
+        rN =    [ ("^Trigger corruption.+?;-+", nil)
+                ]
+
+nil :: String -> String
+nil str = ""
 
 createGenDir :: IO ()
 createGenDir = do
@@ -179,31 +216,12 @@ createCfg = do
                     \[misc]\n\
                     \unlock_campaign = true"
 
-writeDC :: String -> FilePath -> IO ()
-writeDC fname sourceFpath = do
+write :: String -> FilePath -> [[(String, String -> String)]] -> IO ()
+write fname sourceFpath funcs = do
     putStr $ "Writing new `" ++ fname ++ "' ... "
     src <- readFile sourceFpath
-    writeFile ("gen/" ++ _DC) (process' src)
+    writeFile ("gen/" ++ fname) (compose (map grpGsub funcs) src)
     putStrLn "done"
-    where
-        process' = compose (map grpGsub [r1, r2, r3, rN])
-        same str = str
-        -- Base: Ship movement speed +50%
-        r1 =    [ ("type\\s+admiral.+?starting_action_points\\s+", same)
-                , ("\\d+", mult 1.5)
-                ]
-        -- Base: Diplomat movement speed +100%
-        r2 =    [ ("type\\s+diplomat.+?starting_action_points\\s+", same)
-                , ("\\d+", mult 2)
-                ]
-        -- Base: Princess movement speed +75%
-        r3 =    [ ("type\\s+princess.+?starting_action_points\\s+", same)
-                , ("\\d+", mult 1.75)
-                ]
-        -- Global: Campaign movement speed +75%
-        rN =    [ ("starting_action_points\\s+", same)
-                , ("\\d+", mult 1.75)
-                ]
 
 -- Function composition over a list; see http://www.haskell.org/haskellwiki/Compose
 --
