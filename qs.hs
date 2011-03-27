@@ -134,6 +134,7 @@ qs opts@Opts{..} = do
     write   _DC     _DC_PATH    _DC_FUNCS
     write   _DCL    _DCL_PATH   _DCL_FUNCS
     write   _EDCT   _EDCT_PATH  _EDCT_FUNCS
+    write   _EDB    _EDB_PATH   _EDB_FUNCS
     putStrLn $ "\nquicksilver mod version " ++ _QS_VERSION ++ " successfully generated."
     where
         _DC_PATH   = udp ++ "/" ++ _DC
@@ -150,34 +151,54 @@ qs opts@Opts{..} = do
 
 _DC_FUNCS = [r1, r2, r3, rN]
     where
-        -- Base: Ship movement speed +50%
+        -- Ship movement speed 1.5x
         r1 =    [ ("^type\\s+admiral.+?starting_action_points\\s+", id)
                 , ("\\d+", mult 1.5)
                 ]
-        -- Base: Diplomat movement speed +100%
+        -- Diplomat movement speed 2x
         r2 =    [ ("^type\\s+diplomat.+?starting_action_points\\s+", id)
                 , ("\\d+", mult 2)
                 ]
-        -- Base: Princess movement speed +75%
+        -- Princess movement speed 1.75x
         r3 =    [ ("^type\\s+princess.+?starting_action_points\\s+", id)
                 , ("\\d+", mult 1.75)
                 ]
-        -- Global: Campaign movement speed +75%
+        -- Campaign movement speed 1.75x
         rN =    [ ("^starting_action_points\\s+", id)
                 , ("\\d+", mult 1.75)
                 ]
 
 _DCL_FUNCS = [rN]
     where
-        -- Global: Spy recruitment cost 3x
+        -- Spy recruitment cost 3x
         rN =    [ ("^spy.+?spy\\.tga\\s+", id)
                 , ("\\d+", mult 3)
                 ]
 
 _EDCT_FUNCS = [rN]
     where
-        -- Global: Remove corruption trigger based on high treasury
+        -- Remove corruption trigger based on high treasury
         rN =    [ ("^Trigger corruption.+?;-+", nil)
+                ]
+
+_EDB_FUNCS = [r1, r2, r3, rN]
+    where
+        -- Mines give 5x profits
+        r1 =    [ ("^\\s+mine_resource\\s+", id)
+                , ("\\d+", mult 5)
+                ]
+        -- Mines cost 2x more
+        r2 =    [ ("^\\s+mines.+?", id)
+                , ("cost\\s+", id)
+                , ("\\d+", mult 2)
+                ]
+        -- All building constructions take 1 turn
+        r3 =    [ ("^\\s+construction\\s+", id)
+                , ("\\d+", (\s -> "1"))
+                ]
+        -- All building costs 1.33x
+        rN =    [ ("^\\s+cost\\s+", id)
+                , ("\\d+", mult 1.33)
                 ]
 
 nil :: String -> String
