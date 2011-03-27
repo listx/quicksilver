@@ -97,15 +97,15 @@ checkOpts Opts{..} = do
         checkSum _EDCT  _EDCT_PATH  _SHA1_EDCT
         checkSum _EDU   _EDU_PATH   _SHA1_EDU
     where
-        _DC_PATH   = (udp ++ "/" ++ _DC)
-        _DCL_PATH  = (udp ++ "/" ++ _DCL)
-        _DFS_PATH  = (udp ++ "/" ++ _DFS)
-        _DP_PATH   = (udp ++ "/" ++ _DP)
-        _DS_PATH   = (dp  ++ "/" ++ _DS)
-        _DW_PATH   = (udp ++ "/" ++ _DW)
-        _EDB_PATH  = (udp ++ "/" ++ _EDB)
-        _EDCT_PATH = (udp ++ "/" ++ _EDCT)
-        _EDU_PATH  = (udp ++ "/" ++ _EDU)
+        _DC_PATH   = udp ++ "/" ++ _DC
+        _DCL_PATH  = udp ++ "/" ++ _DCL
+        _DFS_PATH  = udp ++ "/" ++ _DFS
+        _DP_PATH   = udp ++ "/" ++ _DP
+        _DS_PATH   = dp  ++ "/" ++ _DS
+        _DW_PATH   = udp ++ "/" ++ _DW
+        _EDB_PATH  = udp ++ "/" ++ _EDB
+        _EDCT_PATH = udp ++ "/" ++ _EDCT
+        _EDU_PATH  = udp ++ "/" ++ _EDU
         udp = unpacked_data_path
         dp = data_path
 
@@ -134,15 +134,15 @@ qs opts@Opts{..} = do
     writeDC _DC _DC_PATH
     putStrLn $ "\nquicksilver mod version " ++ _QS_VERSION ++ " successfully generated."
     where
-        _DC_PATH   = (udp ++ "/" ++ _DC)
-        _DCL_PATH  = (udp ++ "/" ++ _DCL)
-        _DFS_PATH  = (udp ++ "/" ++ _DFS)
-        _DP_PATH   = (udp ++ "/" ++ _DP)
-        _DS_PATH   = (dp  ++ "/" ++ _DS)
-        _DW_PATH   = (udp ++ "/" ++ _DW)
-        _EDB_PATH  = (udp ++ "/" ++ _EDB)
-        _EDCT_PATH = (udp ++ "/" ++ _EDCT)
-        _EDU_PATH  = (udp ++ "/" ++ _EDU)
+        _DC_PATH   = udp ++ "/" ++ _DC
+        _DCL_PATH  = udp ++ "/" ++ _DCL
+        _DFS_PATH  = udp ++ "/" ++ _DFS
+        _DP_PATH   = udp ++ "/" ++ _DP
+        _DS_PATH   = dp  ++ "/" ++ _DS
+        _DW_PATH   = udp ++ "/" ++ _DW
+        _EDB_PATH  = udp ++ "/" ++ _EDB
+        _EDCT_PATH = udp ++ "/" ++ _EDCT
+        _EDU_PATH  = udp ++ "/" ++ _EDU
         udp = unpacked_data_path
         dp = data_path
 
@@ -187,7 +187,7 @@ writeDC fname sourceFpath = do
     putStrLn "done"
     where
         process = rep2 . rep1
-        same = (\str -> str)
+        same str = str
         -- Base: Ship movement speed +50%
         rep1 =  grpGsub    [ ("type\\s+admiral.+?starting_action_points\\s+", same)
                            , ("\\d+", mult 1.5)
@@ -203,17 +203,17 @@ writeDC fname sourceFpath = do
 --      2. replace "aaa"'s match by applying foo on it
 --      3. replace "bbb"'s match by applying bar on it
 --      4. etc. etc.
-grpGsub :: [(String, (String -> String))] -> String -> String
+grpGsub :: [(String, String -> String)] -> String -> String
 grpGsub grps src =
     sub cnt re funcs src
     where
         parenthesize s = "(" ++ s ++ ")"
         re = concatMap (parenthesize . fst) grps
         funcs = zip [1..] $ map snd grps
-        cnt = (length $ match re src) - 1
+        cnt = length (match re src) - 1
 
 -- process the results of a matchAllText with an association list of functions
-sub :: Int -> String -> [(Int, (String -> String))] -> String -> String
+sub :: Int -> String -> [(Int, String -> String)] -> String -> String
 sub (-1) _ _ src = src
 sub cnt re funcs src =
     sub (cnt - 1) re funcs (sub' minfo funcs src)
@@ -223,7 +223,7 @@ sub cnt re funcs src =
 
 -- manually replaces text using MatchText info, but intelligently with an association list of string
 -- manipulation functions (where key corresponds to the group that this function will act on)
-sub' :: MatchText String -> [(Int, (String -> String))] -> String -> String
+sub' :: MatchText String -> [(Int, String -> String)] -> String -> String
 sub' matchInfo assocFuncs src =
     take pos src ++ replacement ++ drop (pos + bytes) src
     where
@@ -235,10 +235,10 @@ sub' matchInfo assocFuncs src =
             _ -> ""
 
 match :: String -> String -> [MatchText String]
-match re src = matchAllText (makeRegexDef re) src
+match re = matchAllText (makeRegexDef re)
 
 mult :: Double -> String -> String
-mult d i = show . round $ (fromIntegral (read i::Int)) * d
+mult d i = show . round $ fromIntegral (read i::Int) * d
 
 abort :: (String, Int) -> IO ()
 abort (msg, eid) = do
@@ -301,7 +301,7 @@ reSub inp re repl = subRegex (makeRegexOpts copts eopts re) inp repl
 gsub :: String -> (String -> String) -> String -> String
 gsub re f inp = case inp =~ re :: (Int,Int) of
     (-1,_)    -> inp
-    (begin,n) -> (take begin inp) ++ f (take n (drop begin inp)) ++ gsub re f (drop n (drop begin inp))
+    (begin,n) -> take begin inp ++ f (take n (drop begin inp)) ++ gsub re f (drop n (drop begin inp))
 
 makeRegexDef :: String -> Regex
 makeRegexDef re = makeRegexOpts copts eopts re
