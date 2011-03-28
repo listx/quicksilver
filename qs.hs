@@ -137,6 +137,7 @@ qs opts@Opts{..} = do
     write   _DCL    _DCL_PATH   _DCL_FUNCS
     write   _DFS    _DFS_PATH   _DFS_FUNCS
     write   _DS     _DS_PATH    _DS_FUNCS
+    write   _DW     _DW_PATH    _DW_FUNCS
     write   _EDCT   _EDCT_PATH  _EDCT_FUNCS
     write   _EDB    _EDB_PATH   _EDB_FUNCS
     putStrLn $ "\nquicksilver mod version " ++ _QS_VERSION ++ " successfully generated."
@@ -198,6 +199,40 @@ _DS_FUNCS = [r1, r2, rN]
         -- King's purse 2x
         rN =    [ ("^denari_kings_purse\\s+", id)
                 , ("\\d+", mult 2)
+                ]
+
+_DW_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, rN]
+    where
+        -- Walls and gate HP 5x
+        r1 =    [ ("^\\s+gate\\s.+?full_health\\s", id)
+                , ("\\d+", mult 5)
+                ]
+        r2 =    [ ("^\\s+wall.+?full_health\\s", id)
+                , ("\\d+", mult 5)
+                ]
+        r3 =    [ ("^\\s+gateway.+?full_health\\s", id)
+                , ("\\d+", mult 5)
+                ]
+        -- Tower HP 2x
+        r4 =    [ ("^\\s+tower.+?full_health\\s", id)
+                , ("\\d+", mult 2)
+                ]
+        -- Tower non-flaming firing rate 2x
+        r5 =    [ ("^\\s+fire_rate\\s+small\\s+", id)
+                , ("\\d+", mult 0.5)
+                ]
+        r6 =    [ ("^\\s+fire_rate\\s+normal\\s+", id)
+                , ("\\d+", mult 0.5)
+                ]
+        r7 =    [ ("^\\s+fire_rate\\s+large\\s+", id)
+                , ("\\d+", mult 0.5)
+                ]
+        r8 =    [ ("^\\s+fire_rate\\s+huge\\s+", id)
+                , ("\\d+", mult 0.5)
+                ]
+        -- City/Castle defense tower activation range 8x
+        rN =    [ ("^\\s+control_area_radius\\s+", id)
+                , ("\\d+", mult 8)
                 ]
 
 _EDCT_FUNCS = [rN]
