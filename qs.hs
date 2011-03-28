@@ -261,24 +261,19 @@ _EDB_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
                 , ("\\d+", mult 1.33)
                 ]
         -- Give free upkeep slots to castles (vanilla cities are 2, 3, 4, 5, 6)
-        r5 =    [ ("^\\s{8}motte_and_bailey.+?", id)
-                , ("wall_level.+?", id)
+        r5 =    [ ("^\\s{8}motte_and_bailey.+?wall_level.+?", id)
                 , ("\\d+", up "1")
                 ]
-        r6 =    [ ("^\\s{8}wooden_castle.+?", id)
-                , ("wall_level.+?", id)
+        r6 =    [ ("^\\s{8}wooden_castle.+?wall_level.+?", id)
                 , ("\\d+", up "2")
                 ]
-        r7 =    [ ("^\\s{8}castle.+?", id)
-                , ("wall_level.+?", id)
+        r7 =    [ ("^\\s{8}castle.+?wall_level.+?", id)
                 , ("\\d+", up "3")
                 ]
-        r8 =    [ ("^\\s{8}fortress.+?", id)
-                , ("wall_level.+?", id)
+        r8 =    [ ("^\\s{8}fortress.+?wall_level.+?", id)
                 , ("\\d+", up "4")
                 ]
-        r9 =    [ ("^\\s{8}citadel.+?", id)
-                , ("wall_level.+?", id)
+        r9 =    [ ("^\\s{8}citadel.+?wall_level.+?", id)
                 , ("\\d+", up "5")
                 ]
         -- All free upkeep slots 2.5x
