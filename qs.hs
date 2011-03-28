@@ -135,6 +135,7 @@ qs opts@Opts{..} = do
     putStrLn $ "data path is: `" ++ data_path ++ "'"
     write   _DC     _DC_PATH    _DC_FUNCS
     write   _DCL    _DCL_PATH   _DCL_FUNCS
+    write   _DFS    _DFS_PATH   _DFS_FUNCS
     write   _DS     _DS_PATH    _DS_FUNCS
     write   _EDCT   _EDCT_PATH  _EDCT_FUNCS
     write   _EDB    _EDB_PATH   _EDB_FUNCS
@@ -176,6 +177,12 @@ _DCL_FUNCS = [rN]
         -- Spy recruitment cost 3x
         rN =    [ ("^spy.+?spy\\.tga\\s+", id)
                 , ("\\d+", mult 3)
+                ]
+
+_DFS_FUNCS = [rN]
+    where
+        -- Fixed faction standing bug
+        rN =    [ ("^;Trigger 0102_city_razed.+?;-+", nil)
                 ]
 
 _DS_FUNCS = [r1, r2, rN]
