@@ -3,6 +3,7 @@
 import Control.Monad (when)
 import Data.Digest.Pure.SHA
 import qualified Data.ByteString.Lazy as BL
+import qualified Data.ByteString.Char8 as BC
 import IO
 import System.Console.CmdArgs.Implicit
 import System.Console.CmdArgs.Verbosity
@@ -12,6 +13,7 @@ import System.Exit
 import System.IO
 import Text.Regex.PCRE hiding (match)
 import Data.Array
+import Data.List (foldl')
 import Text.Show.Pretty
 
 _QS_NAME = "quicksilver"
@@ -210,7 +212,7 @@ _EDB_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
                 ]
         -- All building constructions take 1 turn
         r3 =    [ ("^\\s+construction\\s+", id)
-                , ("\\d+", (\s -> "1"))
+                , ("\\d+", (\s -> BC.pack "1"))
                 ]
         -- All building costs 1.33x
         r4 =    [ ("^\\s+cost\\s+", id)
@@ -241,11 +243,11 @@ _EDB_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
         rN =    [ ("^\\s+free_upkeep\\s+bonus\\s+", id)
                 , ("\\d+", mult 2.5)
                 ]
-        up :: String -> (String -> String)
-        up amt = (\d -> d ++ "\r\n" ++ (take 16 $ repeat ' ') ++ "free_upkeep bonus " ++ amt)
+        up :: String -> (BC.ByteString -> BC.ByteString)
+        up amt = (\d -> BC.append d (BC.pack $ "\r\n" ++ replicate 16 ' ' ++ "free_upkeep bonus " ++ amt))
 
-nil :: String -> String
-nil str = ""
+nil :: BC.ByteString -> BC.ByteString
+nil str = BC.empty
 
 createGenDir :: IO ()
 createGenDir = do
@@ -283,11 +285,11 @@ createCfg = do
                     \[misc]\n\
                     \unlock_campaign = true"
 
-write :: String -> FilePath -> [[(String, String -> String)]] -> IO ()
+write :: String -> FilePath -> [[(String, BC.ByteString -> BC.ByteString)]] -> IO ()
 write fname sourceFpath funcs = do
     putStr $ "Writing new `" ++ fname ++ "' ... "
-    src <- readFile sourceFpath
-    writeFile ("gen/" ++ fname) (compose (map grpGsub funcs) src)
+    src <- BC.readFile sourceFpath
+    BC.writeFile ("gen/" ++ fname) (compose (map grpGsub funcs) src)
     putStrLn "done"
 
 -- Function composition over a list; see http://www.haskell.org/haskellwiki/Compose
@@ -300,17 +302,17 @@ compose funcs = foldl (.) id (reverse funcs)
 --      2. replace "aaa"'s match by applying foo on it
 --      3. replace "bbb"'s match by applying bar on it
 --      4. etc. etc.
-grpGsub :: [(String, String -> String)] -> String -> String
+grpGsub :: [(String, BC.ByteString -> BC.ByteString)] -> BC.ByteString -> BC.ByteString
 grpGsub grps src =
     sub cnt re funcs src
     where
-        parenthesize s = "(" ++ s ++ ")"
-        re = concatMap (parenthesize . fst) grps
+        parenthesize s = BC.concat $ map BC.pack ["(", s, ")"]
+        re = BC.concat $ map (parenthesize . fst) grps
         funcs = zip [1..] $ map snd grps
         cnt = length (match re src) - 1
 
 -- process the results of a matchAllText with an association list of functions
-sub :: Int -> String -> [(Int, String -> String)] -> String -> String
+sub :: Int -> BC.ByteString -> [(Int, BC.ByteString -> BC.ByteString)] -> BC.ByteString -> BC.ByteString
 sub (-1) _ _ src = src
 sub cnt re funcs src =
     sub (cnt - 1) re funcs (sub' minfo funcs src)
@@ -320,22 +322,29 @@ sub cnt re funcs src =
 
 -- manually replaces text using MatchText info, but intelligently with an association list of string
 -- manipulation functions (where key corresponds to the group that this function will act on)
-sub' :: MatchText String -> [(Int, String -> String)] -> String -> String
+sub' :: MatchText BC.ByteString -> [(Int, BC.ByteString -> BC.ByteString)] -> BC.ByteString -> BC.ByteString
 sub' matchInfo assocFuncs src =
-    take pos src ++ replacement ++ drop (pos + bytes) src
+    BC.append (BC.append (BC.take (fromIntegral pos) src) replacement) (BC.drop (fromIntegral (pos + bytes)) src)
     where
         kvs = assocs matchInfo
         (fullMatchStr, (pos, bytes)) = matchInfo!0
-        replacement = concatMap replaceGrps kvs
+        -- We use foldl' here to incrementally construct the full replacement bytestring; if we were
+        -- to use BC.concat $ map ..., then the thunk size will grow (possibly very large) depending
+        -- on the number of regex groups.
+        replacement = foldl' BC.append BC.empty $ map replaceGrps kvs
         replaceGrps (k, v@(str, (_, _))) = case lookup k assocFuncs of
             Just func -> func str
-            _ -> ""
+            _ -> BC.empty
 
-match :: String -> String -> [MatchText String]
+match :: BC.ByteString -> BC.ByteString -> [MatchText BC.ByteString]
 match re = matchAllText (makeRegexDef re)
 
-mult :: Double -> String -> String
-mult d i = show . round $ fromIntegral (read i::Int) * d
+mult :: Double -> BC.ByteString -> BC.ByteString
+mult d i = BC.pack . show . round $ fromIntegral (i') * d
+    where
+        i' = case BC.readInt i of
+            Just (n, _) -> n
+            _ -> 0
 
 abort :: (String, Int) -> IO ()
 abort (msg, eid) = do
@@ -346,7 +355,7 @@ abort (msg, eid) = do
 errMsg :: String -> IO ()
 errMsg msg = hPutStrLn stderr $ "error: " ++ msg
 
-makeRegexDef :: String -> Regex
+makeRegexDef :: BC.ByteString -> Regex
 makeRegexDef re = makeRegexOpts copts eopts re
     where
         copts = sum [compDotAll, compMultiline]
