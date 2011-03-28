@@ -69,6 +69,8 @@ main = do
     hSetBuffering stdout NoBuffering
     hSetBuffering stderr NoBuffering
     opts <- getOpts
+    putStrLn $ "data path: `" ++ data_path opts ++ "'"
+    putStrLn $ "unpacked data path: `" ++ unpacked_data_path opts ++ "'"
     checkOpts opts
     qs opts
 
@@ -113,26 +115,24 @@ checkOpts Opts{..} = do
 
 checkExists :: String -> FilePath -> IO ()
 checkExists fname fpath = do
-    putStr $ "checking if `" ++ fname ++ "' exists ... "
+    putStr $ "checking if `" ++ fname ++ "' exists... "
     fpathExist <- doesFileExist fpath
     when (not fpathExist) $ abort ("could not find `" ++ fname ++ "' source", 1)
     putStrLn "OK"
 
 checkSum :: String -> FilePath -> Integer -> IO ()
 checkSum fname fpath cksum = do
-    putStr $ "checking SHA-1 sum of `" ++ fname ++ "' ... "
+    putStr $ "checking SHA-1 sum of `" ++ fname ++ "'... "
     fBytes <- BL.readFile fpath
     when (integerDigest (sha1 fBytes) /= cksum) $ abort (fname ++ ": SHA-1 mismatch", 2)
     putStrLn "OK"
 
 qs :: Opts -> IO ()
 qs opts@Opts{..} = do
-    putStrLn "\nStarting mod generation ... "
+    putStrLn "\nStarting mod generation... "
     createGenDir
     createBat
     createCfg
-    putStrLn $ "unpacked data path is: `" ++ unpacked_data_path ++ "'"
-    putStrLn $ "data path is: `" ++ data_path ++ "'"
     write   _DC     _DC_PATH    _DC_FUNCS
     write   _DCL    _DCL_PATH   _DCL_FUNCS
     write   _DFS    _DFS_PATH   _DFS_FUNCS
@@ -258,16 +258,16 @@ nil str = BC.empty
 
 createGenDir :: IO ()
 createGenDir = do
-    putStr "Ensuring that directory `./gen' exists ... "
+    putStr "Ensuring that directory `./gen' exists... "
     createDirectoryIfMissing True "gen"
     putStrLn "OK"
-    putStr "Ensuring that directory `./gen/world/maps/campaign/imperial_campaign' exists ... "
+    putStr "Ensuring that directory `./gen/world/maps/campaign/imperial_campaign' exists... "
     createDirectoryIfMissing True "gen/world/maps/campaign/imperial_campaign"
     putStrLn "OK"
 
 createBat :: IO ()
 createBat = do
-    putStr "Writing quicksilver.bat ... "
+    putStr "Writing quicksilver.bat... "
     writeFile "gen/quicksilver.bat" contents
     putStrLn "done"
     where
@@ -275,7 +275,7 @@ createBat = do
 
 createCfg :: IO ()
 createCfg = do
-    putStr "Writing quicksilver.cfg ... "
+    putStr "Writing quicksilver.cfg... "
     writeFile "gen/quicksilver.cfg" contents
     putStrLn "done"
     where
@@ -294,7 +294,7 @@ createCfg = do
 
 write :: String -> FilePath -> [[(String, BC.ByteString -> BC.ByteString)]] -> IO ()
 write fname sourceFpath funcs = do
-    putStr $ "Writing new `" ++ fname ++ "' ... "
+    putStr $ "Writing new `" ++ fname ++ "'... "
     src <- BC.readFile sourceFpath
     BC.writeFile ("gen/" ++ fname) (compose (map grpGsub funcs) src)
     putStrLn "done"
