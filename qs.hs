@@ -290,7 +290,7 @@ _EDU_FUNCS = [r1]
         -- NOTE: Technically, this regex only catches "real" bodyguards from the campaign game;
         -- hero units in custom battles (King Richard, Duke William, etc.) are also heavy cavalry
         -- general's bodyguard units, but they are left alone.
-        r1 =    [ ("^type.+?_Bodyguard.+?soldier.+?_Bodyguard,\\s+", id)
+        r1 =    [ ("^dictionary\\s+\\w+?_Bodyguard.+?soldier\\s+\\w+?_Bodyguard,\\s+", id)
                 , ("\\d+", mult 0.5) -- soldiers 0.5x
                 , (".+?stat_cost\\s+\\d+,\\s+", id)
                 , ("\\d+", mult 0.5) -- recruitment cost
