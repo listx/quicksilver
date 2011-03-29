@@ -19,3 +19,6 @@
 - City/Castle defense tower activation range 8x
 - Walls and gate HP 5x
 - Tower HP 2x
+- Bodyguard soldiers (cavalry and infantry types) reduced 0.5x; costs reduced accordingly
+- Missile infantry ammo 2x
+- Pikemen units: fix rubber swords bug (pikemen only use pikes, not their weak secondary swords)
