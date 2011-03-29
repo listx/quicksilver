@@ -17,7 +17,7 @@ import Data.List (foldl')
 import Text.Show.Pretty
 
 _QS_NAME = "quicksilver"
-_QS_VERSION = "0.02"
+_QS_VERSION = "0.03"
 _QS_INFO = _QS_NAME ++ " version " ++ _QS_VERSION
 _COPYRIGHT = "(C) Linus Arver 2011"
 
