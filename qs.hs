@@ -10,11 +10,14 @@ import System.Console.CmdArgs.Verbosity
 import System.Directory
 import System.Environment
 import System.Exit
+import System.FilePath
 import System.IO
 import Text.Regex.PCRE hiding (match)
 import Data.Array
 import Data.List (foldl')
 import Text.Show.Pretty
+
+import Sums
 
 _QS_NAME = "quicksilver"
 _QS_VERSION = "0.03"
@@ -30,15 +33,6 @@ _DW     = "descr_walls.txt"
 _EDB    = "export_descr_buildings.txt"
 _EDCT   = "export_descr_character_traits.txt"
 _EDU    = "export_descr_unit.txt"
-_SHA1_DC    = 0x9505d63491e7c90debba66016f4a837173fa8374
-_SHA1_DCL   = 0x0d121a3b5567f1d326abde8f7f270c8fe6469952
-_SHA1_DFS   = 0x6e9bc8a4ec4e938ba5124e049079758efe8e2ed2
-_SHA1_DP    = 0xd8c67ee32e5856d16e4a0947f54c7b8b0fe9e653
-_SHA1_DS    = 0x852dd3c9a4a6647f38af2f84eb07874de152acf8
-_SHA1_DW    = 0x959d554513c313b12be95ac9579bff3b4aa49521
-_SHA1_EDB   = 0xca2018a694fbabcaf5a058f4e87889acc3d35f89
-_SHA1_EDCT  = 0x2a95300126b5f78294caffa0af8658f4576a2d40
-_SHA1_EDU   = 0x140f93465e48577a5262d6e104630518426a7a13
 
 data Opts = Opts
     { unpacked_data_path    :: FilePath
@@ -69,8 +63,8 @@ main = do
     hSetBuffering stdout NoBuffering
     hSetBuffering stderr NoBuffering
     opts <- getOpts
-    putStrLn $ "data path: `" ++ data_path opts ++ "'"
-    putStrLn $ "unpacked data path: `" ++ unpacked_data_path opts ++ "'"
+    putStrLn $ "Data path: `" ++ data_path opts ++ "'"
+    putStrLn $ "Unpacked data path: `" ++ unpacked_data_path opts ++ "'"
     checkOpts opts
     qs opts
 
@@ -115,14 +109,14 @@ checkOpts Opts{..} = do
 
 checkExists :: String -> FilePath -> IO ()
 checkExists fname fpath = do
-    putStr $ "checking if `" ++ fname ++ "' exists... "
+    putStr $ "Checking if `" ++ fname ++ "' exists... "
     fpathExist <- doesFileExist fpath
     when (not fpathExist) $ abort ("could not find `" ++ fname ++ "' source", 1)
     putStrLn "OK"
 
 checkSum :: String -> FilePath -> Integer -> IO ()
 checkSum fname fpath cksum = do
-    putStr $ "checking SHA-1 sum of `" ++ fname ++ "'... "
+    putStr $ "Checking SHA-1 sum of `" ++ fname ++ "'... "
     fBytes <- BL.readFile fpath
     when (integerDigest (sha1 fBytes) /= cksum) $ abort (fname ++ ": SHA-1 mismatch", 2)
     putStrLn "OK"
@@ -133,6 +127,7 @@ qs opts@Opts{..} = do
     createGenDir
     createBat
     createCfg
+    copyData opts
     write   _DC     _DC_PATH    _DC_FUNCS
     write   _DCL    _DCL_PATH   _DCL_FUNCS
     write   _DFS    _DFS_PATH   _DFS_FUNCS
@@ -154,6 +149,21 @@ qs opts@Opts{..} = do
         _EDU_PATH  = udp ++ "/" ++ _EDU
         udp = unpacked_data_path
         dp = data_path
+
+copyData :: Opts -> IO ()
+copyData Opts{..} = mapM_ (copyFile' no_sha data_path) _SHA1_DATA
+
+copyFile' :: Bool -> FilePath -> (Integer, FilePath) -> IO ()
+copyFile' skipVerify parent (cksum, fpath) = do
+    createDirectoryIfMissing True modSubdir
+    when (not skipVerify) $ checkSum fname sourceFile cksum
+    putStr $ "Copying file `" ++ fname ++ "'... "
+    copyFile sourceFile $ "gen/" ++ fpath
+    putStrLn "done"
+    where
+        sourceFile = parent ++ "/" ++ fpath
+        modSubdir = "gen/" ++ fst (splitFileName fpath)
+        fname = snd $ splitFileName fpath
 
 _DC_FUNCS = addTrueTest [r1, r2, r3, r4, rN]
     where
