@@ -155,7 +155,7 @@ qs opts@Opts{..} = do
         udp = unpacked_data_path
         dp = data_path
 
-_DC_FUNCS = [r1, r2, r3, r4, rN]
+_DC_FUNCS = addTrueTest [r1, r2, r3, r4, rN]
     where
         -- Ship movement speed 3x
         r1 =    [ ("^type\\s+admiral.+?starting_action_points\\s+", id)
@@ -178,20 +178,20 @@ _DC_FUNCS = [r1, r2, r3, r4, rN]
                 , ("\\d+", mult 3)
                 ]
 
-_DCL_FUNCS = [rN]
+_DCL_FUNCS = addTrueTest [rN]
     where
         -- Spy recruitment cost 3x
         rN =    [ ("^spy.+?spy\\.tga\\s+", id)
                 , ("\\d+", mult 3)
                 ]
 
-_DFS_FUNCS = [rN]
+_DFS_FUNCS = addTrueTest [rN]
     where
         -- Fixed faction standing bug
         rN =    [ ("^;Trigger 0102_city_razed.+?;-+", nil)
                 ]
 
-_DS_FUNCS = [r1, r2, rN]
+_DS_FUNCS = addTrueTest [r1, r2, rN]
     where
         -- Rebel spawn rate 10x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -206,7 +206,7 @@ _DS_FUNCS = [r1, r2, rN]
                 , ("\\d+", mult 2)
                 ]
 
-_DW_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, rN]
+_DW_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
     where
         -- Walls and gate HP 5x
         r1 =    [ ("^\\s+gate\\s.+?full_health\\s", id)
@@ -240,13 +240,13 @@ _DW_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, rN]
                 , ("\\d+", mult 8)
                 ]
 
-_EDCT_FUNCS = [rN]
+_EDCT_FUNCS = addTrueTest [rN]
     where
         -- Remove corruption trigger based on high treasury
         rN =    [ ("^Trigger corruption.+?;-+", nil)
                 ]
 
-_EDB_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
+_EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
     where
         -- Mines give 5x profits
         r1 =    [ ("^\\s+mine_resource\\s+", id)
@@ -288,7 +288,7 @@ _EDB_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
         up :: String -> (BC.ByteString -> BC.ByteString)
         up amt = (\d -> BC.append d (BC.pack $ "\r\n" ++ replicate 16 ' ' ++ "free_upkeep bonus " ++ amt))
 
-_EDU_FUNCS = [r1, r2, r3]
+_EDU_FUNCS = addTrueTest [r1, r2, r3] ++ [rN]
     where
         -- Bodyguard soldiers (cavalry and infantry types) reduced 0.5x; costs reduced accordingly
         -- NOTE: Technically, this regex only catches "real" bodyguards from the campaign game;
@@ -317,12 +317,34 @@ _EDU_FUNCS = [r1, r2, r3]
         r3 =    [ ("^stat_pri_attr\\s+.+?,\\s+long_pike.+?", id)
                 , ("^stat_sec.+?\\r\\n", only "stat_sec         0, 0, no, 0 0, no, melee_simple, blunt, none, 25, 1\r\n")
                 ]
+        -- Basic infantry have free upkeep (mental up to 5 AND cost up to 650)
+        rN =    [ ("^category\\s+infantry.+?", id, alwaysTrue)
+                , ("^attributes[^\\r]+", add ", free_upkeep_unit", \s -> not $ BC.isInfixOf (BC.pack "free_upkeep_unit") s)
+                , (".+?^stat_mental\\s+", id, alwaysTrue)
+                , ("\\d+", id, numTest (<= 5))
+                , (".+?^stat_cost\\s+\\d+,\\s+", id, alwaysTrue)
+                , ("\\d+", id, numTest (<= 650))
+                ]
 
 nil :: BC.ByteString -> BC.ByteString
 nil str = BC.empty
 
 only :: String -> BC.ByteString -> BC.ByteString
 only repl _ = BC.pack repl
+
+add :: String -> BC.ByteString -> BC.ByteString
+add str orig = BC.append orig $ BC.pack str
+
+numTest :: (Int -> Bool) -> BC.ByteString -> Bool
+numTest f byteStr = case BC.readInt byteStr of
+    Just (n, _) -> (f n)
+    _ -> False
+
+addTrueTest :: [[(String, (BC.ByteString -> BC.ByteString))]] -> [[(String, (BC.ByteString -> BC.ByteString), (BC.ByteString -> Bool))]]
+addTrueTest = map (map (\(a, b) -> (a, b, alwaysTrue)))
+
+alwaysTrue :: BC.ByteString -> Bool
+alwaysTrue _ = True
 
 createGenDir :: IO ()
 createGenDir = do
@@ -360,7 +382,7 @@ createCfg = do
                     \[misc]\n\
                     \unlock_campaign = true"
 
-write :: String -> FilePath -> [[(String, BC.ByteString -> BC.ByteString)]] -> IO ()
+write :: String -> FilePath -> [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]] -> IO ()
 write fname sourceFpath funcs = do
     putStr $ "Writing new `" ++ fname ++ "'... "
     src <- BC.readFile sourceFpath
@@ -371,7 +393,7 @@ write fname sourceFpath funcs = do
 
 -- First split up the source string into subparts, then apply the regex transformations for each
 -- part.
-write' :: String -> FilePath -> [[(String, BC.ByteString -> BC.ByteString)]] -> String -> String -> IO ()
+write' :: String -> FilePath -> [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]] -> String -> String -> IO ()
 write' fname sourceFpath funcs delim delim' = do
     putStr $ "Writing new `" ++ fname ++ "'... "
     src <- BC.readFile sourceFpath
@@ -391,23 +413,63 @@ compose funcs = foldl (.) id (reverse funcs)
 --      2. replace "aaa"'s match by applying foo on it
 --      3. replace "bbb"'s match by applying bar on it
 --      4. etc. etc.
-grpGsub :: [(String, BC.ByteString -> BC.ByteString)] -> BC.ByteString -> BC.ByteString
+grpGsub :: [(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)] -> BC.ByteString -> BC.ByteString
 grpGsub grps src =
     sub cnt re funcs src
     where
         parenthesize s = BC.pack $ "(" ++ s ++ ")"
-        re = BC.concat $ map (parenthesize . fst) grps
-        funcs = zip [1..] $ map snd grps
+        re = BC.concat $ map (parenthesize . fst3) grps
+        funcs = zip3 [1..] (map snd3 grps) (map thd3 grps)
         cnt = length (match re src) - 1
 
--- process the results of a matchAllText with an association list of functions
-sub :: Int -> BC.ByteString -> [(Int, BC.ByteString -> BC.ByteString)] -> BC.ByteString -> BC.ByteString
+-- Process the results of a matchAllText with an association list of regex replacement functions;
+-- replacement occurs only if every subgroup regex's accompanying test function passes. E.g., if
+-- funcs is
+--     [ (1 , id, alwaysTrue)
+--     , (2 , add ", free_upkeep_unit", \s -> not $ BC.isInfixOf (BC.pack "free_upkeep_unit") s)
+--     , (3, id, alwaysTrue)
+--     , (4, id, numTest (<= 5))
+--     , (5, id, alwaysTrue)
+--     , (6, id, numTest (<= 650))
+--     ]
+-- then funcs' is
+--     [ (1 , id)
+--     , (2 , add ", free_upkeep_unit")
+--     , (3,  id)
+--     , (4,  id)
+--     , (5,  id)
+--     , (6,  id)
+--     ]
+-- and funcs'' is
+--     [ (1 , alwaysTrue)
+--     , (2 , \s -> not $ BC.isInfixOf (BC.pack "free_upkeep_unit") s)
+--     , (3, alwaysTrue)
+--     , (4, numTest (<= 5))
+--     , (5, alwaysTrue)
+--     , (6, numTest (<= 650))
+--     ]
+-- . The regex looks (essentially) like "(\\1)(\\2)(\\3)(\\4)(\\5)(\\6)" because of grpGsub. The
+-- entire regex's successful match (subgroups 1-6) are ONLY processed by the replacement functions
+-- in funcs'(subgroups 1-6) if ALL of the tests in funcs'' return True.
+sub :: Int -> BC.ByteString -> [(Int, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)] -> BC.ByteString -> BC.ByteString
 sub (-1) _ _ src = src
 sub cnt re funcs src =
-    sub (cnt - 1) re funcs (sub' minfo funcs src)
+    sub (cnt - 1) re funcs maybeSub
     where
         minfos = match re src
         minfo = minfos!!cnt
+        funcs' = zip (map fst3 funcs) (map snd3 funcs)
+        funcs'' = zip (map fst3 funcs) (map thd3 funcs)
+        maybeSub = if testsOK
+            then sub' minfo funcs' src
+            else src
+        testsOK = all (== True) tests
+            where
+                kvs = assocs minfo
+                tests = map test kvs
+                test (k, v@(str, (_, _))) = case lookup k funcs'' of
+                    Just func -> func str
+                    _ -> True -- since minfo includes the entire regex's full match info as the first (k, v), we will always visit this codepath (since we zip up the replacment functions starting from k = 1, and the full match info's k is 0), so we need to let the k = 0 case succeed.
 
 -- manually replaces text using MatchText info, but intelligently with an association list of string
 -- manipulation functions (where key corresponds to the group that this function will act on)
@@ -423,7 +485,7 @@ sub' matchInfo assocFuncs src =
         replacement = foldl' BC.append BC.empty $ map replaceGrps kvs
         replaceGrps (k, v@(str, (_, _))) = case lookup k assocFuncs of
             Just func -> func str
-            _ -> BC.empty
+            _ -> BC.empty -- we will always visit this codepath because k = 0 exists for the fullMatchStr case; since we only do replacments on a per-group (k = 1, k = 2, etc.) basis, we skip the fullMatchStr case by making it an empty string
 
 match :: BC.ByteString -> BC.ByteString -> [MatchText BC.ByteString]
 match re = matchAllText (makeRegexDef re)
@@ -465,3 +527,12 @@ makeRegexDef re = makeRegexOpts copts eopts re
     where
         copts = sum [compDotAll, compMultiline]
         eopts = sum [execBlank]
+
+fst3 :: (a, b, c) -> a
+fst3 (a, b, c) = a
+
+snd3 :: (a, b, c) -> b
+snd3 (a, b, c) = b
+
+thd3 :: (a, b, c) -> c
+thd3 (a, b, c) = c
