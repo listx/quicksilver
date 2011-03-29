@@ -284,7 +284,7 @@ _EDB_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
         up :: String -> (BC.ByteString -> BC.ByteString)
         up amt = (\d -> BC.append d (BC.pack $ "\r\n" ++ replicate 16 ' ' ++ "free_upkeep bonus " ++ amt))
 
-_EDU_FUNCS = [r1]
+_EDU_FUNCS = [r1, r2]
     where
         -- Bodyguard soldiers (cavalry and infantry types) reduced 0.5x; costs reduced accordingly
         -- NOTE: Technically, this regex only catches "real" bodyguards from the campaign game;
@@ -304,6 +304,10 @@ _EDU_FUNCS = [r1]
                 , ("\\d+", mult 0.5) -- custom battle: recruitment cost
                 , (",\\s+\\d+,\\s+", id) -- custom battle: recruitment count before penalty (skip)
                 , ("\\d+", mult 0.5) -- custom battle: over-recruitment penalty
+                ]
+        -- Missile infantry ammo 1.75x
+        r2 =    [ ("^category\\s+infantry\\s+class\\s+missile.+?stat_pri\\s+.+?,.+?,.+?,.+?,\\s+", id)
+                , ("\\d+", mult 1.75)
                 ]
 
 nil :: BC.ByteString -> BC.ByteString
