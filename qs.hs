@@ -157,9 +157,9 @@ qs opts@Opts{..} = do
 
 _DC_FUNCS = [r1, r2, r3, r4, rN]
     where
-        -- Ship movement speed 1.5x
+        -- Ship movement speed 3x
         r1 =    [ ("^type\\s+admiral.+?starting_action_points\\s+", id)
-                , ("\\d+", mult 1.5)
+                , ("\\d+", mult 3)
                 ]
         -- Diplomat movement speed 2x
         r2 =    [ ("^type\\s+diplomat.+?starting_action_points\\s+", id)
