@@ -155,7 +155,7 @@ qs opts@Opts{..} = do
         udp = unpacked_data_path
         dp = data_path
 
-_DC_FUNCS = [r1, r2, r3, rN]
+_DC_FUNCS = [r1, r2, r3, r4, rN]
     where
         -- Ship movement speed 1.5x
         r1 =    [ ("^type\\s+admiral.+?starting_action_points\\s+", id)
@@ -170,8 +170,12 @@ _DC_FUNCS = [r1, r2, r3, rN]
                 , ("\\d+", mult 1.75)
                 ]
         -- Campaign movement speed 1.75x
-        rN =    [ ("^starting_action_points\\s+", id)
+        r4 =    [ ("^starting_action_points\\s+", id)
                 , ("\\d+", mult 1.75)
+                ]
+        -- Spy upkeep cost 3x
+        rN =    [ ("^type\\s+spy\\s+[\\w\\s,]+?\\r\\nwage_base\\s+", id)
+                , ("\\d+", mult 3)
                 ]
 
 _DCL_FUNCS = [rN]
