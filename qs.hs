@@ -139,8 +139,8 @@ qs opts@Opts{..} = do
     write   _DS     _DS_PATH    _DS_FUNCS
     write   _DW     _DW_PATH    _DW_FUNCS
     write   _EDCT   _EDCT_PATH  _EDCT_FUNCS
-    write   _EDB    _EDB_PATH   _EDB_FUNCS
-    write'  _EDU    _EDU_PATH   _EDU_FUNCS  " \r\n \r\n"
+    write'  _EDB    _EDB_PATH   _EDB_FUNCS  "^\\}\\r\\n"        "}\r\n"
+    write'  _EDU    _EDU_PATH   _EDU_FUNCS  " \\r\\n \\r\\n"    " \r\n \r\n"
     putStrLn $ "\nquicksilver mod version " ++ _QS_VERSION ++ " successfully generated."
     where
         _DC_PATH   = udp ++ "/" ++ _DC
@@ -356,12 +356,12 @@ write fname sourceFpath funcs = do
 
 -- First split up the source string into subparts, then apply the regex transformations for each
 -- part.
-write' :: String -> FilePath -> [[(String, BC.ByteString -> BC.ByteString)]] -> String -> IO ()
-write' fname sourceFpath funcs delim = do
+write' :: String -> FilePath -> [[(String, BC.ByteString -> BC.ByteString)]] -> String -> String -> IO ()
+write' fname sourceFpath funcs delim delim' = do
     putStr $ "Writing new `" ++ fname ++ "'... "
     src <- BC.readFile sourceFpath
     let parts = splitBy (makeRegexDef $ BC.pack delim) src
-    BC.writeFile ("gen/" ++ fname) $ BC.intercalate (BC.pack delim) (map applyRegexes parts)
+    BC.writeFile ("gen/" ++ fname) $ BC.intercalate (BC.pack delim') (map applyRegexes parts)
     putStrLn "done"
     where
         applyRegexes = compose (map grpGsub funcs)
