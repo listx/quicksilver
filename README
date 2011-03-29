@@ -1,6 +1,6 @@
 * Changes from vanilla M2TW (with 1.3 patch):
 
-- Ship movement speed 1.5x
+- Ship movement speed 3x
 - Diplomat movement speed 2x
 - Princess movement speed 1.75x
 - Campaign movement speed 1.75x for all units (ships, diplomats, princesses's stats are stacked)
