@@ -305,9 +305,9 @@ _EDU_FUNCS = [r1, r2, r3]
                 , (",\\s+\\d+,\\s+", id) -- custom battle: recruitment count before penalty (skip)
                 , ("\\d+", mult 0.5) -- custom battle: over-recruitment penalty
                 ]
-        -- Missile infantry ammo 1.75x
+        -- Missile infantry ammo 2x
         r2 =    [ ("^category\\s+infantry\\s+class\\s+missile.+?stat_pri\\s+.+?,.+?,.+?,.+?,\\s+", id)
-                , ("\\d+", mult 1.75)
+                , ("\\d+", mult 2)
                 ]
         -- Pikemen units: fix rubber swords bug
         r3 =    [ ("^stat_pri_attr\\s+.+?,\\s+long_pike.+?", id)
