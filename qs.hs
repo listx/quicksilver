@@ -255,7 +255,7 @@ _EDB_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
                 ]
         -- All building constructions take 1 turn
         r3 =    [ ("^\\s+construction\\s+", id)
-                , ("\\d+", (\s -> BC.pack "1"))
+                , ("\\d+", only "1")
                 ]
         -- All building costs 1.33x
         r4 =    [ ("^\\s+cost\\s+", id)
@@ -284,7 +284,7 @@ _EDB_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
         up :: String -> (BC.ByteString -> BC.ByteString)
         up amt = (\d -> BC.append d (BC.pack $ "\r\n" ++ replicate 16 ' ' ++ "free_upkeep bonus " ++ amt))
 
-_EDU_FUNCS = [r1, r2]
+_EDU_FUNCS = [r1, r2, r3]
     where
         -- Bodyguard soldiers (cavalry and infantry types) reduced 0.5x; costs reduced accordingly
         -- NOTE: Technically, this regex only catches "real" bodyguards from the campaign game;
@@ -309,9 +309,16 @@ _EDU_FUNCS = [r1, r2]
         r2 =    [ ("^category\\s+infantry\\s+class\\s+missile.+?stat_pri\\s+.+?,.+?,.+?,.+?,\\s+", id)
                 , ("\\d+", mult 1.75)
                 ]
+        -- Pikemen units: fix rubber swords bug
+        r3 =    [ ("^stat_pri_attr\\s+.+?,\\s+long_pike.+?", id)
+                , ("^stat_sec.+?\\r\\n", only "stat_sec         0, 0, no, 0 0, no, melee_simple, blunt, none, 25, 1\r\n")
+                ]
 
 nil :: BC.ByteString -> BC.ByteString
 nil str = BC.empty
+
+only :: String -> BC.ByteString -> BC.ByteString
+only repl _ = BC.pack repl
 
 createGenDir :: IO ()
 createGenDir = do
