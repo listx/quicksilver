@@ -140,6 +140,7 @@ qs opts@Opts{..} = do
     write   _DW     _DW_PATH    _DW_FUNCS
     write   _EDCT   _EDCT_PATH  _EDCT_FUNCS
     write   _EDB    _EDB_PATH   _EDB_FUNCS
+    write'  _EDU    _EDU_PATH   _EDU_FUNCS  " \r\n \r\n"
     putStrLn $ "\nquicksilver mod version " ++ _QS_VERSION ++ " successfully generated."
     where
         _DC_PATH   = udp ++ "/" ++ _DC
@@ -283,6 +284,28 @@ _EDB_FUNCS = [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
         up :: String -> (BC.ByteString -> BC.ByteString)
         up amt = (\d -> BC.append d (BC.pack $ "\r\n" ++ replicate 16 ' ' ++ "free_upkeep bonus " ++ amt))
 
+_EDU_FUNCS = [r1]
+    where
+        -- Bodyguard soldiers (cavalry and infantry types) reduced 0.5x; costs reduced accordingly
+        -- NOTE: Technically, this regex only catches "real" bodyguards from the campaign game;
+        -- hero units in custom battles (King Richard, Duke William, etc.) are also heavy cavalry
+        -- general's bodyguard units, but they are left alone.
+        r1 =    [ ("^type.+?_Bodyguard.+?soldier.+?_Bodyguard,\\s+", id)
+                , ("\\d+", mult 0.5) -- soldiers 0.5x
+                , (".+?stat_cost\\s+\\d+,\\s+", id)
+                , ("\\d+", mult 0.5) -- recruitment cost
+                , (",\\s+", id)
+                , ("\\d+", mult 0.5) -- upkeep cost
+                , (",\\s+", id)
+                , ("\\d+", mult 0.5) -- weapon upgrade cost
+                , (",\\s+", id)
+                , ("\\d+", mult 0.5) -- armor upgrade cost
+                , (",\\s+", id)
+                , ("\\d+", mult 0.5) -- custom battle: recruitment cost
+                , (",\\s+\\d+,\\s+", id) -- custom battle: recruitment count before penalty (skip)
+                , ("\\d+", mult 0.5) -- custom battle: over-recruitment penalty
+                ]
+
 nil :: BC.ByteString -> BC.ByteString
 nil str = BC.empty
 
@@ -326,8 +349,22 @@ write :: String -> FilePath -> [[(String, BC.ByteString -> BC.ByteString)]] -> I
 write fname sourceFpath funcs = do
     putStr $ "Writing new `" ++ fname ++ "'... "
     src <- BC.readFile sourceFpath
-    BC.writeFile ("gen/" ++ fname) (compose (map grpGsub funcs) src)
+    BC.writeFile ("gen/" ++ fname) $ applyRegexes src
     putStrLn "done"
+    where
+        applyRegexes = compose (map grpGsub funcs)
+
+-- First split up the source string into subparts, then apply the regex transformations for each
+-- part.
+write' :: String -> FilePath -> [[(String, BC.ByteString -> BC.ByteString)]] -> String -> IO ()
+write' fname sourceFpath funcs delim = do
+    putStr $ "Writing new `" ++ fname ++ "'... "
+    src <- BC.readFile sourceFpath
+    let parts = splitBy (makeRegexDef $ BC.pack delim) src
+    BC.writeFile ("gen/" ++ fname) $ BC.intercalate (BC.pack delim) (map applyRegexes parts)
+    putStrLn "done"
+    where
+        applyRegexes = compose (map grpGsub funcs)
 
 -- Function composition over a list; see http://www.haskell.org/haskellwiki/Compose
 compose :: [a -> a] -> a -> a
@@ -343,7 +380,7 @@ grpGsub :: [(String, BC.ByteString -> BC.ByteString)] -> BC.ByteString -> BC.Byt
 grpGsub grps src =
     sub cnt re funcs src
     where
-        parenthesize s = BC.concat $ map BC.pack ["(", s, ")"]
+        parenthesize s = BC.pack $ "(" ++ s ++ ")"
         re = BC.concat $ map (parenthesize . fst) grps
         funcs = zip [1..] $ map snd grps
         cnt = length (match re src) - 1
@@ -375,6 +412,22 @@ sub' matchInfo assocFuncs src =
 
 match :: BC.ByteString -> BC.ByteString -> [MatchText BC.ByteString]
 match re = matchAllText (makeRegexDef re)
+
+splitBy :: Regex -> BC.ByteString -> [BC.ByteString]
+splitBy delim strIn
+    | BC.null strIn = []
+    | otherwise =
+        let matches = map (!0) (matchAll delim strIn)
+            go _ str [] = str : []
+            go i str ((off,len):rest) =
+                let i' = off+len
+                    firstline = BC.take (off-i) str
+                    remainder = BC.drop (i'-i) str
+                in seq i' $
+                    if BC.null remainder
+                        then [firstline, BC.empty]
+                        else firstline : go i' remainder rest
+        in go 0 strIn matches
 
 mult :: Double -> BC.ByteString -> BC.ByteString
 mult d i = BC.pack . show . round $ fromIntegral (i') * d
