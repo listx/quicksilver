@@ -6,3 +6,6 @@ prof:
 
 clean:
 	rm -rf gen *.o *.hi
+
+refresh:
+	rm -rf gen
