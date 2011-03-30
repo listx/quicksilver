@@ -61,14 +61,27 @@ qs :: Opts -> IO ()
 qs opts@Opts{..} = do
     putStrLn "\nStarting mod generation... "
     createGenDir
-    createBat
-    createCfg
+    createFile "quicksilver.bat" bat
+    createFile "quicksilver.cfg" cfg
     mapM_ (modSource opts udd) _SHA1_UDD_SOURCES
     mapM_ (modSource opts idd) _SHA1_IDD_SOURCES
-    putStrLn $ "\nquicksilver mod version " ++ _QS_VERSION ++ " successfully generated."
+    putStrLn $ "\nquicksilver version " ++ _QS_VERSION ++ " successfully generated."
     where
         udd = unpacked_data_dir
         idd = installed_data_dir
+        bat =   "medieval2.exe @quicksilver.cfg"
+        cfg =   "[features]\n\
+                \mod = quicksilver\n\
+                \\n\
+                \[log]\n\
+                \to = logs/quicksilver.log.txt\n\
+                \level = * error\n\
+                \\n\
+                \[game]\n\
+                \event_cutscenes = 0\n\
+                \\n\
+                \[misc]\n\
+                \unlock_campaign = true"
 
 createGenDir :: IO ()
 createGenDir = do
@@ -78,32 +91,11 @@ createGenDir = do
     createDirectoryIfMissing True _MOD_PATH_DATA
     putStrLn "OK"
 
-createBat :: IO ()
-createBat = do
-    putStr "Writing quicksilver.bat... "
-    writeFile (_MOD_PATH_TOP ++ "quicksilver.bat") contents
+createFile :: String -> String -> IO ()
+createFile fname contents = do
+    putStr $ "Writing `" ++ fname ++ "'... "
+    writeFile (_MOD_PATH_TOP ++ fname) contents
     putStrLn "done"
-    where
-        contents = "medieval2.exe @quicksilver.cfg"
-
-createCfg :: IO ()
-createCfg = do
-    putStr "Writing quicksilver.cfg... "
-    writeFile (_MOD_PATH_TOP ++ "quicksilver.cfg") contents
-    putStrLn "done"
-    where
-        contents =  "[features]\n\
-                    \mod = quicksilver\n\
-                    \\n\
-                    \[log]\n\
-                    \to = logs/quicksilver.log.txt\n\
-                    \level = * error\n\
-                    \\n\
-                    \[game]\n\
-                    \event_cutscenes = 0\n\
-                    \\n\
-                    \[misc]\n\
-                    \unlock_campaign = true"
 
 modSource :: Opts -> FilePath -> (Integer, FilePath) -> IO ()
 modSource opts@Opts{..} = f
