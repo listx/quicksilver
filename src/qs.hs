@@ -36,8 +36,9 @@ _TO_EDIT =
     , _EDU
     ]
 
-_MOD_PATH_DATA  = "gen/" ++ _QS_NAME ++ "/data/"
-_MOD_PATH_TOP   = "gen/"
+_GEN_PATH       = "gen/"
+_MOD_PATH_DATA  = _GEN_PATH ++ _QS_NAME ++ "/data/"
+_MOD_PATH_TOP   = _GEN_PATH
 
 data SourceParent =
       IFolder
@@ -71,6 +72,8 @@ qs opts@Opts{..} = do
 
 createGenDir :: IO ()
 createGenDir = do
+    genExist <- doesDirectoryExist _GEN_PATH
+    when genExist $ abort ("`" ++ _GEN_PATH ++ "' already exists", 1)
     putStr "Ensuring that directory `./gen' exists... "
     createDirectoryIfMissing True _MOD_PATH_DATA
     putStrLn "OK"
