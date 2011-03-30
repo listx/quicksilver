@@ -15,27 +15,6 @@ import Regex
 import Source
 import Util
 
-_DC     = "descr_character.txt"
-_DCL    = "descr_cultures.txt"
-_DFS    = "descr_faction_standing.txt"
-_DP     = "descr_projectile.txt"
-_DS     = "world/maps/campaign/imperial_campaign/descr_strat.txt"
-_DW     = "descr_walls.txt"
-_EDB    = "export_descr_buildings.txt"
-_EDCT   = "export_descr_character_traits.txt"
-_EDU    = "export_descr_unit.txt"
-
-_TO_EDIT =
-    [ _DC
-    , _DCL
-    , _DFS
-    , _DS
-    , _DW
-    , _EDB
-    , _EDCT
-    , _EDU
-    ]
-
 _GEN_PATH       = "gen/"
 _MOD_PATH_DATA  = _GEN_PATH ++ _QS_NAME ++ "/data/"
 _MOD_PATH_TOP   = _GEN_PATH
@@ -52,8 +31,8 @@ main = do
     hSetBuffering stdout NoBuffering
     hSetBuffering stderr NoBuffering
     opts <- getOpts
-    putStrLn $ "Data path: `" ++ installed_data_dir opts ++ "'"
-    putStrLn $ "Unpacked data path: `" ++ unpacked_data_dir opts ++ "'"
+    putStrLn $ "Data path: " ++ (enquote $ installed_data_dir opts)
+    putStrLn $ "Unpacked data path: " ++ (enquote $ unpacked_data_dir opts)
     checkOpts opts
     qs opts
 
@@ -63,9 +42,13 @@ qs opts@Opts{..} = do
     createGenDir
     createFile "quicksilver.bat" bat
     createFile "quicksilver.cfg" cfg
+    putStr "\n"
+    mapM_ (checkFile opts udd) _SHA1_UDD_SOURCES
+    mapM_ (checkFile opts idd) _SHA1_IDD_SOURCES
+    putStr "\n"
     mapM_ (modSource opts udd) _SHA1_UDD_SOURCES
     mapM_ (modSource opts idd) _SHA1_IDD_SOURCES
-    putStrLn $ "\nquicksilver version " ++ _QS_VERSION ++ " successfully generated."
+    putStrLn $ "\nquicksilver version " ++ _QS_VERSION ++ " successfully generated inside " ++ enquote _GEN_PATH
     where
         udd = unpacked_data_dir
         idd = installed_data_dir
@@ -86,59 +69,45 @@ qs opts@Opts{..} = do
 createGenDir :: IO ()
 createGenDir = do
     genExist <- doesDirectoryExist _GEN_PATH
-    when genExist $ abort ("`" ++ _GEN_PATH ++ "' already exists", 1)
-    putStr "Ensuring that directory `./gen' exists... "
+    when genExist $ abort (enquote _GEN_PATH ++ " already exists", 1)
+    putStr $ "Ensuring that directory " ++ enquote _GEN_PATH ++ " exists... "
     createDirectoryIfMissing True _MOD_PATH_DATA
     putStrLn "OK"
 
 createFile :: String -> String -> IO ()
 createFile fname contents = do
-    putStr $ "Writing `" ++ fname ++ "'... "
-    writeFile (_MOD_PATH_TOP ++ fname) contents
+    putStr $ "Writing " ++ enquote dest ++ "... "
+    writeFile dest contents
     putStrLn "done"
+    where
+        dest = _MOD_PATH_TOP ++ fname
 
 modSource :: Opts -> FilePath -> (Integer, FilePath) -> IO ()
-modSource opts@Opts{..} = f
-    where
-        f :: FilePath -> (Integer, FilePath) -> IO ()
-        f parentDir (cksum, fpath)
-            | elem fpath _TO_EDIT   = editFile  opts cksum parentDir fpath
-            | otherwise             = copyFile' opts cksum parentDir fpath
-            where
-                fname = snd $ splitFileName fpath
-                _DC_PATH   = udd ++ "/" ++ _DC
-                _DCL_PATH  = udd ++ "/" ++ _DCL
-                _DFS_PATH  = udd ++ "/" ++ _DFS
-                _DP_PATH   = udd ++ "/" ++ _DP
-                _DS_PATH   = idd ++ "/" ++ _DS
-                _DW_PATH   = udd ++ "/" ++ _DW
-                _EDB_PATH  = udd ++ "/" ++ _EDB
-                _EDCT_PATH = udd ++ "/" ++ _EDCT
-                _EDU_PATH  = udd ++ "/" ++ _EDU
-                udd = unpacked_data_dir
-                idd = installed_data_dir
+modSource opts@Opts{..} parentDir (cksum, fpath)
+    | elem fpath _TO_EDIT   = editFile  opts cksum parentDir fpath
+    | otherwise             = copyFile' opts cksum parentDir fpath
 
 copyFile' :: Opts -> Integer -> FilePath -> FilePath -> IO ()
 copyFile' opts@Opts{..} cksum parentDir fpath = do
-    checkFile opts sourcePath cksum
     createDirectoryIfMissing True modSubdir
-    putStr $ "Copying file `" ++ fpath ++ "' from source... "
-    copyFile sourcePath $ _MOD_PATH_DATA ++ fpath
+    putStr $ "Copying file " ++ enquote sourcePath ++ "... "
+    copyFile sourcePath dest
     putStrLn "done"
     where
+        dest = _MOD_PATH_DATA ++ fpath
         modSubdir = _MOD_PATH_DATA ++ fst (splitFileName fpath)
         fname = snd $ splitFileName fpath
         sourcePath = parentDir ++ "/" ++ fpath
 
 editFile :: Opts -> Integer -> FilePath -> FilePath -> IO ()
 editFile opts@Opts{..} cksum parentDir fpath = do
-    checkFile opts sourcePath cksum
     src <- BC.readFile sourcePath
     -- apply one (or more) transformations on the source file
-    putStr $ "Writing new `" ++ fpath ++ "'... "
-    BC.writeFile (_MOD_PATH_DATA ++ fpath) $ transformFile src
+    putStr $ "Writing new " ++ enquote dest ++ "... "
+    BC.writeFile dest $ transformFile src
     putStrLn "done"
     where
+        dest = _MOD_PATH_DATA ++ fpath
         fname = snd $ splitFileName fpath
         sourcePath = parentDir ++ "/" ++ fpath
         transformFile :: BC.ByteString -> BC.ByteString

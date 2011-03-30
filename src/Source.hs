@@ -1,13 +1,35 @@
 module Source where
 
+-- Edited files
+_DC     = "descr_character.txt"
+_DCL    = "descr_cultures.txt"
+_DFS    = "descr_faction_standing.txt"
+_DS     = "world/maps/campaign/imperial_campaign/descr_strat.txt"
+_DW     = "descr_walls.txt"
+_EDB    = "export_descr_buildings.txt"
+_EDCT   = "export_descr_character_traits.txt"
+_EDU    = "export_descr_unit.txt"
+
+_TO_EDIT =
+    [ _DC
+    , _DCL
+    , _DFS
+    , _DS
+    , _DW
+    , _EDB
+    , _EDCT
+    , _EDU
+    ]
+
+
 _SHA1_UDD_SOURCES =
-    [ (0x9505d63491e7c90debba66016f4a837173fa8374, "descr_character.txt")
-    , (0x0d121a3b5567f1d326abde8f7f270c8fe6469952, "descr_cultures.txt")
-    , (0x6e9bc8a4ec4e938ba5124e049079758efe8e2ed2, "descr_faction_standing.txt")
-    , (0x959d554513c313b12be95ac9579bff3b4aa49521, "descr_walls.txt")
-    , (0xca2018a694fbabcaf5a058f4e87889acc3d35f89, "export_descr_buildings.txt")
-    , (0x2a95300126b5f78294caffa0af8658f4576a2d40, "export_descr_character_traits.txt")
-    , (0x140f93465e48577a5262d6e104630518426a7a13, "export_descr_unit.txt")
+    [ (0x9505d63491e7c90debba66016f4a837173fa8374, _DC)
+    , (0x0d121a3b5567f1d326abde8f7f270c8fe6469952, _DCL)
+    , (0x6e9bc8a4ec4e938ba5124e049079758efe8e2ed2, _DFS)
+    , (0x959d554513c313b12be95ac9579bff3b4aa49521, _DW)
+    , (0xca2018a694fbabcaf5a058f4e87889acc3d35f89, _EDB)
+    , (0x2a95300126b5f78294caffa0af8658f4576a2d40, _EDCT)
+    , (0x140f93465e48577a5262d6e104630518426a7a13, _EDU)
     ]
 
 _SHA1_IDD_SOURCES =
@@ -37,7 +59,7 @@ _SHA1_IDD_SOURCES =
     , (0xf6fa1461772edde8da9ba98e7dd7423bd1c96962, "world/maps/campaign/imperial_campaign/description_venice.txt")
     , (0xa2fe4ed7369472728c6480bea8597cd8bdcab84f, "world/maps/campaign/imperial_campaign/descr_mercenaries.txt")
     , (0x451c4fe24a4cd3739aecb3c4e8e7a8dbbed40788, "world/maps/campaign/imperial_campaign/descr_regions_and_settlement_name_lookup.txt")
-    , (0x852dd3c9a4a6647f38af2f84eb07874de152acf8, "world/maps/campaign/imperial_campaign/descr_strat.txt")
+    , (0x852dd3c9a4a6647f38af2f84eb07874de152acf8, _DS)
     , (0x7b760c91ac51d9832de2d06e9d270964ce4fe352, "world/maps/campaign/imperial_campaign/descr_win_conditions.txt")
     , (0x3f7167403a6a7b4d19125600fe830aa5197dd3dd, "world/maps/campaign/imperial_campaign/disasters.tga")
     , (0x0e08d40de99cc811057620c2fe18398efa274800, "world/maps/campaign/imperial_campaign/map_aztecs.tga")

@@ -9,23 +9,29 @@ import System.FilePath
 
 import Error
 import Option
+import Util
 
 checkExists :: FilePath -> IO ()
 checkExists sourcePath = do
-    putStr $ "Checking if `" ++ sourcePath ++ "' exists... "
+    putStr $ "Checking if " ++ enquote sourcePath ++ " exists... "
     sourceExist <- doesFileExist sourcePath
-    when (not sourceExist) $ abort ("could not find `" ++ sourcePath ++ "'", 1)
+    when (not sourceExist) $ abort ("could not find " ++ enquote sourcePath, 1)
     putStrLn "OK"
 
 checkSum :: FilePath -> Integer -> IO ()
 checkSum sourcePath cksum = do
-    putStr $ "Checking SHA-1 sum of `" ++ sourcePath ++ "'... "
+    putStr $ "Checking SHA-1 sum of " ++ enquote sourcePath ++ "... "
     sourceBytes <- BL.readFile sourcePath
-    when (integerDigest (sha1 sourceBytes) /= cksum) $ abort (sourcePath ++ ": SHA-1 mismatch", 2)
+    when (integerDigest (sha1 sourceBytes) /= cksum) $ abort (enquote sourcePath ++ ": SHA-1 mismatch", 2)
     putStrLn "OK"
 
-checkFile :: Opts -> FilePath -> Integer -> IO ()
-checkFile Opts{..} sourcePath cksum =
+checkFile :: Opts -> FilePath -> (Integer, FilePath) -> IO ()
+checkFile opts parentDir (cksum, fpath) = checkFile' opts sourcePath cksum
+    where
+        sourcePath = parentDir ++ "/" ++ fpath
+
+checkFile' :: Opts -> FilePath -> Integer -> IO ()
+checkFile' Opts{..} sourcePath cksum =
     if (no_check)
         then return ()
         else if (no_sha)

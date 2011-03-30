@@ -1,5 +1,8 @@
 module Util where
 
+enquote :: String -> String
+enquote s = "`" ++ s ++ "'"
+
 -- Function composition over a list; see http://www.haskell.org/haskellwiki/Compose
 compose :: [a -> a] -> a -> a
 compose funcs = foldl (.) id (reverse funcs)
