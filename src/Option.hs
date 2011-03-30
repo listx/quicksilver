@@ -9,7 +9,7 @@ import System.Console.CmdArgs.Verbosity
 import Error
 
 _QS_NAME = "quicksilver"
-_QS_VERSION = "0.04"
+_QS_VERSION = "0.05"
 _QS_INFO = _QS_NAME ++ " version " ++ _QS_VERSION
 _COPYRIGHT = "(C) Linus Arver 2011"
 
