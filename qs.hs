@@ -383,7 +383,7 @@ createCfg = do
                     \mod = quicksilver\n\
                     \\n\
                     \[log]\n\
-                    \to = logs/system.log.txt\n\
+                    \to = logs/quicksilver.log.txt\n\
                     \level = * error\n\
                     \\n\
                     \[game]\n\
