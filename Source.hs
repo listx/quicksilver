@@ -1,18 +1,16 @@
-module Sums where
+module Source where
 
--- Core text file sums
-_SHA1_DC    = 0x9505d63491e7c90debba66016f4a837173fa8374
-_SHA1_DCL   = 0x0d121a3b5567f1d326abde8f7f270c8fe6469952
-_SHA1_DFS   = 0x6e9bc8a4ec4e938ba5124e049079758efe8e2ed2
-_SHA1_DP    = 0xd8c67ee32e5856d16e4a0947f54c7b8b0fe9e653
-_SHA1_DS    = 0x852dd3c9a4a6647f38af2f84eb07874de152acf8
-_SHA1_DW    = 0x959d554513c313b12be95ac9579bff3b4aa49521
-_SHA1_EDB   = 0xca2018a694fbabcaf5a058f4e87889acc3d35f89
-_SHA1_EDCT  = 0x2a95300126b5f78294caffa0af8658f4576a2d40
-_SHA1_EDU   = 0x140f93465e48577a5262d6e104630518426a7a13
+_SHA1_UDD_SOURCES =
+    [ (0x9505d63491e7c90debba66016f4a837173fa8374, "descr_character.txt")
+    , (0x0d121a3b5567f1d326abde8f7f270c8fe6469952, "descr_cultures.txt")
+    , (0x6e9bc8a4ec4e938ba5124e049079758efe8e2ed2, "descr_faction_standing.txt")
+    , (0x959d554513c313b12be95ac9579bff3b4aa49521, "descr_walls.txt")
+    , (0xca2018a694fbabcaf5a058f4e87889acc3d35f89, "export_descr_buildings.txt")
+    , (0x2a95300126b5f78294caffa0af8658f4576a2d40, "export_descr_character_traits.txt")
+    , (0x140f93465e48577a5262d6e104630518426a7a13, "export_descr_unit.txt")
+    ]
 
--- Auxiliary file sums (data folder, not unpacked folder)
-_SHA1_DATA  =
+_SHA1_IDD_SOURCES =
     [ (0x82c4a8ce1d5c474b379ca7eed4273f969ebe6f10, "sounds/events.dat")
     , (0x2ea5c502f5366dec134cc8671bcce2bd7c82b9bc, "sounds/events.idx")
     , (0xc444b41da651a0e6499c047d17eec5e74bc10065, "world/maps/base/descr_disasters.txt")
@@ -101,4 +99,3 @@ _SHA1_DATA  =
     , (0x8aea23c1fa7ffdfe9251f84ffc4ed50f571c0901, "world/maps/campaign/imperial_campaign/vc_turks.tga")
     , (0x94a6b833cc41daec7a320bd5d7b59cbd6e0fe30f, "world/maps/campaign/imperial_campaign/vc_venice.tga")
     ]
-
