@@ -10,19 +10,14 @@ import Error
 
 checkExists :: FilePath -> IO ()
 checkExists sourcePath = do
-    putStr $ "Checking if `" ++ fname ++ "' exists... "
+    putStr $ "Checking if `" ++ sourcePath ++ "' exists... "
     sourceExist <- doesFileExist sourcePath
-    when (not sourceExist) $ abort ("could not find `" ++ fname ++ "' source", 1)
+    when (not sourceExist) $ abort ("could not find `" ++ sourcePath ++ "'", 1)
     putStrLn "OK"
-    where
-        fname = snd $ splitFileName sourcePath
 
 checkSum :: FilePath -> Integer -> IO ()
 checkSum sourcePath cksum = do
-    putStr $ "Checking SHA-1 sum of `" ++ fname ++ "'... "
+    putStr $ "Checking SHA-1 sum of `" ++ sourcePath ++ "'... "
     sourceBytes <- BL.readFile sourcePath
-    when (integerDigest (sha1 sourceBytes) /= cksum) $ abort (fname ++ ": SHA-1 mismatch", 2)
+    when (integerDigest (sha1 sourceBytes) /= cksum) $ abort (sourcePath ++ ": SHA-1 mismatch", 2)
     putStrLn "OK"
-    where
-        fname = snd $ splitFileName sourcePath
-

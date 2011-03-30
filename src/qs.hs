@@ -130,7 +130,7 @@ copyFile' :: Opts -> Integer -> FilePath -> FilePath -> IO ()
 copyFile' Opts{..} cksum parentDir fpath = do
     createDirectoryIfMissing True modSubdir
     when (not no_sha) $ checkSum fullpath cksum
-    putStr $ "Copying file `" ++ fname ++ "'... "
+    putStr $ "Copying file `" ++ fpath ++ "' from source... "
     copyFile fullpath $ _MOD_PATH_DATA ++ fpath
     putStrLn "done"
     where
