@@ -119,23 +119,20 @@ modSource opts@Opts{..} = f
                 idd = installed_data_dir
 
 copyFile' :: Opts -> Integer -> FilePath -> FilePath -> IO ()
-copyFile' Opts{..} cksum parentDir fpath = do
+copyFile' opts@Opts{..} cksum parentDir fpath = do
+    checkFile opts sourcePath cksum
     createDirectoryIfMissing True modSubdir
-    when (not no_sha) $ checkSum fullpath cksum
     putStr $ "Copying file `" ++ fpath ++ "' from source... "
-    copyFile fullpath $ _MOD_PATH_DATA ++ fpath
+    copyFile sourcePath $ _MOD_PATH_DATA ++ fpath
     putStrLn "done"
     where
         modSubdir = _MOD_PATH_DATA ++ fst (splitFileName fpath)
         fname = snd $ splitFileName fpath
-        fullpath = parentDir ++ "/" ++ fpath
+        sourcePath = parentDir ++ "/" ++ fpath
 
 editFile :: Opts -> Integer -> FilePath -> FilePath -> IO ()
-editFile Opts{..} cksum parentDir fpath = do
-    -- check that source files exist
-    checkExists sourcePath
-    -- check SHA1 sums
-    when (not no_sha) $ checkSum sourcePath cksum
+editFile opts@Opts{..} cksum parentDir fpath = do
+    checkFile opts sourcePath cksum
     src <- BC.readFile sourcePath
     -- apply one (or more) transformations on the source file
     putStr $ "Writing new `" ++ fpath ++ "'... "

@@ -1,3 +1,4 @@
+{-# LANGUAGE RecordWildCards #-}
 module Check where
 
 import Control.Monad (when)
@@ -7,6 +8,7 @@ import System.Directory
 import System.FilePath
 
 import Error
+import Option
 
 checkExists :: FilePath -> IO ()
 checkExists sourcePath = do
@@ -21,3 +23,11 @@ checkSum sourcePath cksum = do
     sourceBytes <- BL.readFile sourcePath
     when (integerDigest (sha1 sourceBytes) /= cksum) $ abort (sourcePath ++ ": SHA-1 mismatch", 2)
     putStrLn "OK"
+
+checkFile :: Opts -> FilePath -> Integer -> IO ()
+checkFile Opts{..} sourcePath cksum =
+    if (no_check)
+        then return ()
+        else if (no_sha)
+            then checkExists sourcePath
+            else checkSum sourcePath cksum

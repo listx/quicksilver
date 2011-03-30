@@ -14,16 +14,18 @@ _QS_INFO = _QS_NAME ++ " version " ++ _QS_VERSION
 _COPYRIGHT = "(C) Linus Arver 2011"
 
 data Opts = Opts
-    { unpacked_data_dir    :: FilePath
-    , installed_data_dir             :: FilePath
-    , no_sha                :: Bool
+    { unpacked_data_dir :: FilePath
+    , installed_data_dir :: FilePath
+    , no_check :: Bool
+    , no_sha :: Bool
     } deriving (Data, Typeable, Show, Eq)
 
 qsOpts :: Opts
 qsOpts = Opts
-    { unpacked_data_dir    = def &= typDir &= help "path to the `data' directory created by the official M2TW unpacker.exe tool"
-    , installed_data_dir             = def &= typDir &= help "path to the `data' directory inside your M2TW installation folder"
-    , no_sha                = def &= help "disable SHA-1 checks on source files"
+    { unpacked_data_dir = def &= typDir &= help "path to the `data' directory created by the official M2TW unpacker.exe tool"
+    , installed_data_dir = def &= typDir &= help "path to the `data' directory inside your M2TW installation folder"
+    , no_check = def &= help "disable both file existence checks and SHA-1 checks on source files"
+    , no_sha = def &= help "disable SHA-1 checks on source files (existence checking still performed)"
     }
 
 getOpts :: IO Opts
