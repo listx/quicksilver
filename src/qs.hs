@@ -46,8 +46,8 @@ qs opts@Opts{..} = do
     mapM_ (checkFile opts udd) _SHA1_UDD_SOURCES
     mapM_ (checkFile opts idd) _SHA1_IDD_SOURCES
     putStr "\n"
-    mapM_ (modSource opts udd) _SHA1_UDD_SOURCES
-    mapM_ (modSource opts idd) _SHA1_IDD_SOURCES
+    mapM_ (modSource udd) _SHA1_UDD_SOURCES
+    mapM_ (modSource idd) _SHA1_IDD_SOURCES
     putStrLn $ "\nquicksilver version " ++ _QS_VERSION ++ " successfully generated inside " ++ enquote _GEN_PATH
     where
         udd = unpacked_data_dir
@@ -82,13 +82,13 @@ createFile fname contents = do
     where
         dest = _MOD_PATH_TOP ++ fname
 
-modSource :: Opts -> FilePath -> (Integer, FilePath) -> IO ()
-modSource opts@Opts{..} parentDir (cksum, fpath)
-    | elem fpath _TO_EDIT   = editFile  opts cksum parentDir fpath
-    | otherwise             = copyFile' opts cksum parentDir fpath
+modSource :: FilePath -> (Integer, FilePath) -> IO ()
+modSource parentDir (_, fpath)
+    | elem fpath _TO_EDIT   = editFile parentDir fpath
+    | otherwise             = copyFile' parentDir fpath
 
-copyFile' :: Opts -> Integer -> FilePath -> FilePath -> IO ()
-copyFile' opts@Opts{..} cksum parentDir fpath = do
+copyFile' :: FilePath -> FilePath -> IO ()
+copyFile' parentDir fpath = do
     createDirectoryIfMissing True modSubdir
     putStr $ "Copying file " ++ enquote sourcePath ++ "... "
     copyFile sourcePath dest
@@ -99,8 +99,8 @@ copyFile' opts@Opts{..} cksum parentDir fpath = do
         fname = snd $ splitFileName fpath
         sourcePath = parentDir ++ "/" ++ fpath
 
-editFile :: Opts -> Integer -> FilePath -> FilePath -> IO ()
-editFile opts@Opts{..} cksum parentDir fpath = do
+editFile :: FilePath -> FilePath -> IO ()
+editFile parentDir fpath = do
     src <- BC.readFile sourcePath
     -- apply one (or more) transformations on the source file
     putStr $ "Writing new " ++ enquote dest ++ "... "
