@@ -143,11 +143,12 @@ editFile parentDir fpath = do
             | fpath == _DCL     = transform     _DCL_FUNCS
             | fpath == _DFS     = transform     _DFS_FUNCS
             | fpath == _DS      = transform     _DS_FUNCS
+            | fpath == _DSR     = transform     _DSR_FUNCS
             | fpath == _DW      = transform     _DW_FUNCS
             | fpath == _EDB     = transform'    _EDB_FUNCS "^\\}\\r\\n"        "}\r\n"
             | fpath == _EDCT    = transform     _EDCT_FUNCS
             | fpath == _EDU     = transform'    _EDU_FUNCS " \\r\\n \\r\\n"    " \r\n \r\n"
-            | otherwise = \src -> src
+            | otherwise = id
 
 transform :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]] -> BC.ByteString -> BC.ByteString
 transform funcs = compose (map grpGsub funcs)

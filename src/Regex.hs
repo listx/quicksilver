@@ -43,7 +43,7 @@ _DFS_FUNCS = addTrueTest [rN]
         rN =    [ ("^;Trigger 0102_city_razed.+?;-+", nil)
                 ]
 
-_DS_FUNCS = addTrueTest [r1, r2, rN]
+_DS_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8] ++ [r9, r10, r11, r12]
     where
         -- Rebel spawn rate 10x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -54,8 +54,106 @@ _DS_FUNCS = addTrueTest [r1, r2, rN]
                 , ("\\d+", mult 10)
                 ]
         -- King's purse 2x
-        rN =    [ ("^denari_kings_purse\\s+", id)
+        r3 =    [ ("^denari_kings_purse\\s+", id)
                 , ("\\d+", mult 2)
+                ]
+        -- Replace all mineable resources from the map, except for gold and silver, with similarly
+        -- valued non-mineable resources; this does two things:
+        --  (1) only allow gold and silver to be mineable
+        --  (1) reduce the needlessly large variety of resources
+        r4 =    [ ("^resource\\s+", id)
+                , ("tin", only "wool")
+                ]
+        r5 =    [ ("^resource\\s+", id)
+                , ("iron", only "wine")
+                ]
+        r6 =    [ ("^resource\\s+", id)
+                , ("sulfur", only "grain")
+                ]
+        r7 =    [ ("^resource\\s+", id)
+                , ("marble", only "sugar")
+                ]
+        r8 =    [ ("^resource\\s+", id)
+                , ("coal", only "furs")
+                ]
+        -- Remove all gold resources from the map, except for Aztecs
+        r9 =    [ ("^resource\\s+gold,\\s+", nil, alwaysTrue)
+                , ("\\d+", nil, numTest (>= 30))
+                , (",\\s+\\d+\\r\\n", nil, alwaysTrue)
+                ]
+        -- Remove all silver resources from the map, except for Aztecs
+        r10 =   [ ("^resource\\s+silver,\\s+", nil, alwaysTrue)
+                , ("\\d+", nil, numTest (>= 30))
+                , (",\\s+\\d+\\r\\n", nil, alwaysTrue)
+                ]
+        -- Add in 1 gold resource for every faction's capital city region
+        r11 =   [ ("^resource\\s+gold,\\s+5,\\s+143\\r\\n", addResource "gold" goldCoords, alwaysTrue)
+                ]
+        -- Add in 1 silver resource for every faction's second city (or the capital city if no
+        -- second city)
+        r12 =   [ ("^resource\\s+silver,\\s+4,\\s+123\\r\\n", addResource "silver" silverCoords, alwaysTrue)
+                ]
+        showResource :: String -> (Int, Int) -> String
+        showResource res (x, y) = "resource\t" ++ res ++ ",\t" ++ show x ++ ",\t" ++ show y ++ "\r\n"
+        addResource :: String -> [(Int, Int)] -> BC.ByteString -> BC.ByteString
+        addResource res coords s = BC.append s $ BC.pack (concatMap (showResource res) coords)
+        -- Gold resource locations, one for each faction's capital (except Aztecs)
+        goldCoords =
+            [ (97,174) -- Scotland
+            , (93, 145) -- England
+            , (114, 120) -- France
+            , (66, 105) -- Spain
+            , (57, 81) -- Portugal
+            , (69, 74) -- Moors
+            , (127, 107) -- Milan
+            , (151, 66) -- Sicily
+            , (148, 93) -- Papal States (Rome region)
+            , (145, 91) -- Papal States (Rome region)
+            , (147, 88) -- Papal States (Rome region)
+            , (147, 94) -- Papal States (Rome region)
+            , (149, 86) -- Papal States (Rome region)
+            , (144, 92) -- Papal States (Rome region)
+            , (149, 92) -- Papal States (Rome region)
+            , (153, 109) -- Venice
+            , (142, 138) -- HRE
+            , (139, 168) -- Denmark
+            , (186, 136) -- Poland
+            , (176, 123) -- Hungary
+            , (207, 90) -- Byzantium
+            , (206, 178) -- Russia
+            , (231, 81) -- Turks
+            , (239, 30) -- Egypt
+            ]
+        -- Silver resource location, one for each faction's second region
+        silverCoords =
+            [ (101,162) -- Scotland
+            , (103, 156) -- England
+            , (121, 127) -- France
+            , (77, 94) -- Spain
+            , (88, 104) -- Portugal
+            , (73, 73) -- Moors
+            , (131, 106) -- Milan
+            , (161, 82) -- Sicily
+            , (166, 99) -- Venice
+            , (151, 128) -- HRE
+            , (142, 171) -- Denmark
+            , (194, 136) -- Poland
+            , (191, 119) -- Hungary
+            , (207, 82) -- Byzantium
+            , (217, 182) -- Russia
+            , (246, 91) -- Turks
+            , (251, 37) -- Egypt
+            ]
+
+_DSR_FUNCS = addTrueTest [r1, r2]
+    where
+        -- Gold resource worth 2
+        r1 =    [ ("^type\\s+gold\\r\\ntrade_value\\s+", id)
+                , ("\\d+", only "2")
+                ]
+        -- Silver resource worth 1
+        r2 =    [ ("^type\\s+silver\\r\\ntrade_value\\s+", id)
+                , ("\\d+", only "1")
                 ]
 
 _DW_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
@@ -100,9 +198,9 @@ _EDCT_FUNCS = addTrueTest [rN]
 
 _EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
     where
-        -- Mines give 5x profits
+        -- Mining income 50x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
-                , ("\\d+", mult 5)
+                , ("\\d+", mult 50)
                 ]
         -- Mines cost 2x more
         r2 =    [ ("^\\s+mines.+?", id)

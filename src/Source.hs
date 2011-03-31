@@ -5,6 +5,7 @@ _DC     = "descr_character.txt"
 _DCL    = "descr_cultures.txt"
 _DFS    = "descr_faction_standing.txt"
 _DS     = "world/maps/campaign/imperial_campaign/descr_strat.txt"
+_DSR    = "descr_sm_resources.txt"
 _DW     = "descr_walls.txt"
 _EDB    = "export_descr_buildings.txt"
 _EDCT   = "export_descr_character_traits.txt"
@@ -15,6 +16,7 @@ _TO_EDIT =
     , _DCL
     , _DFS
     , _DS
+    , _DSR
     , _DW
     , _EDB
     , _EDCT
@@ -26,6 +28,7 @@ _SHA1_UDD_SOURCES =
     [ (0x9505d63491e7c90debba66016f4a837173fa8374, _DC)
     , (0x0d121a3b5567f1d326abde8f7f270c8fe6469952, _DCL)
     , (0x6e9bc8a4ec4e938ba5124e049079758efe8e2ed2, _DFS)
+    , (0x5783e8565f7d43acf9054b833272bebca5423998, _DSR)
     , (0x959d554513c313b12be95ac9579bff3b4aa49521, _DW)
     , (0xca2018a694fbabcaf5a058f4e87889acc3d35f89, _EDB)
     , (0x2a95300126b5f78294caffa0af8658f4576a2d40, _EDCT)

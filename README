@@ -7,7 +7,14 @@
 - Spy recruitment cost 3x
 - Spy upkeep cost 3x
 - Remove corruption trigger based on high treasury
-- Mines give 5x profits
+- Gold/silver-only mining mod:
+    - Only gold and silver are mineable.
+    - Tin, Iron, Sulfur, Marble, and Coal have been replaced with similarly-valued trade resources (namely, wool, wine, grain, sugar, and furs, respectively).
+    - All existing gold and silver resources on the main campaign map (not New World) have been removed; instead, each faction has 1 gold at its capital and 1 silver resource at its secondary region (or both at capital if the faction starts out with only 1 region).
+    - The point of this mod is to make each faction's capital and secondary region (if applicable) very valuable. There is an incentive to take an enemy faction's capital before taking their other settlements, for example. It also levels the playing field for those factions without valuable mineable resources, because gold and silver are no longer concentrated in regions like Zagreb/Vienna.
+    - NOTE: To reinforce the idea that gold/silver can only benefit the owner of the region, their trade value has been drastically reduced (to 2 and 1, respectively).
+    - NOTE: The New World regions still have all of their gold/silver resources, which makes them extremely valuable. Vanilla M2TW made taking the New World regions very boring, but now at least there is an incentive (lots of money!).
+    - NOTE: For kicks, Rome has 7 gold resources. This makes capturing Rome very tempting...
 - Mines cost 2x more
 - All building constructions take 1 turn
 - All building costs 1.33x (mines are stacked)
