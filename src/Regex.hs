@@ -145,11 +145,17 @@ _DS_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8] ++ [r9, r10, r11, r12]
             , (251, 37) -- Egypt
             ]
 
-_DSM_FUNCS = addTrueTest [r1]
+_DSM_FUNCS = addTrueTest [r1, r2]
     where
         -- Reduce "distance to capital" penalty by 75%
         r1 =    [ ("CAPITAL.+?value=\"", id)
                 , ("1\\.0", only "0.25")
+                ]
+        -- Reduce "religious unrest" penalty by 50%
+        r2 =    [ ("UNREST.+?value=\"", id)
+                , ("1\\.0", only "0.5")
+                , (".+?0\\.5.+?", id)
+                , ("\\d+", mult 0.5)
                 ]
 
 _DSR_FUNCS = addTrueTest [r1, r2]
