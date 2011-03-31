@@ -35,6 +35,7 @@
 - Reduce "religious unrest" penalty by 50%
 - Disable all mission penalties
 - Disable the "cease hostilities" mission
+- Disable graphics cap during battle (where your reinforcements are denied entry into the battlefield because of M2TW's opinion of your graphics hardware capabilities)
 
 Misc (non-substantive) changes:
 - Disable forced combat closeups (gate/wall is destroyed or enemy general is killed)

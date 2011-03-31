@@ -62,10 +62,10 @@ qs opts@Opts{..} = do
                 \level = * error\n\
                 \\n\
                 \[game]\n"
-                ++
-                "event_cutscenes = 0\n" -- disable forced combat closeups during battle, when an enemy general is killed, a gate is broken down, or a wall is destroyed
-                ++
-                "\n\
+                ++ "event_cutscenes = 0\n" -- disable forced combat closeups during battle, when an enemy general is killed, a gate is broken down, or a wall is destroyed
+                ++ "unlimited_men_on_battlefield = 1\n" -- disable graphics cap during battle (always allow reinforcements regardless of M2TW's opinion of user's hardware)
+
+                ++ "\n\
                 \[misc]\n\
                 \unlock_campaign = true"
 
