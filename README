@@ -31,3 +31,4 @@
 - Pikemen units: fix rubber swords bug (pikemen only use pikes, not their weak secondary swords)
 - Basic infantry have free upkeep (mental up to 5 AND cost up to 650)
 - Unlock all playable factions
+- Reduce "distance to capital" penalty by 75%
