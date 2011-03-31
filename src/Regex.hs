@@ -43,10 +43,12 @@ _DFS_FUNCS = addTrueTest [rN]
         rN =    [ ("^;Trigger 0102_city_razed.+?;-+", nil)
                 ]
 
-_DM_FUNCS = addTrueTest [rN]
+_DM_FUNCS = addTrueTest [r1, r2]
     where
-        -- Disable all mission penalties
-        rN =    [ ("^\\s+penalty\\r\\n.+?\\}\\r\\n", nil)
+        -- Disable all mission penalties, and disable the "cease hostilities" mission
+        r1 =    [ ("^\\s+penalty\\r\\n.+?\\}\\r\\n", nil)
+                ]
+        r2 =    [ ("^mission\\s+cease.+?^\\}\\r\\n\\r\\n\\r\\n", nil)
                 ]
 
 _DS_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8] ++ [r9, r10, r11, r12]
