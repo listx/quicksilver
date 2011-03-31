@@ -14,12 +14,11 @@
     - The point of this mod is to make each faction's capital and secondary region (if applicable) very valuable. There is an incentive to take an enemy faction's capital before taking their other settlements, for example. It also levels the playing field for those factions without valuable mineable resources, because gold and silver are no longer concentrated in regions like Zagreb/Vienna.
     - NOTE: To reinforce the idea that gold/silver can only benefit the owner of the region, their trade value has been drastically reduced (to 2 and 1, respectively).
     - NOTE: The New World regions still have all of their gold/silver resources, which makes them extremely valuable. Vanilla M2TW made taking the New World regions very boring, but now at least there is an incentive (lots of money!).
-    - NOTE: For kicks, Rome has 7 gold resources. This makes capturing Rome very tempting...
-- Mines cost 2x more
+    - NOTE: For kicks, Rome has 7 gold resources! This makes capturing Rome very tempting...
 - All building constructions take 1 turn
 - All building costs 1.33x (mines are stacked)
 - Give free upkeep slots to castles (1, 2, 3, 4, and 5)
-- All free upkeep slots 2.5x (castles stacked)
+- All free upkeep slots 2x (castles stacked)
 - Rebel spawn rate 10x lower
 - Pirate spawn rate 10x lower
 - King's purse 2x

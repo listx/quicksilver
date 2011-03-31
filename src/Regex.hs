@@ -196,44 +196,39 @@ _EDCT_FUNCS = addTrueTest [rN]
         rN =    [ ("^Trigger corruption.+?;-+", nil)
                 ]
 
-_EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, rN]
+_EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
     where
         -- Mining income 50x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
                 , ("\\d+", mult 50)
                 ]
-        -- Mines cost 2x more
-        r2 =    [ ("^\\s+mines.+?", id)
-                , ("cost\\s+", id)
-                , ("\\d+", mult 2)
-                ]
         -- All building constructions take 1 turn
-        r3 =    [ ("^\\s+construction\\s+", id)
+        r2 =    [ ("^\\s+construction\\s+", id)
                 , ("\\d+", only "1")
                 ]
         -- All building costs 1.33x
-        r4 =    [ ("^\\s+cost\\s+", id)
+        r3 =    [ ("^\\s+cost\\s+", id)
                 , ("\\d+", mult 1.33)
                 ]
         -- Give free upkeep slots to castles (vanilla cities are 2, 3, 4, 5, 6)
-        r5 =    [ ("^\\s{8}motte_and_bailey.+?wall_level.+?", id)
+        r4 =    [ ("^\\s{8}motte_and_bailey.+?wall_level.+?", id)
                 , ("\\d+", up "1")
                 ]
-        r6 =    [ ("^\\s{8}wooden_castle.+?wall_level.+?", id)
+        r5 =    [ ("^\\s{8}wooden_castle.+?wall_level.+?", id)
                 , ("\\d+", up "2")
                 ]
-        r7 =    [ ("^\\s{8}castle.+?wall_level.+?", id)
+        r6 =    [ ("^\\s{8}castle.+?wall_level.+?", id)
                 , ("\\d+", up "3")
                 ]
-        r8 =    [ ("^\\s{8}fortress.+?wall_level.+?", id)
+        r7 =    [ ("^\\s{8}fortress.+?wall_level.+?", id)
                 , ("\\d+", up "4")
                 ]
-        r9 =    [ ("^\\s{8}citadel.+?wall_level.+?", id)
+        r8 =    [ ("^\\s{8}citadel.+?wall_level.+?", id)
                 , ("\\d+", up "5")
                 ]
-        -- All free upkeep slots 2.5x
+        -- All free upkeep slots 2x
         rN =    [ ("^\\s+free_upkeep\\s+bonus\\s+", id)
-                , ("\\d+", mult 2.5)
+                , ("\\d+", mult 2)
                 ]
         up :: String -> (BC.ByteString -> BC.ByteString)
         up amt = (\d -> BC.append d (BC.pack $ "\r\n" ++ replicate 16 ' ' ++ "free_upkeep bonus " ++ amt))
