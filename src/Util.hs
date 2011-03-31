@@ -1,5 +1,8 @@
 module Util where
 
+dquote :: String -> String
+dquote s = "\"" ++ s ++ "\""
+
 enquote :: String -> String
 enquote s = "`" ++ s ++ "'"
 

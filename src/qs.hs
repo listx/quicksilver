@@ -7,6 +7,7 @@ import System.Directory
 import System.Environment
 import System.Exit
 import System.FilePath
+import System.Process
 
 import Check
 import Error
@@ -84,8 +85,34 @@ createFile fname contents = do
 
 modSource :: FilePath -> (Integer, FilePath) -> IO ()
 modSource parentDir (_, fpath)
-    | elem fpath _TO_EDIT   = editFile parentDir fpath
+    | elem fpath _TO_EDIT   = editFile parentDir fpath >>
+                              diffFile parentDir fpath
     | otherwise             = copyFile' parentDir fpath
+
+diffFile :: FilePath -> FilePath -> IO ()
+diffFile parentDir fpath = do
+    putStr $ "Writing diff " ++ enquote patchDest ++ "... "
+    (sin, sout, serr, p) <- createProcess diffCmd
+    diffData <- case sout of
+        Just h -> hGetContents h
+        Nothing -> return ""
+    writeFile patchDest diffData
+    waitForProcess p
+    putStrLn "done"
+    where
+        sourcePath = parentDir ++ "/" ++ fpath
+        dest = _MOD_PATH_DATA ++ fpath
+        fname = snd $ splitFileName fpath
+        patchDest = _GEN_PATH ++ fname ++ ".patch"
+        diffCmd = CreateProcess
+            { cmdspec = ShellCommand ("diff -uN " ++ dquote sourcePath ++ " " ++ dquote dest)
+            , cwd = Nothing
+            , env = Nothing
+            , std_in = CreatePipe
+            , std_out = CreatePipe
+            , std_err = Inherit
+            , close_fds = False
+            }
 
 copyFile' :: FilePath -> FilePath -> IO ()
 copyFile' parentDir fpath = do
