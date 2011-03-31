@@ -143,6 +143,7 @@ editFile parentDir fpath = do
             | fpath == _DCL     = transform     _DCL_FUNCS
             | fpath == _DFS     = transform     _DFS_FUNCS
             | fpath == _DS      = transform     _DS_FUNCS
+            | fpath == _DM      = transform     _DM_FUNCS
             | fpath == _DSM     = transform     _DSM_FUNCS
             | fpath == _DSR     = transform     _DSR_FUNCS
             | fpath == _DW      = transform     _DW_FUNCS
