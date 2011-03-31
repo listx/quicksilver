@@ -35,3 +35,6 @@
 - Reduce "religious unrest" penalty by 50%
 - Disable all mission penalties
 - Disable the "cease hostilities" mission
+
+Misc (non-substantive) changes:
+- Disable forced combat closeups (gate/wall is destroyed or enemy general is killed)

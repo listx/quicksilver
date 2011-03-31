@@ -61,9 +61,11 @@ qs opts@Opts{..} = do
                 \to = logs/quicksilver.log.txt\n\
                 \level = * error\n\
                 \\n\
-                \[game]\n\
-                \event_cutscenes = 0\n\
-                \\n\
+                \[game]\n"
+                ++
+                "event_cutscenes = 0\n" -- disable forced combat closeups during battle, when an enemy general is killed, a gate is broken down, or a wall is destroyed
+                ++
+                "\n\
                 \[misc]\n\
                 \unlock_campaign = true"
 
