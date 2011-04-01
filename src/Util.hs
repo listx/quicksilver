@@ -6,6 +6,14 @@ dquote s = "\"" ++ s ++ "\""
 enquote :: String -> String
 enquote s = "`" ++ s ++ "'"
 
+cmtRuler :: String -> String
+cmtRuler s = replicate (length s) ';' ++ "\r\n"
+
+cmtBox :: String -> String
+cmtBox s = horiz ++ ";; " ++ s ++ " ;;\r\n" ++ horiz
+    where
+        horiz = replicate (length s + 6) ';' ++ "\r\n"
+
 -- Function composition over a list; see http://www.haskell.org/haskellwiki/Compose
 compose :: [a -> a] -> a -> a
 compose funcs = foldl (.) id (reverse funcs)

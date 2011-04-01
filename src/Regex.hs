@@ -6,6 +6,7 @@ import qualified Data.ByteString.Char8 as BC
 import Text.Regex.PCRE hiding (match)
 import qualified Text.Printf as TP
 
+import Option
 import Util
 
 _REGEX_INT = "\\d+"
@@ -232,7 +233,7 @@ _EDCT_FUNCS = addTrueTest [rN]
         rN =    [ ("^Trigger corruption.+?;-+", nil)
                 ]
 
-_EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
+_EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r3']
     where
         -- Mining income 50x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
@@ -242,9 +243,54 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
         r2 =    [ ("^\\s+construction\\s+", id)
                 , (_REGEX_INT, only "1")
                 ]
-        -- All building costs 1.75x
+        -- Increased building cost. The extra costs are graduated, with the following formula:
+        --      NEW = OLD + (((OLD - 400)/400) * 400)
+        --
         r3 =    [ ("^\\s+cost\\s+", id)
-                , (multRoundInt 1.75)
+                , (_REGEX_INT, gradCost)
+                ]
+        gradFormula :: Double -> Int
+        gradFormula n = round $ n + (((n - 400)/400) * 400)
+        gradCost :: BC.ByteString -> BC.ByteString
+        gradCost i = BC.pack . show . gradFormula $ fromIntegral i'
+            where
+                i' = case BC.readInt i of
+                        Just (n, _) -> n
+                        _ -> 0
+        costsDiffNote :: String
+        costsDiffNote = "\r\n"
+                        ++ cmtBox _QS_INFO
+                        ++ "\r\n; Building cost changes from vanilla M2TW:\r\n"
+                        ++ (concatMap showChg (zip3 old new chg))
+            where
+                showChg :: (Int, Int, Double) -> String
+                showChg (o, n, diff) = ";    " ++ show o ++ " -> " ++ show n ++ TP.printf " (%.2fx)\r\n" diff
+                old :: [Int]
+                old =   [ 400
+                        , 600
+                        , 800
+                        , 1000
+                        , 1200
+                        , 1600
+                        , 2000
+                        , 2400
+                        , 3000
+                        , 3200
+                        , 3500
+                        , 3600
+                        , 4800
+                        , 6400
+                        , 9600
+                        , 10000
+                        , 12000
+                        , 15000
+                        ]
+                new = map (gradFormula . fromIntegral) old
+                chg = map newToOldChg (zip new old)
+                newToOldChg (n, o) = (fromIntegral n)/(fromIntegral o)
+        -- Make a note about the changes in the EDB file (comments)
+        r3' =   [ ("^;This.+?by hand", id)
+                , ("\\r\\n", add costsDiffNote)
                 ]
         -- Give free upkeep slots to castles (vanilla cities are 2, 3, 4, 5, 6)
         r4 =    [ ("^\\s{8}motte_and_bailey.+?wall_level.+?", id)
@@ -263,7 +309,7 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
                 , (_REGEX_INT, up "5")
                 ]
         -- All free upkeep slots 2x
-        rN =    [ ("^\\s+free_upkeep\\s+bonus\\s+", id)
+        r9 =    [ ("^\\s+free_upkeep\\s+bonus\\s+", id)
                 , (multRoundInt 2)
                 ]
         up :: String -> (BC.ByteString -> BC.ByteString)
