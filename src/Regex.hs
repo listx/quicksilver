@@ -4,37 +4,41 @@ import Data.Array
 import Data.List (foldl')
 import qualified Data.ByteString.Char8 as BC
 import Text.Regex.PCRE hiding (match)
+import qualified Text.Printf as TP
 
 import Util
+
+_REGEX_INT = "\\d+"
+_REGEX_DOUBLE = "\\d+\\.\\d+"
 
 _DC_FUNCS = addTrueTest [r1, r2, r3, r4, rN]
     where
         -- Ship movement speed 3x
         r1 =    [ ("^type\\s+admiral.+?starting_action_points\\s+", id)
-                , ("\\d+", mult 3)
+                , (multRoundInt 3)
                 ]
         -- Diplomat movement speed 2x
         r2 =    [ ("^type\\s+diplomat.+?starting_action_points\\s+", id)
-                , ("\\d+", mult 2)
+                , (multRoundInt 2)
                 ]
         -- Princess movement speed 1.75x
         r3 =    [ ("^type\\s+princess.+?starting_action_points\\s+", id)
-                , ("\\d+", mult 1.75)
+                , (multRoundInt 1.75)
                 ]
         -- Campaign movement speed 1.75x
         r4 =    [ ("^starting_action_points\\s+", id)
-                , ("\\d+", mult 1.75)
+                , (multRoundInt 1.75)
                 ]
         -- Spy upkeep cost 3x
         rN =    [ ("^type\\s+spy\\s+[\\w\\s,]+?\\r\\nwage_base\\s+", id)
-                , ("\\d+", mult 3)
+                , (multRoundInt 3)
                 ]
 
 _DCL_FUNCS = addTrueTest [rN]
     where
         -- Spy recruitment cost 3x
         rN =    [ ("^spy.+?spy\\.tga\\s+", id)
-                , ("\\d+", mult 3)
+                , (multRoundInt 3)
                 ]
 
 _DFS_FUNCS = addTrueTest [rN]
@@ -55,15 +59,15 @@ _DS_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8] ++ [r9, r10, r11, r12]
     where
         -- Rebel spawn rate 10x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
-                , ("\\d+", mult 10)
+                , (multRoundInt 10)
                 ]
         -- Pirate spawn rate 10x lower
         r2 =    [ ("^pirate_spawn_value\\s+", id)
-                , ("\\d+", mult 10)
+                , (multRoundInt 10)
                 ]
         -- King's purse 2x
         r3 =    [ ("^denari_kings_purse\\s+", id)
-                , ("\\d+", mult 2)
+                , (multRoundInt 2)
                 ]
         -- Replace all mineable resources from the map, except for gold and silver, with similarly
         -- valued non-mineable resources; this does two things:
@@ -86,12 +90,12 @@ _DS_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8] ++ [r9, r10, r11, r12]
                 ]
         -- Remove all gold resources from the map, except for Aztecs
         r9 =    [ ("^resource\\s+gold,\\s+", nil, alwaysTrue)
-                , ("\\d+", nil, numTest (>= 30))
+                , (_REGEX_INT, nil, numTest (>= 30))
                 , (",\\s+\\d+\\r\\n", nil, alwaysTrue)
                 ]
         -- Remove all silver resources from the map, except for Aztecs
         r10 =   [ ("^resource\\s+silver,\\s+", nil, alwaysTrue)
-                , ("\\d+", nil, numTest (>= 30))
+                , (_REGEX_INT, nil, numTest (>= 30))
                 , (",\\s+\\d+\\r\\n", nil, alwaysTrue)
                 ]
         -- Add in 1 gold resource for every faction's capital city region
@@ -174,52 +178,52 @@ _DSM_FUNCS = addTrueTest [r1, r2]
         r2 =    [ ("UNREST.+?value=\"", id)
                 , ("1\\.0", only "0.5")
                 , (".+?0\\.5.+?", id)
-                , ("\\d+", mult 0.5)
+                , (multRoundInt 0.5)
                 ]
 
 _DSR_FUNCS = addTrueTest [r1, r2]
     where
         -- Gold resource worth 2
         r1 =    [ ("^type\\s+gold\\r\\ntrade_value\\s+", id)
-                , ("\\d+", only "2")
+                , (_REGEX_INT, only "2")
                 ]
         -- Silver resource worth 1
         r2 =    [ ("^type\\s+silver\\r\\ntrade_value\\s+", id)
-                , ("\\d+", only "1")
+                , (_REGEX_INT, only "1")
                 ]
 
 _DW_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
     where
         -- Walls and gate HP 5x
         r1 =    [ ("^\\s+gate\\s.+?full_health\\s", id)
-                , ("\\d+", mult 5)
+                , (multRoundInt 5)
                 ]
         r2 =    [ ("^\\s+wall.+?full_health\\s", id)
-                , ("\\d+", mult 5)
+                , (multRoundInt 5)
                 ]
         r3 =    [ ("^\\s+gateway.+?full_health\\s", id)
-                , ("\\d+", mult 5)
+                , (multRoundInt 5)
                 ]
         -- Tower HP 2x
         r4 =    [ ("^\\s+tower.+?full_health\\s", id)
-                , ("\\d+", mult 2)
+                , (multRoundInt 2)
                 ]
         -- Tower non-flaming firing rate 2x
         r5 =    [ ("^\\s+fire_rate\\s+small\\s+", id)
-                , ("\\d+", mult 0.5)
+                , (multRoundInt 0.5)
                 ]
         r6 =    [ ("^\\s+fire_rate\\s+normal\\s+", id)
-                , ("\\d+", mult 0.5)
+                , (multRoundInt 0.5)
                 ]
         r7 =    [ ("^\\s+fire_rate\\s+large\\s+", id)
-                , ("\\d+", mult 0.5)
+                , (multRoundInt 0.5)
                 ]
         r8 =    [ ("^\\s+fire_rate\\s+huge\\s+", id)
-                , ("\\d+", mult 0.5)
+                , (multRoundInt 0.5)
                 ]
         -- City/Castle defense tower activation range 8x
         rN =    [ ("^\\s+control_area_radius\\s+", id)
-                , ("\\d+", mult 8)
+                , (multRoundInt 8)
                 ]
 
 _EDCT_FUNCS = addTrueTest [rN]
@@ -232,35 +236,35 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
     where
         -- Mining income 50x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
-                , ("\\d+", mult 50)
+                , (multRoundInt 50)
                 ]
         -- All building constructions take 1 turn
         r2 =    [ ("^\\s+construction\\s+", id)
-                , ("\\d+", only "1")
+                , (_REGEX_INT, only "1")
                 ]
         -- All building costs 1.75x
         r3 =    [ ("^\\s+cost\\s+", id)
-                , ("\\d+", mult 1.75)
+                , (multRoundInt 1.75)
                 ]
         -- Give free upkeep slots to castles (vanilla cities are 2, 3, 4, 5, 6)
         r4 =    [ ("^\\s{8}motte_and_bailey.+?wall_level.+?", id)
-                , ("\\d+", up "1")
+                , (_REGEX_INT, up "1")
                 ]
         r5 =    [ ("^\\s{8}wooden_castle.+?wall_level.+?", id)
-                , ("\\d+", up "2")
+                , (_REGEX_INT, up "2")
                 ]
         r6 =    [ ("^\\s{8}castle.+?wall_level.+?", id)
-                , ("\\d+", up "3")
+                , (_REGEX_INT, up "3")
                 ]
         r7 =    [ ("^\\s{8}fortress.+?wall_level.+?", id)
-                , ("\\d+", up "4")
+                , (_REGEX_INT, up "4")
                 ]
         r8 =    [ ("^\\s{8}citadel.+?wall_level.+?", id)
-                , ("\\d+", up "5")
+                , (_REGEX_INT, up "5")
                 ]
         -- All free upkeep slots 2x
         rN =    [ ("^\\s+free_upkeep\\s+bonus\\s+", id)
-                , ("\\d+", mult 2)
+                , (multRoundInt 2)
                 ]
         up :: String -> (BC.ByteString -> BC.ByteString)
         up amt = (\d -> BC.append d (BC.pack $ "\r\n" ++ replicate 16 ' ' ++ "free_upkeep bonus " ++ amt))
@@ -272,23 +276,23 @@ _EDU_FUNCS = addTrueTest [r1, r2, r3] ++ [rN]
         -- hero units in custom battles (King Richard, Duke William, etc.) are also heavy cavalry
         -- general's bodyguard units, but they are left alone.
         r1 =    [ ("^dictionary\\s+\\w+?_Bodyguard.+?soldier\\s+\\w+?_Bodyguard,\\s+", id)
-                , ("\\d+", mult 0.5) -- soldiers 0.5x
+                , (multRoundInt 0.5) -- soldiers 0.5x
                 , (".+?stat_cost\\s+\\d+,\\s+", id)
-                , ("\\d+", mult 0.5) -- recruitment cost
+                , (multRoundInt 0.5) -- recruitment cost
                 , (",\\s+", id)
-                , ("\\d+", mult 0.5) -- upkeep cost
+                , (multRoundInt 0.5) -- upkeep cost
                 , (",\\s+", id)
-                , ("\\d+", mult 0.5) -- weapon upgrade cost
+                , (multRoundInt 0.5) -- weapon upgrade cost
                 , (",\\s+", id)
-                , ("\\d+", mult 0.5) -- armor upgrade cost
+                , (multRoundInt 0.5) -- armor upgrade cost
                 , (",\\s+", id)
-                , ("\\d+", mult 0.5) -- custom battle: recruitment cost
+                , (multRoundInt 0.5) -- custom battle: recruitment cost
                 , (",\\s+\\d+,\\s+", id) -- custom battle: recruitment count before penalty (skip)
-                , ("\\d+", mult 0.5) -- custom battle: over-recruitment penalty
+                , (multRoundInt 0.5) -- custom battle: over-recruitment penalty
                 ]
         -- Missile infantry ammo 2x
         r2 =    [ ("^category\\s+infantry\\s+class\\s+missile.+?stat_pri\\s+.+?,.+?,.+?,.+?,\\s+", id)
-                , ("\\d+", mult 2)
+                , (multRoundInt 2)
                 ]
         -- Pikemen units: fix rubber swords bug
         r3 =    [ ("^stat_pri_attr\\s+.+?,\\s+long_pike.+?", id)
@@ -298,9 +302,9 @@ _EDU_FUNCS = addTrueTest [r1, r2, r3] ++ [rN]
         rN =    [ ("^category\\s+infantry.+?", id, alwaysTrue)
                 , ("^attributes[^\\r]+", add ", free_upkeep_unit", \s -> not $ BC.isInfixOf (BC.pack "free_upkeep_unit") s)
                 , (".+?^stat_mental\\s+", id, alwaysTrue)
-                , ("\\d+", id, numTest (<= 5))
+                , (_REGEX_INT, id, numTest (<= 5))
                 , (".+?^stat_cost\\s+\\d+,\\s+", id, alwaysTrue)
-                , ("\\d+", id, numTest (<= 650))
+                , (_REGEX_INT, id, numTest (<= 650))
                 ]
 
 nil :: BC.ByteString -> BC.ByteString
@@ -323,12 +327,32 @@ addTrueTest = map (map (\(a, b) -> (a, b, alwaysTrue)))
 alwaysTrue :: BC.ByteString -> Bool
 alwaysTrue _ = True
 
+multRoundInt :: Double -> (String, BC.ByteString -> BC.ByteString)
+multRoundInt m = (_REGEX_INT, mult m)
+
+multDouble :: Double -> (String, BC.ByteString -> BC.ByteString)
+multDouble m = (_REGEX_DOUBLE, mult' m)
+
+-- Produce an integer value.
 mult :: Double -> BC.ByteString -> BC.ByteString
-mult d i = BC.pack . show . round $ fromIntegral (i') * d
+mult d n = BC.pack . show . round $ n' * d
     where
-        i' = case BC.readInt i of
-            Just (n, _) -> n
-            _ -> 0
+        n' :: Double
+        n' = if BC.isInfixOf (BC.pack ".") n
+                then read (BC.unpack n)::Double
+                else case BC.readInt n of
+                    Just (n, _) -> fromIntegral n
+                    _ -> 0.0
+
+-- Produce a double value, with up to 4 digits after the decimal point.
+mult' :: Double -> BC.ByteString -> BC.ByteString
+mult' d n = BC.pack . TP.printf "%.4f" $ n' * d
+    where
+        n' = if BC.isInfixOf (BC.pack ".") n
+                then read (BC.unpack n)::Double
+                else case BC.readInt n of
+                    Just (n, _) -> fromIntegral n
+                    _ -> 0.0
 
 -- takes a list of strings and functions, such as [("aaa", foo), ("bbb", bar)] and performs a global
 -- substitution on them, as follows:
