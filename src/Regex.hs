@@ -153,6 +153,17 @@ _DS_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8] ++ [r9, r10, r11, r12]
             , (251, 37) -- Egypt
             ]
 
+_DSK_FUNCS = addTrueTest [r1, r2, r3]
+    where
+        -- Diplomats/princesses: remove annoying "conduct diplomacy" animation
+        r1 =    [ ("^anim\\s+conduct_diplomacy.+?\\r\\n", nil)
+                ]
+        -- Diplomats/princesses: remove needless bowing animation (same as deselect animation)
+        r2 =    [ ("^anim\\s+selected_to_stand[^\\r]+?Stratmap_Diplomat.+?\\r\\n", nil)
+                ]
+        r3 =    [ ("^anim\\s+selected_to_stand[^\\r]+?Stratmap_Princess.+?\\r\\n", nil)
+                ]
+
 _DSM_FUNCS = addTrueTest [r1, r2]
     where
         -- Reduce "distance to capital" penalty by 75%

@@ -38,4 +38,5 @@
 - Disable graphics cap during battle (where your reinforcements are denied entry into the battlefield because of M2TW's opinion of your graphics hardware capabilities)
 
 Misc (non-substantive) changes:
+- Disable diplomat/princess diplomacy animations from the campaign map
 - Disable forced combat closeups (gate/wall is destroyed or enemy general is killed)

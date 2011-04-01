@@ -6,12 +6,22 @@ _DCL    = "descr_cultures.txt"
 _DFS    = "descr_faction_standing.txt"
 _DM     = "descr_missions.txt"
 _DS     = "world/maps/campaign/imperial_campaign/descr_strat.txt"
+_DSK    = "descr_skeleton.txt"
 _DSM    = "descr_settlement_mechanics.xml"
 _DSR    = "descr_sm_resources.txt"
 _DW     = "descr_walls.txt"
 _EDB    = "export_descr_buildings.txt"
 _EDCT   = "export_descr_character_traits.txt"
 _EDU    = "export_descr_unit.txt"
+_PDAT   = "animations/pack.dat"
+_PIDX   = "animations/pack.idx"
+_SDAT   = "animations/skeletons.dat"
+_SIDX   = "animations/skeletons.idx"
+-- Binary diff sources (should be packaged with qs)
+_PDAT'  = "bdiff/pack.dat.bdiff"
+_PIDX'  = "bdiff/pack.idx.bdiff"
+_SDAT'  = "bdiff/skeletons.dat.bdiff"
+_SIDX'  = "bdiff/skeletons.idx.bdiff"
 
 _TO_EDIT =
     [ _DC
@@ -19,6 +29,7 @@ _TO_EDIT =
     , _DFS
     , _DM
     , _DS
+    , _DSK
     , _DSM
     , _DSR
     , _DW
@@ -27,12 +38,20 @@ _TO_EDIT =
     , _EDU
     ]
 
+_TO_DIFF =
+    [ _PDAT
+    , _PIDX
+    , _SDAT
+    , _SIDX
+    ]
+
 
 _SHA1_UDD_SOURCES =
     [ (0x9505d63491e7c90debba66016f4a837173fa8374, _DC)
     , (0x0d121a3b5567f1d326abde8f7f270c8fe6469952, _DCL)
     , (0x6e9bc8a4ec4e938ba5124e049079758efe8e2ed2, _DFS)
     , (0xe1016813ec6e0f1f621d01c73c6b1e9465777bc3, _DM)
+    , (0x97e3caf49d8ceb7e09192fa18e28eb278a0f56fe, _DSK)
     , (0x25a82cb8d15146a1c58f7b1cfeb09c7bb2fb5953, _DSM)
     , (0x5783e8565f7d43acf9054b833272bebca5423998, _DSR)
     , (0x959d554513c313b12be95ac9579bff3b4aa49521, _DW)
@@ -42,7 +61,11 @@ _SHA1_UDD_SOURCES =
     ]
 
 _SHA1_IDD_SOURCES =
-    [ (0x82c4a8ce1d5c474b379ca7eed4273f969ebe6f10, "sounds/events.dat")
+    [ (0xdb22c7400f27ce863dd7c92201eea6183ba30335, _PDAT)
+    , (0x044a8a79011589ba340a3bffc87642a02bc87c7a, _PIDX)
+    , (0x47deb00beb5bdb2d2bfd4aa7bb8d1452ed6747b5, _SDAT)
+    , (0x70b656a6831c1f2da80eb04448011472a69865fc, _SIDX)
+    , (0x82c4a8ce1d5c474b379ca7eed4273f969ebe6f10, "sounds/events.dat")
     , (0x2ea5c502f5366dec134cc8671bcce2bd7c82b9bc, "sounds/events.idx")
     , (0xc444b41da651a0e6499c047d17eec5e74bc10065, "world/maps/base/descr_disasters.txt")
     , (0x52566bb7ea9e26791fc0697db8c76483e3130234, "world/maps/base/descr_regions.txt")

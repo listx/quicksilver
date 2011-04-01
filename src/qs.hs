@@ -41,6 +41,7 @@ qs :: Opts -> IO ()
 qs opts@Opts{..} = do
     putStrLn "\nStarting mod generation... "
     createGenDir
+    createDirectoryIfMissing True $ _MOD_PATH_DATA ++ "animations"
     createFile "quicksilver.bat" bat
     createFile "quicksilver.cfg" cfg
     putStr "\n"
@@ -89,7 +90,35 @@ modSource :: FilePath -> (Integer, FilePath) -> IO ()
 modSource parentDir (_, fpath)
     | elem fpath _TO_EDIT   = editFile parentDir fpath >>
                               diffFile parentDir fpath
+    | elem fpath _TO_DIFF   = applyBinaryDiff parentDir fpath
     | otherwise             = copyFile' parentDir fpath
+
+applyBinaryDiff :: FilePath -> FilePath -> IO ()
+applyBinaryDiff parentDir fpath
+    | fpath == _PDAT    = bdiff parentDir fpath _PDAT'
+    | fpath == _PIDX    = bdiff parentDir fpath _PIDX'
+    | fpath == _SDAT    = bdiff parentDir fpath _SDAT'
+    | fpath == _SIDX    = bdiff parentDir fpath _SIDX'
+    | otherwise = return ()
+    where
+        bdiff :: FilePath -> FilePath -> FilePath -> IO ()
+        bdiff parentDir fpath delta = do
+            putStr $ "Resolving deltas for " ++ enquote dest ++ "... "
+            (sin, sout, serr, p) <- createProcess diffCmd
+            waitForProcess p
+            putStrLn "done"
+            where
+                sourcePath = parentDir ++ "/" ++ fpath
+                dest = _MOD_PATH_DATA ++ fpath
+                diffCmd = CreateProcess
+                    { cmdspec = ShellCommand ("xdelta3 -d -s " ++ dquote sourcePath ++ " " ++ dquote delta ++ " " ++ dquote dest)
+                    , cwd = Nothing
+                    , env = Nothing
+                    , std_in = CreatePipe
+                    , std_out = CreatePipe
+                    , std_err = Inherit
+                    , close_fds = False
+                    }
 
 diffFile :: FilePath -> FilePath -> IO ()
 diffFile parentDir fpath = do
@@ -146,12 +175,13 @@ editFile parentDir fpath = do
             | fpath == _DFS     = transform     _DFS_FUNCS
             | fpath == _DS      = transform     _DS_FUNCS
             | fpath == _DM      = transform     _DM_FUNCS
+            | fpath == _DSK     = transform     _DSK_FUNCS
             | fpath == _DSM     = transform     _DSM_FUNCS
             | fpath == _DSR     = transform     _DSR_FUNCS
             | fpath == _DW      = transform     _DW_FUNCS
-            | fpath == _EDB     = transform'    _EDB_FUNCS "^\\}\\r\\n"        "}\r\n"
+            | fpath == _EDB     = transform'    _EDB_FUNCS  "^\\}\\r\\n"    "}\r\n"
             | fpath == _EDCT    = transform     _EDCT_FUNCS
-            | fpath == _EDU     = transform'    _EDU_FUNCS " \\r\\n \\r\\n"    " \r\n \r\n"
+            | fpath == _EDU     = transform'    _EDU_FUNCS  " \\r\\n \\r\\n"    " \r\n \r\n"
             | otherwise = id
 
 transform :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]] -> BC.ByteString -> BC.ByteString
