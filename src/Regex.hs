@@ -238,9 +238,9 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
         r2 =    [ ("^\\s+construction\\s+", id)
                 , ("\\d+", only "1")
                 ]
-        -- All building costs 1.33x
+        -- All building costs 1.75x
         r3 =    [ ("^\\s+cost\\s+", id)
-                , ("\\d+", mult 1.33)
+                , ("\\d+", mult 1.75)
                 ]
         -- Give free upkeep slots to castles (vanilla cities are 2, 3, 4, 5, 6)
         r4 =    [ ("^\\s{8}motte_and_bailey.+?wall_level.+?", id)
