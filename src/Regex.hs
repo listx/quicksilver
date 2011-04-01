@@ -35,6 +35,44 @@ _DC_FUNCS = addTrueTest [r1, r2, r3, r4, rN]
                 , (multRoundInt 3)
                 ]
 
+_DCD_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9]
+    where
+        -- Reduce random heretic/witch spawn rate by 75%
+        r1 =    [ ("witch_creation_modifier.+?\"", id)
+                , (multDouble 0.25)
+                ]
+        r2 =    [ ("heretic_creation_modifier.+?\"", id)
+                , (multDouble 0.25)
+                ]
+        -- Reduce heretic/witch max (allowed on campaign map) by 75%
+        r3 =    [ ("max_witches uint.+?\"", id)
+                , (multRoundInt 0.25)
+                ]
+        r4 =    [ ("max_heretics uint.+?\"", id)
+                , (multRoundInt 0.25)
+                ]
+        -- Reduce inquisitor denounce success rate by 50%
+        r5 =    [ ("denounce_inquisitor_base_chance.+?\"", id)
+                , (multDouble 0.5)
+                ]
+        -- Improve priest denouncing power (against heretics/witches) 2x
+        r6 =    [ ("denounce_priest_base_chance.+?\"", id)
+                , (multDouble 2)
+                ]
+        -- Improve effectiveness of assassins 2x
+        r7 =    [ ("assassinate_base_chance.+?\"", id)
+                , (multRoundInt 2)
+                ]
+        -- Assassin's minimum success chance changed from 5% to 17% (1 out of 6, just like rolling a
+        -- die; so a newbie assassin should be able to succeed more easily), and maximum chance
+        -- changed from 95% to 99%
+        r8 =    [ ("assassinate_chance_min.+?\"", id)
+                , (_REGEX_INT, only "17")
+                ]
+        r9 =    [ ("assassinate_chance_max.+?\"", id)
+                , (_REGEX_INT, only "99")
+                ]
+
 _DCL_FUNCS = addTrueTest [rN]
     where
         -- Spy recruitment cost 3x

@@ -171,6 +171,7 @@ editFile parentDir fpath = do
         transformFile :: BC.ByteString -> BC.ByteString
         transformFile
             | fpath == _DC      = transform     _DC_FUNCS
+            | fpath == _DCD     = transform     _DCD_FUNCS
             | fpath == _DCL     = transform     _DCL_FUNCS
             | fpath == _DFS     = transform     _DFS_FUNCS
             | fpath == _DS      = transform     _DS_FUNCS
