@@ -42,7 +42,7 @@
     - Also, increase the cash threshold 10x for triggering the major/mod/min money rewards (since quicksilver's other modifications make it so that the player has a large cash reserve most of the time).
 - Increase every mission's military rewards 3x
 - Decrease every mission's duration by 33% (except for the "convert" mission where you have to convert a settlement's religion)
-
+- Papal States no longer capture rebel settlements (helps land-strapped factions like Milan and Sicily expand into Africa more easily)
 - Disable graphics cap during battle (where your reinforcements are denied entry into the battlefield because of M2TW's opinion of your graphics hardware capabilities)
 - Reduce random heretic/witch spawn rate by 75%
 - Reduce heretic/witch max (allowed on campaign map) by 75%

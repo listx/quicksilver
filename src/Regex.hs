@@ -73,6 +73,26 @@ _DCD_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9]
                 , (_REGEX_INT, only "99")
                 ]
 
+_DCAD_FUNCS = addTrueTest [r1]
+    where
+        -- Stop Papal States from capturing rebel settlements (helps land-strapped factions like Milan and Sicily expand into Africa more easily)
+        r1 =    [ ("papal_faction.+?invasion_decisions.+?", id)
+                , ("<decision_entry>.+?", id)
+                , ("<decision_entry>.+?", id)
+                , ("<decision_entry>.+?", id)
+                , ("<decision_entry>.+?", id)
+                , ("<decision_entry>.+?", id)
+                , ("<decision_entry>.+?", id)
+                , ("<decision_entry>.+?", id)
+                , ("<decision_entry>.+?", id)
+                , ("<decision_entry>.+?", id)
+                , ("\\r\\n\\s+<decision_entry>.+?", nil)
+                , ("<decision_entry>.+?", nil)
+                , ("<decision_entry>.+?", nil)
+                , ("<decision_entry>.+?", nil)
+                , ("\\r\\n\\s+<decision_entry>", id)
+                ]
+
 _DCL_FUNCS = addTrueTest [rN]
     where
         -- Spy recruitment cost 3x

@@ -3,6 +3,7 @@ module Source where
 -- Edited files
 _DC     = "descr_character.txt"
 _DCD    = "descr_campaign_db.xml"
+_DCAD   = "descr_campaign_ai_db.xml"
 _DCL    = "descr_cultures.txt"
 _DFS    = "descr_faction_standing.txt"
 _DM     = "descr_missions.txt"
@@ -27,6 +28,7 @@ _SIDX'  = "bdiff/skeletons.idx.bdiff"
 _TO_EDIT =
     [ _DC
     , _DCD
+    , _DCAD
     , _DCL
     , _DFS
     , _DM
@@ -51,6 +53,7 @@ _TO_DIFF =
 _SHA1_UDD_SOURCES =
     [ (0x9505d63491e7c90debba66016f4a837173fa8374, _DC)
     , (0xe9896f7ab02de7d308b590b2ebbbc2918fe375c8, _DCD)
+    , (0x3dbe5d41d1a0754a63e9673ccc42070c0ea61ac6, _DCAD)
     , (0x0d121a3b5567f1d326abde8f7f270c8fe6469952, _DCL)
     , (0x6e9bc8a4ec4e938ba5124e049079758efe8e2ed2, _DFS)
     , (0xe1016813ec6e0f1f621d01c73c6b1e9465777bc3, _DM)
