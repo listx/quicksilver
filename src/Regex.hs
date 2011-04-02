@@ -86,7 +86,7 @@ _DFS_FUNCS = addTrueTest [rN]
         rN =    [ ("^;Trigger 0102_city_razed.+?;-+", nil)
                 ]
 
-_DM_FUNCS = addTrueTest [r1, r2, r3]
+_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r4c, r5, r6a, r6b, r4']
     where
         -- Disable all mission penalties, and disable the "cease hostilities" mission
         r1 =    [ ("^\\s+penalty\\r\\n.+?\\}\\r\\n", nil)
@@ -97,6 +97,59 @@ _DM_FUNCS = addTrueTest [r1, r2, r3]
         r3 =    [ ("guild_money\\s+", id)
                 , (_REGEX_INT, only "100")
                 , ("\\s+assassins_guild", id)
+                ]
+        -- Increase all missions' monetary rewards with this formula:
+        --      NEW = OLD + (((OLD - 100)/100) * 2000)
+        --
+        r4a =   [ ("^\\s+money\\s+", id)
+                , (_REGEX_INT, gradCost moneyFormula)
+                ]
+        r4b =   [ ("^\\s+guild_money\\s+", id)
+                , (_REGEX_INT, gradCost moneyFormula)
+                ]
+        -- Fix council_min/mod_money bug (the lines starting with "    cash ..." were not correctly
+        -- mapped to their intended paybacks)
+        --
+        -- Also, increase the cash threshold 10x for triggering the major/mod/min money rewards
+        r4c =   [ ("^\\s+cash\\s+", id)
+                , (multRoundInt 10)
+                , ("\\s+payback_id\\s+", id)
+                , ("council_min_money", only "council_mod_money")
+                , ("\\s+^\\s+cash\\s+", id)
+                , (multRoundInt 10)
+                , ("\\s+payback_id\\s+", id)
+                , ("council_mod_money", only "council_min_money")
+                ]
+        moneyFormula :: Double -> Int
+        moneyFormula n = round $ n + (((n - 100)/100) * 2000)
+        -- Make a note about the changes in the DM file (comments)
+        r4' =   [ ("^; descr_missions.+?\\r\\n", prepend $ costsDiffNote "Mission money reward" old new chg)
+                ]
+            where
+                old =   [ 100
+                        , 200
+                        , 300
+                        , 500
+                        , 1000
+                        , 2000
+                        , 2500
+                        , 3000
+                        , 5000
+                        ]
+                new = applyFormula moneyFormula old
+                chg = getChgFactors new old
+        -- Increase every mission's military rewards 3x
+        r5 =    [ ("_unit\\s+\\d+\\s+", id)
+                , (multRoundInt 3)
+                ]
+        -- Decrease mission durations (except for the "convert" mission where you have to convert a
+        -- settlement's religion)
+        r6a =   [ ("\\s+duration\\s+", id)
+                , (multRoundInt 0.66)
+                ]
+        -- Change the 'convert' mission's duration back to 15
+        r6b =   [ ("^mission convert.+?duration\\s+", id)
+                , (_REGEX_INT, only "15")
                 ]
 
 _DS_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8] ++ [r9, r10, r11, r12]
@@ -290,21 +343,13 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r3']
         --      NEW = OLD + (((OLD - 400)/400) * 400)
         --
         r3 =    [ ("^\\s+cost\\s+", id)
-                , (_REGEX_INT, gradCost)
+                , (_REGEX_INT, gradCost gradFormula)
                 ]
         gradFormula :: Double -> Int
         gradFormula n = round $ n + (((n - 400)/400) * 400)
-        gradCost :: BC.ByteString -> BC.ByteString
-        gradCost i = BC.pack . show . gradFormula $ fromIntegral i'
-            where
-                i' = case BC.readInt i of
-                        Just (n, _) -> n
-                        _ -> 0
-        costsDiffNote :: String
-        costsDiffNote = "\r\n"
-                        ++ cmtBox _QS_INFO
-                        ++ "\r\n; Building cost changes from vanilla M2TW:\r\n"
-                        ++ showIntChanges (zip3 old new chg)
+        -- Make a note about the changes in the EDB file (comments)
+        r3' =   [ ("^;This.+?by hand.+?\\r\\n", prepend $ costsDiffNote "Building cost" old new chg)
+                ]
             where
                 old =   [ 400
                         , 600
@@ -327,10 +372,6 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r3']
                         ]
                 new = applyFormula gradFormula old
                 chg = getChgFactors new old
-        -- Make a note about the changes in the EDB file (comments)
-        r3' =   [ ("^;This.+?by hand", id)
-                , ("\\r\\n", add costsDiffNote)
-                ]
         -- Give free upkeep slots to castles (vanilla cities are 2, 3, 4, 5, 6)
         r4 =    [ ("^\\s{8}motte_and_bailey.+?wall_level.+?", id)
                 , (_REGEX_INT, up "1")
@@ -398,6 +439,9 @@ nil str = BC.empty
 only :: String -> BC.ByteString -> BC.ByteString
 only repl _ = BC.pack repl
 
+prepend :: String -> BC.ByteString -> BC.ByteString
+prepend str orig = BC.append (BC.pack str) orig
+
 add :: String -> BC.ByteString -> BC.ByteString
 add str orig = BC.append orig $ BC.pack str
 
@@ -441,6 +485,13 @@ mult' d n = BC.pack . TP.printf "%.4f" $ n' * d
 
 applyFormula :: (Double -> Int) -> [Int] -> [Int]
 applyFormula f ns = map (f . fromIntegral) ns
+
+gradCost :: (Double -> Int) -> BC.ByteString -> BC.ByteString
+gradCost formula i = BC.pack . show . formula $ fromIntegral i'
+    where
+        i' = case BC.readInt i of
+                Just (n, _) -> n
+                _ -> 0
 
 getChgFactors :: [Int] -> [Int] -> [Double]
 getChgFactors n o = map getChgFactor (zip n o)

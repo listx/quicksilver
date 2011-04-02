@@ -2,6 +2,8 @@ module Util where
 
 import qualified Text.Printf as TP
 
+import Option
+
 dquote :: String -> String
 dquote s = "\"" ++ s ++ "\""
 
@@ -15,6 +17,13 @@ cmtBox :: String -> String
 cmtBox s = horiz ++ ";; " ++ s ++ " ;;\r\n" ++ horiz
     where
         horiz = replicate (length s + 6) ';' ++ "\r\n"
+
+costsDiffNote :: String -> [Int] -> [Int] -> [Double] -> String
+costsDiffNote s old new chg =
+    cmtBox _QS_INFO
+    ++ "\r\n; " ++ s ++ " changes from vanilla M2TW:\r\n"
+    ++ showIntChanges (zip3 old new chg)
+    ++ "\r\n\r\n"
 
 showIntChanges :: [(Int, Int, Double)] -> String
 showIntChanges = concatMap showChg
