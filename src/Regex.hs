@@ -174,13 +174,13 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r4c, r5, r6a, r6b, r4']
 
 _DS_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8] ++ [r9, r10, r11, r12]
     where
-        -- Rebel spawn rate 10x lower
+        -- Rebel spawn rate 20x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
-                , (multRoundInt 10)
+                , (multRoundInt 20)
                 ]
-        -- Pirate spawn rate 10x lower
+        -- Pirate spawn rate 20x lower
         r2 =    [ ("^pirate_spawn_value\\s+", id)
-                , (multRoundInt 10)
+                , (multRoundInt 20)
                 ]
         -- King's purse 2x
         r3 =    [ ("^denari_kings_purse\\s+", id)
@@ -189,7 +189,7 @@ _DS_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8] ++ [r9, r10, r11, r12]
         -- Replace all mineable resources from the map, except for gold and silver, with similarly
         -- valued non-mineable resources; this does two things:
         --  (1) only allow gold and silver to be mineable
-        --  (1) reduce the needlessly large variety of resources
+        --  (2) reduce the needlessly large variety of resources
         r4 =    [ ("^resource\\s+", id)
                 , ("tin", only "wool")
                 ]

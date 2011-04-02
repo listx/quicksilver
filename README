@@ -19,8 +19,8 @@
 - The more expensive the building, the more it costs. See the comment in the export_descr_buildings.txt file for details. The cheapest building (which costs 400) is the same, but the most expensive ones (15000) cost almost 2x more.
 - Give free upkeep slots to castles (1, 2, 3, 4, and 5)
 - All free upkeep slots 2x (castles stacked)
-- Rebel spawn rate 10x lower
-- Pirate spawn rate 10x lower
+- Rebel spawn rate 20x lower
+- Pirate spawn rate 20x lower
 - King's purse 2x
 - Fixed faction standing bug
 - City/Castle defense tower activation range 8x
