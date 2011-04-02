@@ -304,11 +304,8 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r3']
         costsDiffNote = "\r\n"
                         ++ cmtBox _QS_INFO
                         ++ "\r\n; Building cost changes from vanilla M2TW:\r\n"
-                        ++ (concatMap showChg (zip3 old new chg))
+                        ++ showIntChanges (zip3 old new chg)
             where
-                showChg :: (Int, Int, Double) -> String
-                showChg (o, n, diff) = ";    " ++ show o ++ " -> " ++ show n ++ TP.printf " (%.2fx)\r\n" diff
-                old :: [Int]
                 old =   [ 400
                         , 600
                         , 800
@@ -328,9 +325,8 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r3']
                         , 12000
                         , 15000
                         ]
-                new = map (gradFormula . fromIntegral) old
-                chg = map newToOldChg (zip new old)
-                newToOldChg (n, o) = (fromIntegral n)/(fromIntegral o)
+                new = applyFormula gradFormula old
+                chg = getChgFactors new old
         -- Make a note about the changes in the EDB file (comments)
         r3' =   [ ("^;This.+?by hand", id)
                 , ("\\r\\n", add costsDiffNote)
@@ -442,6 +438,15 @@ mult' d n = BC.pack . TP.printf "%.4f" $ n' * d
                 else case BC.readInt n of
                     Just (n, _) -> fromIntegral n
                     _ -> 0.0
+
+applyFormula :: (Double -> Int) -> [Int] -> [Int]
+applyFormula f ns = map (f . fromIntegral) ns
+
+getChgFactors :: [Int] -> [Int] -> [Double]
+getChgFactors n o = map getChgFactor (zip n o)
+    where
+        getChgFactor :: (Int, Int) -> Double
+        getChgFactor (n, o) = (fromIntegral n)/(fromIntegral o)
 
 -- takes a list of strings and functions, such as [("aaa", foo), ("bbb", bar)] and performs a global
 -- substitution on them, as follows:

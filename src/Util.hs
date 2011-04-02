@@ -1,5 +1,7 @@
 module Util where
 
+import qualified Text.Printf as TP
+
 dquote :: String -> String
 dquote s = "\"" ++ s ++ "\""
 
@@ -13,6 +15,12 @@ cmtBox :: String -> String
 cmtBox s = horiz ++ ";; " ++ s ++ " ;;\r\n" ++ horiz
     where
         horiz = replicate (length s + 6) ';' ++ "\r\n"
+
+showIntChanges :: [(Int, Int, Double)] -> String
+showIntChanges = concatMap showChg
+    where
+        showChg (o, n, diff) = ";    " ++ show o ++ " -> " ++ show n ++ TP.printf " (%.2fx)\r\n" diff
+
 
 -- Function composition over a list; see http://www.haskell.org/haskellwiki/Compose
 compose :: [a -> a] -> a -> a
