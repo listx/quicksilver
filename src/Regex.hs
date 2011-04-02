@@ -172,7 +172,7 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r4c, r5, r6a, r6b, r4']
                 , (_REGEX_INT, only "15")
                 ]
 
-_DS_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8] ++ [r9, r10, r11, r12]
+_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7]
     where
         -- Rebel spawn rate 20x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -186,41 +186,26 @@ _DS_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8] ++ [r9, r10, r11, r12]
         r3 =    [ ("^denari_kings_purse\\s+", id)
                 , (multRoundInt 2)
                 ]
-        -- Replace all mineable resources from the map, except for gold and silver, with similarly
-        -- valued non-mineable resources; this does two things:
-        --  (1) only allow gold and silver to be mineable
-        --  (2) reduce the needlessly large variety of resources
-        r4 =    [ ("^resource\\s+", id)
-                , ("tin", only "wool")
+        -- Replace all gold resources with chocolate in the map, except for Aztecs
+        r4 =    [ ("^resource\\s+", id, alwaysTrue)
+                , ("gold", only "chocolate", alwaysTrue)
+                , (",\\s+", id, alwaysTrue)
+                , (_REGEX_INT, id, numTest (>= 30))
+                , (",\\s+\\d+\\r\\n", id, alwaysTrue)
                 ]
-        r5 =    [ ("^resource\\s+", id)
-                , ("iron", only "wine")
-                ]
-        r6 =    [ ("^resource\\s+", id)
-                , ("sulfur", only "grain")
-                ]
-        r7 =    [ ("^resource\\s+", id)
-                , ("marble", only "sugar")
-                ]
-        r8 =    [ ("^resource\\s+", id)
-                , ("coal", only "furs")
-                ]
-        -- Remove all gold resources from the map, except for Aztecs
-        r9 =    [ ("^resource\\s+gold,\\s+", nil, alwaysTrue)
-                , (_REGEX_INT, nil, numTest (>= 30))
-                , (",\\s+\\d+\\r\\n", nil, alwaysTrue)
-                ]
-        -- Remove all silver resources from the map, except for Aztecs
-        r10 =   [ ("^resource\\s+silver,\\s+", nil, alwaysTrue)
-                , (_REGEX_INT, nil, numTest (>= 30))
-                , (",\\s+\\d+\\r\\n", nil, alwaysTrue)
+        -- Replace all silver resources with silk in the the map, except for Aztecs
+        r5 =    [ ("^resource\\s+", id, alwaysTrue)
+                , ("silver", only "silk", alwaysTrue)
+                , (",\\s+", id, alwaysTrue)
+                , (_REGEX_INT, id, numTest (>= 30))
+                , (",\\s+\\d+\\r\\n", id, alwaysTrue)
                 ]
         -- Add in 1 gold resource for every faction's capital city region
-        r11 =   [ ("^resource\\s+gold,\\s+5,\\s+143\\r\\n", addResource "gold" goldCoords, alwaysTrue)
+        r6 =    [ ("^resource\\s+gold,\\s+5,\\s+143\\r\\n", addResource "gold" goldCoords, alwaysTrue)
                 ]
         -- Add in 1 silver resource for every faction's second city (or the capital city if no
         -- second city)
-        r12 =   [ ("^resource\\s+silver,\\s+4,\\s+123\\r\\n", addResource "silver" silverCoords, alwaysTrue)
+        r7 =    [ ("^resource\\s+silver,\\s+4,\\s+123\\r\\n", addResource "silver" silverCoords, alwaysTrue)
                 ]
         showResource :: String -> (Int, Int) -> String
         showResource res (x, y) = "resource\t" ++ res ++ ",\t" ++ show x ++ ",\t" ++ show y ++ "\r\n"
@@ -239,10 +224,10 @@ _DS_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8] ++ [r9, r10, r11, r12]
             , (148, 93) -- Papal States (Rome region)
             , (145, 91) -- Papal States (Rome region)
             , (147, 88) -- Papal States (Rome region)
-            , (147, 94) -- Papal States (Rome region)
-            , (149, 86) -- Papal States (Rome region)
-            , (144, 92) -- Papal States (Rome region)
-            , (149, 92) -- Papal States (Rome region)
+            --, (147, 94) -- Papal States (Rome region)
+            --, (149, 86) -- Papal States (Rome region)
+            --, (144, 92) -- Papal States (Rome region)
+            --, (149, 92) -- Papal States (Rome region)
             , (153, 109) -- Venice
             , (142, 138) -- HRE
             , (139, 168) -- Denmark
@@ -298,7 +283,7 @@ _DSM_FUNCS = addTrueTest [r1, r2]
                 , (multRoundInt 0.5)
                 ]
 
-_DSR_FUNCS = addTrueTest [r1, r2]
+_DSR_FUNCS = addTrueTest [r1, r2, r3, r4]
     where
         -- Gold resource worth 2
         r1 =    [ ("^type\\s+gold\\r\\ntrade_value\\s+", id)
@@ -307,6 +292,23 @@ _DSR_FUNCS = addTrueTest [r1, r2]
         -- Silver resource worth 1
         r2 =    [ ("^type\\s+silver\\r\\ntrade_value\\s+", id)
                 , (_REGEX_INT, only "1")
+                ]
+        -- Silver resource worth 1
+        r3 =    [ ("^type\\s+silver\\r\\ntrade_value\\s+", id)
+                , (_REGEX_INT, only "1")
+                ]
+        -- Only allow gold and silver to be minable.
+        r4 =    [ ("^has_mine.+?", id)
+                , ("^has_mine.+?", id)
+                , ("\\r\\nhas_mine", nil)
+                , (".+?", id)
+                , ("\\r\\nhas_mine", nil)
+                , (".+?", id)
+                , ("\\r\\nhas_mine", nil)
+                , (".+?", id)
+                , ("\\r\\nhas_mine", nil)
+                , (".+?", id)
+                , ("\\r\\nhas_mine", nil)
                 ]
 
 _DW_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
@@ -349,11 +351,11 @@ _EDCT_FUNCS = addTrueTest [rN]
         rN =    [ ("^Trigger corruption.+?;-+", nil)
                 ]
 
-_EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r3']
+_EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r3']
     where
-        -- Mining income 50x
+        -- Mining income 75x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
-                , (multRoundInt 50)
+                , (multRoundInt 75)
                 ]
         -- All building constructions take 1 turn
         r2 =    [ ("^\\s+construction\\s+", id)
@@ -394,26 +396,48 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r3']
                 chg = getChgFactors new old
         -- Give free upkeep slots to castles (vanilla cities are 2, 3, 4, 5, 6)
         r4 =    [ ("^\\s{8}motte_and_bailey.+?wall_level.+?", id)
-                , (_REGEX_INT, up "1")
+                , (_REGEX_INT, upkeep "1")
                 ]
         r5 =    [ ("^\\s{8}wooden_castle.+?wall_level.+?", id)
-                , (_REGEX_INT, up "2")
+                , (_REGEX_INT, upkeep "2")
                 ]
         r6 =    [ ("^\\s{8}castle.+?wall_level.+?", id)
-                , (_REGEX_INT, up "3")
+                , (_REGEX_INT, upkeep "3")
                 ]
         r7 =    [ ("^\\s{8}fortress.+?wall_level.+?", id)
-                , (_REGEX_INT, up "4")
+                , (_REGEX_INT, upkeep "4")
                 ]
         r8 =    [ ("^\\s{8}citadel.+?wall_level.+?", id)
-                , (_REGEX_INT, up "5")
+                , (_REGEX_INT, upkeep "5")
                 ]
         -- All free upkeep slots 2x
         r9 =    [ ("^\\s+free_upkeep\\s+bonus\\s+", id)
                 , (multRoundInt 2)
                 ]
-        up :: String -> (BC.ByteString -> BC.ByteString)
-        up amt = (\d -> BC.append d (BC.pack $ "\r\n" ++ replicate 16 ' ' ++ "free_upkeep bonus " ++ amt))
+        upkeep :: String -> (BC.ByteString -> BC.ByteString)
+        upkeep amt = (\d -> BC.append d (BC.pack $ "\r\n" ++ replicate 16 ' ' ++ "free_upkeep bonus " ++ amt))
+        -- Disable the "Mining network" building.
+        r10 =   [ ("^building\\s+hinterland_mines.+?levels\\s+mines", id)
+                , ("\\s+mines\\+1[^\\r]+", nil)
+                , (".+?upgrades.+?\\{\\r\\n", id)
+                , ("\\s+mines\\+1\\r\\n", nil)
+                , (".+?\\}.+?\\}\\r\\n", id)
+                , ("^\\s+mines\\+1.+?\\}.+?\\}.+?\\}\\r\\n", nil)
+                ]
+        r11 =   [ ("^building\\s+hinterland_castle_mines.+?levels\\s+c_mines", id)
+                , ("\\s+c_mines\\+1[^\\r]+", nil)
+                , (".+?upgrades.+?\\{\\r\\n", id)
+                , ("\\s+c_mines\\+1\\r\\n", nil)
+                , (".+?\\}.+?\\}\\r\\n", id)
+                , ("^\\s+c_mines\\+1.+?\\}.+?\\}.+?\\}\\r\\n", nil)
+                ]
+        -- Only allow mines for gold and silver resources
+        r12 =   [ ("^\\s+mines\\s+city\\s+requires\\s+factions.+?resource\\s+gold", id)
+                , ("[^\\r]+", nil)
+                ]
+        r13 =   [ ("^\\s+c_mines\\s+castle\\s+requires\\s+factions.+?resource\\s+gold", id)
+                , ("[^\\r]+", nil)
+                ]
 
 _EDU_FUNCS = addTrueTest [r1, r2, r3] ++ [rN]
     where
