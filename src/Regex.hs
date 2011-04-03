@@ -35,7 +35,7 @@ _DC_FUNCS = addTrueTest [r1, r2, r3, r4, rN]
                 , (multRoundInt 3)
                 ]
 
-_DCD_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9]
+_DCD_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10]
     where
         -- Reduce random heretic/witch spawn rate by 75%
         r1 =    [ ("witch_creation_modifier.+?\"", id)
@@ -71,6 +71,10 @@ _DCD_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9]
                 ]
         r9 =    [ ("assassinate_chance_max.+?\"", id)
                 , (_REGEX_INT, only "99")
+                ]
+        -- Allow a settlement to recruit 2 agents of the same type in a single turn.
+        r10 =   [ ("max_agents_per_turn.+?\"", id)
+                , (multRoundInt 2)
                 ]
 
 _DCAD_FUNCS = addTrueTest [r1]

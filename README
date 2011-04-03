@@ -6,6 +6,7 @@
 - Campaign movement speed 1.75x for all units (ships, diplomats, princesses's stats are stacked)
 - Spy recruitment cost 3x
 - Spy upkeep cost 3x
+- Allow a settlement to recruit 2 agents of the same type in a single turn.
 - Remove corruption trigger based on high treasury
 - Gold/silver-only mining mod:
     - Only gold and silver are mineable.
