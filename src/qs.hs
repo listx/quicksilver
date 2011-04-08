@@ -181,7 +181,9 @@ editFile parentDir fpath = do
             | fpath == _DSM     = transform     _DSM_FUNCS
             | fpath == _DSR     = transform     _DSR_FUNCS
             | fpath == _DW      = transform     _DW_FUNCS
+            | fpath == _EDA     = transform     _EDA_FUNCS
             | fpath == _EDB     = transform'    _EDB_FUNCS  "^\\}\\r\\n"    "}\r\n"
+            | fpath == _EDBE    = transform     _EDBE_FUNCS
             | fpath == _EDCT    = transform     _EDCT_FUNCS
             | fpath == _EDU     = transform'    _EDU_FUNCS  " \\r\\n \\r\\n"    " \r\n \r\n"
             | otherwise = id

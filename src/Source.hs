@@ -12,7 +12,9 @@ _DSK    = "descr_skeleton.txt"
 _DSM    = "descr_settlement_mechanics.xml"
 _DSR    = "descr_sm_resources.txt"
 _DW     = "descr_walls.txt"
+_EDA    = "export_descr_advice.txt"
 _EDB    = "export_descr_buildings.txt"
+_EDBE   = "export_descr_buildings_enums.txt"
 _EDCT   = "export_descr_character_traits.txt"
 _EDU    = "export_descr_unit.txt"
 _PDAT   = "animations/pack.dat"
@@ -37,7 +39,9 @@ _TO_EDIT =
     , _DSM
     , _DSR
     , _DW
+    , _EDA
     , _EDB
+    , _EDBE
     , _EDCT
     , _EDU
     ]
@@ -61,7 +65,9 @@ _SHA1_UDD_SOURCES =
     , (0x25a82cb8d15146a1c58f7b1cfeb09c7bb2fb5953, _DSM)
     , (0x5783e8565f7d43acf9054b833272bebca5423998, _DSR)
     , (0x959d554513c313b12be95ac9579bff3b4aa49521, _DW)
+    , (0xb604c776df95aaa51e9fae9bf3b1ccbf34df8138, _EDA)
     , (0xca2018a694fbabcaf5a058f4e87889acc3d35f89, _EDB)
+    , (0x2c1095e9bb17d078d4719e57cc7bf52a959ef6a9, _EDBE)
     , (0x2a95300126b5f78294caffa0af8658f4576a2d40, _EDCT)
     , (0x140f93465e48577a5262d6e104630518426a7a13, _EDU)
     ]

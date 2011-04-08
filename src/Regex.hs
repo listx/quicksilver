@@ -355,7 +355,15 @@ _EDCT_FUNCS = addTrueTest [rN]
         rN =    [ ("^Trigger corruption.+?;-+", nil)
                 ]
 
-_EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r3']
+_EDA_FUNCS = addTrueTest [r1, r2]
+    where
+        -- Remove advice for mines+1 and c_mines+1 (since they are removed from EDB)
+        r1 =    [ ("^Trigger 1062.+?;-+\r\n", nil)
+                ]
+        r2 =    [ ("^Trigger 1064.+?;-+\r\n", nil)
+                ]
+
+_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13]
     where
         -- Mining income 75x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
@@ -423,17 +431,21 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13
         -- Disable the "Mining network" building.
         r10 =   [ ("^building\\s+hinterland_mines.+?levels\\s+mines", id)
                 , ("\\s+mines\\+1[^\\r]+", nil)
+                , (".+?\\r\\n        {\\r\\n", id)
+                , ("\\s+convert_to.+?\\r\\n", nil)
                 , (".+?upgrades.+?\\{\\r\\n", id)
                 , ("\\s+mines\\+1\\r\\n", nil)
                 , (".+?\\}.+?\\}\\r\\n", id)
-                , ("^\\s+mines\\+1.+?\\}.+?\\}.+?\\}\\r\\n", nil)
+                , ("^\\s+mines\\+1.+?\\}.+?\\}.+?\\}.+?\\}\\r\\n", nil)
                 ]
         r11 =   [ ("^building\\s+hinterland_castle_mines.+?levels\\s+c_mines", id)
                 , ("\\s+c_mines\\+1[^\\r]+", nil)
+                , (".+?\\r\\n        {\\r\\n", id)
+                , ("\\s+convert_to.+?\\r\\n", nil)
                 , (".+?upgrades.+?\\{\\r\\n", id)
                 , ("\\s+c_mines\\+1\\r\\n", nil)
                 , (".+?\\}.+?\\}\\r\\n", id)
-                , ("^\\s+c_mines\\+1.+?\\}.+?\\}.+?\\}\\r\\n", nil)
+                , ("^\\s+c_mines\\+1.+?\\}.+?\\}.+?\\}.+?\\}\\r\\n", nil)
                 ]
         -- Only allow mines for gold and silver resources
         r12 =   [ ("^\\s+mines\\s+city\\s+requires\\s+factions.+?resource\\s+gold", id)
@@ -441,6 +453,14 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13
                 ]
         r13 =   [ ("^\\s+c_mines\\s+castle\\s+requires\\s+factions.+?resource\\s+gold", id)
                 , ("[^\\r]+", nil)
+                ]
+
+_EDBE_FUNCS = addTrueTest [r1, r2]
+    where
+        -- Remove all references to mines+1 and c_mines+1
+        r1 =    [ ("^mines\\+.+?\r\n", nil)
+                ]
+        r2 =    [ ("^c_mines\\+.+?\r\n", nil)
                 ]
 
 _EDU_FUNCS = addTrueTest [r1, r2, r3] ++ [rN]
