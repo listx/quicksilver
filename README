@@ -20,6 +20,13 @@
 - The more expensive the building, the more it costs. See the comment in the export_descr_buildings.txt file for details. The cheapest building (which costs 400) is the same, but the most expensive ones (15000) cost almost 2x more.
 - Give free upkeep slots to castles (1, 2, 3, 4, and 5)
 - All free upkeep slots 2x (castles stacked)
+- Increase recruitment slots from
+      city:   1, 2, 2, 3, 3
+      castle: 1, 2, 3, 3, 3
+  to
+      city:   1, 2, 3, 4, 5
+      castle: 2, 3, 4, 5, 6
+- For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings bonuses to base unit number, recruitment points gained per turn, maximum recruitment points available, and (most importantly) the starting experience.
 - Rebel spawn rate 20x lower
 - Pirate spawn rate 20x lower
 - King's purse 2x

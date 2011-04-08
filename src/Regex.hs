@@ -364,7 +364,7 @@ _EDA_FUNCS = addTrueTest [r1, r2]
         r2 =    [ ("^Trigger 1064.+?;-+\r\n", nil)
                 ]
 
-_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13] ++ addTrueTest r14
+_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15] ++ addTrueTest rN
     where
         -- Mining income 75x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
@@ -455,10 +455,36 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
         r13 =   [ ("^\\s+c_mines\\s+castle\\s+requires\\s+factions.+?resource\\s+gold", id)
                 , ("[^\\r]+", nil)
                 ]
+        -- Increase recruitment slots from
+        --     city:   1, 2, 2, 3, 3
+        --     castle: 1, 2, 3, 3, 3
+        -- to
+        --     city:   1, 2, 3, 4, 5
+        --     castle: 2, 3, 4, 5, 6
+        r14 =   [ ("^building\\s+core_building.+?", id)
+                , ("recruitment_slots.+?recruitment_slots.+?recruitment_slots\\s+", id)
+                , (_REGEX_INT, only "3")
+                , (".+?recruitment_slots\\s+", id)
+                , (_REGEX_INT, only "4")
+                , (".+?recruitment_slots\\s+", id)
+                , (_REGEX_INT, only "5")
+                ]
+        r15 =   [ ("^building\\s+core_castle_building.+?", id)
+                , ("recruitment_slots\\s+", id)
+                , (_REGEX_INT, only "2")
+                , (".+?recruitment_slots\\s+", id)
+                , (_REGEX_INT, only "3")
+                , (".+?recruitment_slots\\s+", id)
+                , (_REGEX_INT, only "4")
+                , (".+?recruitment_slots\\s+", id)
+                , (_REGEX_INT, only "5")
+                , (".+?recruitment_slots\\s+", id)
+                , (_REGEX_INT, only "6")
+                ]
         -- For every type of building (barracks, archery range, city hall, etc.), let all levels of
         -- that building be able to recruit all units; no more waiting idly until your city becomes
         -- a Huge City to be able to recruit elite units.
-        r14 =   [
+        rN =   [
                     -- core_building
                     [ ("^building\\s+core_building.+?            \\{\\r\\n", id)
                     , ("\\s+recruit_pool.+?", only $ _CORE_BUILDING_RECRUITS _RP0)
