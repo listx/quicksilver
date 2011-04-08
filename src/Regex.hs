@@ -364,7 +364,7 @@ _EDA_FUNCS = addTrueTest [r1, r2]
         r2 =    [ ("^Trigger 1064.+?;-+\r\n", nil)
                 ]
 
-_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15] ++ addTrueTest rN
+_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16] ++ addTrueTest rN
     where
         -- Mining income 75x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
@@ -480,6 +480,11 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                 , (_REGEX_INT, only "5")
                 , (".+?recruitment_slots\\s+", id)
                 , (_REGEX_INT, only "6")
+                ]
+        -- Bugfix: give swordsmiths_guild HQ heavy_cavalry_bonus bonus 2, instead of 1 (same as
+        -- master swordsmiths guild)
+        r16 =   [ ("^building\\s+guild_swordsmiths_guild.+?heavy_cavalry_bonus.+?heavy_cavalry_bonus\\s+bonus\\s+", id)
+                , (_REGEX_INT, only "2")
                 ]
         -- For every type of building (barracks, archery range, city hall, etc.), let all levels of
         -- that building be able to recruit all units; no more waiting idly until your city becomes
