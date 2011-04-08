@@ -111,14 +111,15 @@ _DFS_FUNCS = addTrueTest [rN]
         rN =    [ ("^;Trigger 0102_city_razed.+?;-+", nil)
                 ]
 
-_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r4c, r5, r6a, r6b, r4']
+_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4']
     where
         -- Disable all mission penalties, and disable the "cease hostilities" mission
         r1 =    [ ("^\\s+penalty\\r\\n.+?\\}\\r\\n", nil)
                 ]
         r2 =    [ ("^mission\\s+cease.+?^\\}\\r\\n\\r\\n\\r\\n", nil)
                 ]
-        -- Fix guild_assassin_payback bug (10 gold (obvious typo) instead of 100 gold)
+        -- Fix guild_assassin_payback bug (10 guild points (obvious typo) instead of 100 guild
+        -- points)
         r3 =    [ ("guild_money\\s+", id)
                 , (_REGEX_INT, only "100")
                 , ("\\s+assassins_guild", id)
@@ -129,14 +130,11 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r4c, r5, r6a, r6b, r4']
         r4a =   [ ("^\\s+money\\s+", id)
                 , (_REGEX_INT, gradCost moneyFormula)
                 ]
-        r4b =   [ ("^\\s+guild_money\\s+", id)
-                , (_REGEX_INT, gradCost moneyFormula)
-                ]
         -- Fix council_min/mod_money bug (the lines starting with "    cash ..." were not correctly
         -- mapped to their intended paybacks)
         --
         -- Also, increase the cash threshold 10x for triggering the major/mod/min money rewards
-        r4c =   [ ("^\\s+cash\\s+", id)
+        r4b =   [ ("^\\s+cash\\s+", id)
                 , (multRoundInt 10)
                 , ("\\s+payback_id\\s+", id)
                 , ("council_min_money", only "council_mod_money")
