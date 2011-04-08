@@ -285,11 +285,10 @@ _DSM_FUNCS = addTrueTest [r1, r2, r3, r4]
                 , (".+?0\\.5.+?", id)
                 , (multRoundInt 0.5)
                 ]
-        -- Reduce population requirements to upgrade a city settlement, such that smaller
-        -- settlements can get upgraded more quickly. This will help prevent settlements from
-        -- stagnating as villages and towns. The smaller populations get more population upgrade
-        -- reductions than the bigger ones. As for castles, reduce their population requirements by
-        -- a flat 10%.
+        -- Reduce population requirements to upgrade a settlement, such that smaller settlements can
+        -- get upgraded more quickly. This will help prevent settlements from stagnating as villages
+        -- and towns (or mottes/baileys). The smaller populations get more population upgrade
+        -- reductions than the bigger ones.
         r3 =    [ ("level.+?village.+?upgrade=\"", id)
                 , (multRoundInt 0.6)
                 , (".+?level.+?town.+?base=\"", id)
@@ -312,13 +311,13 @@ _DSM_FUNCS = addTrueTest [r1, r2, r3, r4]
                 , (multRoundInt 0.9)
                 ]
         r4 =    [ ("level[^\\r]+?\"castle.+?base=\"", id)
-                , (multRoundInt 0.9)
+                , (multRoundInt 0.7)
                 , (".+?upgrade=\"", id)
-                , (multRoundInt 0.9)
+                , (multRoundInt 0.7)
                 , (".+?level.+?fortress.+?base=\"", id)
-                , (multRoundInt 0.9)
+                , (multRoundInt 0.8)
                 , (".+?upgrade=\"", id)
-                , (multRoundInt 0.9)
+                , (multRoundInt 0.8)
                 , (".+?level.+?citadel.+?base=\"", id)
                 , (multRoundInt 0.9)
                 , (".+?upgrade=\"", id)
