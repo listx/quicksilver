@@ -273,7 +273,7 @@ _DSK_FUNCS = addTrueTest [r1, r2, r3]
         r3 =    [ ("^anim\\s+selected_to_stand[^\\r]+?Stratmap_Princess.+?\\r\\n", nil)
                 ]
 
-_DSM_FUNCS = addTrueTest [r1, r2]
+_DSM_FUNCS = addTrueTest [r1, r2, r3, r4]
     where
         -- Reduce "distance to capital" penalty by 75%
         r1 =    [ ("CAPITAL.+?value=\"", id)
@@ -284,6 +284,47 @@ _DSM_FUNCS = addTrueTest [r1, r2]
                 , ("1\\.0", only "0.5")
                 , (".+?0\\.5.+?", id)
                 , (multRoundInt 0.5)
+                ]
+        -- Reduce population requirements to upgrade a city settlement, such that smaller
+        -- settlements can get upgraded more quickly. This will help prevent settlements from
+        -- stagnating as villages and towns. The smaller populations get more population upgrade
+        -- reductions than the bigger ones. As for castles, reduce their population requirements by
+        -- a flat 10%.
+        r3 =    [ ("level.+?village.+?upgrade=\"", id)
+                , (multRoundInt 0.6)
+                , (".+?level.+?town.+?base=\"", id)
+                , (multRoundInt 0.6)
+                , (".+?upgrade=\"", id)
+                , (multRoundInt 0.6)
+                , (".+?level.+?large_town.+?base=\"", id)
+                , (multRoundInt 0.6)
+                , (".+?upgrade=\"", id)
+                , (multRoundInt 0.7)
+                , (".+?level.+?city.+?base=\"", id)
+                , (multRoundInt 0.7)
+                , (".+?upgrade=\"", id)
+                , (multRoundInt 0.8)
+                , (".+?level.+?large_city.+?base=\"", id)
+                , (multRoundInt 0.8)
+                , (".+?upgrade=\"", id)
+                , (multRoundInt 0.9)
+                , (".+?level.+?huge_city.+?base=\"", id)
+                , (multRoundInt 0.9)
+                ]
+        r4 =    [ ("level[^\\r]+?\"castle.+?base=\"", id)
+                , (multRoundInt 0.9)
+                , (".+?upgrade=\"", id)
+                , (multRoundInt 0.9)
+                , (".+?level.+?fortress.+?base=\"", id)
+                , (multRoundInt 0.9)
+                , (".+?upgrade=\"", id)
+                , (multRoundInt 0.9)
+                , (".+?level.+?citadel.+?base=\"", id)
+                , (multRoundInt 0.9)
+                , (".+?upgrade=\"", id)
+                , (multRoundInt 0.9)
+                , (".+?max=\"", id)
+                , (multRoundInt 0.9)
                 ]
 
 _DSR_FUNCS = addTrueTest [r1, r2, r3, r4]

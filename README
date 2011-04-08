@@ -16,6 +16,7 @@
     - The New World regions still have all of their gold/silver resources, which makes them extremely valuable. Vanilla M2TW made taking the New World regions very boring, but now at least there is an incentive (lots of money!).
     - For kicks, Rome has 3 gold resources! This makes capturing Rome very tempting...
     - The redundant "Mining Network" building has been removed, since the regular mines alone make enough money.
+- Reduce city/castle population upgrade requirements. For cities, there are more reductions for smaller settlements. For castles, there is a flat 10% reduction across the board.
 - All building constructions take 1 turn
 - The more expensive the building, the more it costs. See the comment in the export_descr_buildings.txt file for details. The cheapest building (which costs 400) is the same, but the most expensive ones (15000) cost almost 2x more.
 - Give free upkeep slots to castles (1, 2, 3, 4, and 5)
