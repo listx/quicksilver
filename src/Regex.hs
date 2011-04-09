@@ -176,7 +176,7 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4']
                 , (_REGEX_INT, only "15")
                 ]
 
-_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ mineFuncs capsSecs
+_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest mtePurse ++ mineFuncs capsSecs
     where
         -- Rebel spawn rate 20x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -261,6 +261,21 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ mineFuncs capsSecs
             , (217, 182) -- Russia
             , (246, 91) -- Turks
             , (251, 37) -- Egypt
+            ]
+        -- Give Moors, Turks, and Egypt extra king's purse --- 50%, 50%, and 75% respectively.
+        mtePurse =
+            [
+                [ ("^faction\\smoors.+?denari_kings_purse\\s+", id)
+                , (multRoundInt 1.5)
+                ]
+            ,
+                [ ("^faction\\sturks.+?denari_kings_purse\\s+", id)
+                , (multRoundInt 1.5)
+                ]
+            ,
+                [ ("^faction\\segypt.+?denari_kings_purse\\s+", id)
+                , (multRoundInt 1.75)
+                ]
             ]
         -- Give mines to all factions' capitals/secondary cities, because the AI is too stupid and
         -- doesn't always build mines immediately.
