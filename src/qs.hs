@@ -175,7 +175,7 @@ editFile parentDir fpath = do
             | fpath == _DCAD    = transform     _DCAD_FUNCS
             | fpath == _DCL     = transform     _DCL_FUNCS
             | fpath == _DFS     = transform     _DFS_FUNCS
-            | fpath == _DS      = transform     _DS_FUNCS
+            | fpath == _DS      = transform'    _DS_FUNCS  "^\\r\\n\\r\\n"    "\r\n\r\n"
             | fpath == _DM      = transform     _DM_FUNCS
             | fpath == _DSK     = transform     _DSK_FUNCS
             | fpath == _DSM     = transform     _DSM_FUNCS

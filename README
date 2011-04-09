@@ -29,6 +29,7 @@
       castle: 2, 3, 4, 5, 6
 - For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings bonuses to base unit number, recruitment points gained per turn, maximum recruitment points available, and (most importantly) the starting experience.
 - Fix Swordsmiths Guild HQ bonuses bug (vanilla did not give any extra bonsues for getting the HQ level; now it grants 1 more extra bonus point for factionwide heavy_cavalry_bonus (experience of knights)).
+- Give small factions extra settlements. Scotland now starts with Inverness and York, Russia with Smolensk and Moscow, and Denmark with Oslo. Scotland and Russia receive 2 extra settlements, but Denmark only 1, because: in practice, Scotland/Russia is very weak/stagnant, and Denmark is usually very strong as it is.
 - Rebel spawn rate 20x lower
 - Pirate spawn rate 20x lower
 - King's purse 2x

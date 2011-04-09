@@ -10,6 +10,9 @@ dquote s = "\"" ++ s ++ "\""
 enquote :: String -> String
 enquote s = "`" ++ s ++ "'"
 
+concatRep :: Int -> String -> String
+concatRep n str = concat $ replicate n str
+
 cmtRuler :: String -> String
 cmtRuler s = replicate (length s) ';' ++ "\r\n"
 
