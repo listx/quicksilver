@@ -176,7 +176,7 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4']
                 , (_REGEX_INT, only "15")
                 ]
 
-_DS_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest regions ++ [r4, r5, r6, r7] ++ mineFuncs capsSecs
+_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ mineFuncs capsSecs
     where
         -- Rebel spawn rate 20x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -190,112 +190,6 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest regions ++ [r4, r5, r6, r7] 
         r3 =    [ ("^denari_kings_purse\\s+", id)
                 , (multRoundInt 2)
                 ]
-        -- Give small factions more settlements when starting out
-        regions =
-            [
-                -- Scotland: give it Inverness and York
-                [ ("^settlement\\s+castle\\r\\n" ++ concatRep 2 _REGEX_LINE ++ "\\s+region\\s+Inverness_Province\\r\\n\\r\\n" ++ concatRep 8 _REGEX_LINE ++ "\\}", nil)
-                ]
-            ,
-                [ ("^settlement\\r\\n" ++ concatRep 2 _REGEX_LINE ++ "\\s+region\\s+York_Province\\r\\n\\r\\n" ++ concatRep 4 _REGEX_LINE ++ "\\}", nil)
-                ]
-            ,
-                [ ("Edinburgh_.+?", id)
-                , ("^\\}", add $ "\r\n\r\n" ++ regionInverness ++ regionYork)
-                ]
-            ,
-                -- Russia: give it Smolensk and Moscow
-                [ ("^settlement\\s+castle\\r\\n" ++ concatRep 2 _REGEX_LINE ++ "\\s+region\\s+Smolensk_Province\\r\\n\\r\\n" ++ concatRep 8 _REGEX_LINE ++ "\\}", nil)
-                ]
-            ,
-                [ ("^settlement\\r\\n" ++ concatRep 2 _REGEX_LINE ++ "\\s+region\\s+Moscow_Province\\r\\n\\r\\n" ++ concatRep 8 _REGEX_LINE ++ "\\}", nil)
-                ]
-            ,
-                [ ("Novgorod_.+?", id)
-                , ("^\\}", add $ "\r\n\r\n" ++ regionSmolensk ++ regionMoscow)
-                ]
-            ,
-                -- Denmark: give it Oslo
-                [ ("^settlement\\s+castle\\r\\n" ++ concatRep 2 _REGEX_LINE ++ "\\s+region\\s+Oslo_Province\\r\\n\\r\\n" ++ concatRep 8 _REGEX_LINE ++ "\\}", nil)
-                ]
-            ,
-                [ ("Arhus_.+?", id)
-                , ("^\\}", add $ "\r\n\r\n" ++ regionOslo)
-                ]
-            ]
-        regionInverness =
-            "settlement castle\r\n\
-            \{\r\n\
-            \\tlevel town\r\n\
-            \\tregion Inverness_Province\r\n\
-            \\r\n\
-            \\tyear_founded 0\r\n\
-            \\tpopulation 1500\r\n\
-            \\tplan_set default_set\r\n\
-            \\tfaction_creator england\r\n\
-            \\tbuilding\r\n\
-            \\t{\r\n\
-            \\t\ttype core_castle_building wooden_castle\r\n\
-            \\t}\r\n\
-            \}\r\n\r\n"
-        regionYork =
-            "settlement\r\n\
-            \{\r\n\
-            \\tlevel village\r\n\
-            \\tregion York_Province\r\n\
-            \\r\n\
-            \\tyear_founded 0\r\n\
-            \\tpopulation 800\r\n\
-            \\tplan_set default_set\r\n\
-            \\tfaction_creator england\r\n\
-            \}"
-        regionSmolensk =
-            "settlement castle\r\n\
-            \{\r\n\
-            \\tlevel town\r\n\
-            \\tregion Smolensk_Province\r\n\
-            \\r\n\
-            \\tyear_founded 0\r\n\
-            \\tpopulation 2200\r\n\
-            \\tplan_set default_set\r\n\
-            \\tfaction_creator russia\r\n\
-            \\tbuilding\r\n\
-            \\t{\r\n\
-            \\t\ttype core_castle_building wooden_castle\r\n\
-            \\t}\r\n\
-            \}\r\n\r\n"
-        regionMoscow =
-            "settlement\r\n\
-            \{\r\n\
-            \\tlevel town\r\n\
-            \\tregion Moscow_Province\r\n\
-            \\r\n\
-            \\tyear_founded 0\r\n\
-            \\tpopulation 2500\r\n\
-            \\tplan_set default_set\r\n\
-            \\tfaction_creator russia\r\n\
-            \\tbuilding\r\n\
-            \\t{\r\n\
-            \\t\ttype core_building wooden_pallisade\r\n\
-            \\t}\r\n\
-            \}"
-        regionOslo =
-            "settlement castle\r\n\
-            \{\r\n\
-            \\tlevel town\r\n\
-            \\tregion Oslo_Province\r\n\
-            \\r\n\
-            \\tyear_founded 0\r\n\
-            \\tpopulation 2200\r\n\
-            \\tplan_set default_set\r\n\
-            \\tfaction_creator england\r\n\
-            \\tbuilding\r\n\
-            \\t{\r\n\
-            \\t\ttype core_castle_building wooden_castle\r\n\
-            \\t}\r\n\
-            \}\r\n\r\n"
-        -- Russia: give Smolensk and Moscow
-        -- Denmark: give Oslo
         -- Replace all gold resources with chocolate in the map, except for Aztecs
         r4 =    [ ("^resource\\s+", id, alwaysTrue)
                 , ("gold", only "chocolate", alwaysTrue)
@@ -350,7 +244,7 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest regions ++ [r4, r5, r6, r7] 
             ]
         -- Silver resource location, one for each faction's second region
         silverCoords =
-            [ (101,162) -- Scotland
+            [ (99, 173) -- Scotland
             , (103, 156) -- England
             , (121, 127) -- France
             , (77, 94) -- Spain
@@ -360,11 +254,11 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest regions ++ [r4, r5, r6, r7] 
             , (161, 82) -- Sicily
             , (166, 99) -- Venice
             , (151, 128) -- HRE
-            , (146, 179) -- Denmark (Oslo)
+            , (142, 171) -- Denmark
             , (194, 136) -- Poland
             , (191, 119) -- Hungary
             , (207, 82) -- Byzantium
-            , (243, 175) -- Russia
+            , (217, 182) -- Russia
             , (246, 91) -- Turks
             , (251, 37) -- Egypt
             ]
@@ -395,10 +289,8 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest regions ++ [r4, r5, r6, r7] 
             , "Rheims"
             , "London"
             , "Nottingham"
-            , "York"
             , "Edinburgh"
             , "Arhus"
-            , "Oslo"
             , "Frankfurt"
             , "Nuremburg"
             , "Milan"
@@ -409,7 +301,6 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest regions ++ [r4, r5, r6, r7] 
             , "Naples"
             , "Palermo"
             , "Novgorod"
-            , "Moscow"
             , "Halych"
             , "Cracow" -- "Krakow" in-game
             , "Budapest"
