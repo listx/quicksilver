@@ -360,11 +360,11 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest regions ++ [r4, r5, r6, r7]
             , (161, 82) -- Sicily
             , (166, 99) -- Venice
             , (151, 128) -- HRE
-            , (142, 171) -- Denmark
+            , (146, 179) -- Denmark (Oslo)
             , (194, 136) -- Poland
             , (191, 119) -- Hungary
             , (207, 82) -- Byzantium
-            , (217, 182) -- Russia
+            , (243, 175) -- Russia
             , (246, 91) -- Turks
             , (251, 37) -- Egypt
             ]
