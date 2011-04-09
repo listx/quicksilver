@@ -176,7 +176,7 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4']
                 , (_REGEX_INT, only "15")
                 ]
 
-_DS_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest regions ++ [r4, r5, r6, r7]
+_DS_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest regions ++ [r4, r5, r6, r7] ++ mineFuncs capsSecs
     where
         -- Rebel spawn rate 20x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -367,6 +367,59 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest regions ++ [r4, r5, r6, r7]
             , (243, 175) -- Russia
             , (246, 91) -- Turks
             , (251, 37) -- Egypt
+            ]
+        -- Give mines to all factions' capitals/secondary cities, because the AI is too stupid and
+        -- doesn't always build mines immediately.
+        mine =
+            "\r\n\tbuilding\r\n\
+            \\t{\r\n\
+            \\t\ttype hinterland_mines mines\r\n\
+            \\t}"
+        mineFuncs :: [String] -> [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
+        mineFuncs strs = concatMap makeFunc strs
+            where
+                makeFunc str = addTrueTest
+                    [
+                        [ (str ++ "_.+?", id)
+                        , ("\\r\\n\\}", prepend mine)
+                        ]
+                    ]
+        capsSecs = -- note: mine requires city -- check if m2tw crashes with these mines in (some cases) towns (e.g., Oslo)
+            [ "Cordoba"
+            , "Granada"
+            , "Lisbon"
+            , "Pamplona"
+            , "Leon"
+            , "Toledo"
+            , "Paris"
+            , "Rheims"
+            , "London"
+            , "Nottingham"
+            , "York"
+            , "Edinburgh"
+            , "Arhus"
+            , "Oslo"
+            , "Frankfurt"
+            , "Nuremburg"
+            , "Milan"
+            , "Genoa"
+            , "Venice"
+            , "Ragusa"
+            , "Roman" -- "Rome" in-game
+            , "Naples"
+            , "Palermo"
+            , "Novgorod"
+            , "Moscow"
+            , "Halych"
+            , "Cracow" -- "Krakow" in-game
+            , "Budapest"
+            , "Bran"
+            , "Constantinople"
+            , "Nicaea"
+            , "Iconium"
+            , "Caesarea"
+            , "Cairo"
+            , "Gaza"
             ]
 
 _DSK_FUNCS = addTrueTest [r1, r2, r3]
