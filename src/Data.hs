@@ -7,13 +7,13 @@ showD :: Double -> String
 showD = TP.printf "%.6f"
 
 _RP0, _RP1, _RP2, _RP3, _RP4, _RP5, _RP6 :: (Int, Double, Int, Int)
-_RP0 = (0, 0.0, 0, 1) -- village
-_RP1 = (1, 0.1, 1, 2) -- town
-_RP2 = (2, 0.2, 2, 3) -- large_town
-_RP3 = (3, 0.3, 3, 4) -- city
-_RP4 = (4, 0.4, 4, 5) -- large_city ("Minor City" in-game)
-_RP5 = (6, 0.6, 6, 7) -- huge_city
-_RP6 = (7, 0.7, 7, 9) -- huge_city
+_RP0 = (0, 0.00, 0, 1) -- village
+_RP1 = (1, 0.10, 1, 2) -- town
+_RP2 = (2, 0.10, 2, 3) -- large_town
+_RP3 = (3, 0.15, 3, 4) -- city
+_RP4 = (4, 0.20, 4, 5) -- large_city ("Minor City" in-game)
+_RP5 = (6, 0.30, 6, 7) -- huge_city
+_RP6 = (7, 0.35, 7, 9) -- huge_city
 
 -- recruitment:
 --      recruit_pool
