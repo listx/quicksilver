@@ -293,7 +293,7 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest mtePurse
                         , ("\\r\\n\\}", prepend mine)
                         ]
                     ]
-        capsSecs = -- note: mine requires city -- check if m2tw crashes with these mines in (some cases) towns (e.g., Oslo)
+        capsSecs =
             [ "Cordoba"
             , "Granada"
             , "Lisbon"
