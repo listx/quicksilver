@@ -176,7 +176,7 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4']
                 , (_REGEX_INT, only "15")
                 ]
 
-_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest mtePurse ++ mineFuncs capsSecs
+_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest mtePurse ++ mineFuncs capsSecs ++ addTrueTest giveRoads
     where
         -- Rebel spawn rate 20x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -326,6 +326,35 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest mtePurse
             , "Caesarea"
             , "Cairo"
             , "Gaza"
+            ]
+        -- Give all settlements paved roads.
+        roads =
+            "\r\n\tbuilding\r\n\
+            \\t{\r\n\
+            \\t\ttype hinterland_roads paved_roads\r\n\
+            \\t}"
+        roadsCastle =
+            "\r\n\tbuilding\r\n\
+            \\t{\r\n\
+            \\t\ttype hinterland_castle_roads c_paved_roads\r\n\
+            \\t}"
+        giveRoads =
+            [
+                -- first, remove all road buildings
+                [ ("^\\s+building\\r\\n\\s+\\{\\r\\n\\s+type\\s+hinterland_roads\\s+roads\\r\\n\\s+\\}\\r\\n", nil)
+                ]
+            ,
+                [ ("^\\s+building\\r\\n\\s+\\{\\r\\n\\s+type\\s+hinterland_castle_roads\\s+c_roads\\r\\n\\s+\\}\\r\\n", nil)
+                ]
+            ,
+                -- now add paved_roads for settlements and c_paved_roads for castles
+                [ ("^settlement\\r\\n.+?", id)
+                , ("\\r\\n\\}", prepend roads)
+                ]
+            ,
+                [ ("^settlement\\s+castle\\r\\n.+?", id)
+                , ("\\r\\n\\}", prepend roadsCastle)
+                ]
             ]
 
 _DSK_FUNCS = addTrueTest [r1, r2, r3]
