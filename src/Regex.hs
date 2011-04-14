@@ -14,7 +14,7 @@ _REGEX_INT = "\\d+"
 _REGEX_DOUBLE = "\\d+\\.\\d+"
 _REGEX_LINE = "[^\\r]+\\r\\n"
 
-_DC_FUNCS = addTrueTest [r1, r2, r3, r4, rN]
+_DC_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest assassin
     where
         -- Ship movement speed 3x
         r1 =    [ ("^type\\s+admiral.+?starting_action_points\\s+", id)
@@ -24,18 +24,17 @@ _DC_FUNCS = addTrueTest [r1, r2, r3, r4, rN]
         r2 =    [ ("^type\\s+diplomat.+?starting_action_points\\s+", id)
                 , (multRoundInt 2)
                 ]
-        -- Princess movement speed 1.75x
-        r3 =    [ ("^type\\s+princess.+?starting_action_points\\s+", id)
-                , (multRoundInt 1.75)
-                ]
         -- Campaign movement speed 1.75x
-        r4 =    [ ("^starting_action_points\\s+", id)
+        r3 =    [ ("^starting_action_points\\s+", id)
                 , (multRoundInt 1.75)
                 ]
-        -- Spy upkeep cost 3x
-        rN =    [ ("^type\\s+spy\\s+[\\w\\s,]+?\\r\\nwage_base\\s+", id)
+        assassin =
+            [
+                -- Assassin upkeep cost 3x
+                [ ("^type\\s+assassin\\s+[\\w\\s,]+?\\r\\nwage_base\\s+", id)
                 , (multRoundInt 3)
                 ]
+            ]
 
 _DCD_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7]
     where
@@ -90,8 +89,8 @@ _DCAD_FUNCS = addTrueTest [r1]
 
 _DCL_FUNCS = addTrueTest [rN]
     where
-        -- Spy recruitment cost 3x
-        rN =    [ ("^spy.+?spy\\.tga\\s+", id)
+        -- Assassin recruitment cost 3x
+        rN =    [ ("^assassin.+?assassin\\.tga\\s+", id)
                 , (multRoundInt 3)
                 ]
 
@@ -101,7 +100,7 @@ _DFS_FUNCS = addTrueTest [rN]
         rN =    [ ("^;Trigger 0102_city_razed.+?;-+", nil)
                 ]
 
-_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4']
+_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTrueTest merchantsGuild ++ addTrueTest thievesGuild
     where
         -- Disable all mission penalties, and disable the "cease hostilities" mission
         r1 =    [ ("^\\s+penalty\\r\\n.+?\\}\\r\\n", nil)
@@ -164,6 +163,21 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4']
         r6b =   [ ("^mission convert.+?duration\\s+", id)
                 , (_REGEX_INT, only "15")
                 ]
+        -- Disable merchant recruitment/acquisition missions.
+        merchantsGuild =
+            [
+                [ ("^mission guild_recruit_agent guild_recruit_merchant.+?\\}.+?\\}\\r\\n", nil)
+                ]
+            ,
+                [ ("^mission guild_acquisition.+?\\}.+?\\}\\r\\n", nil)
+                ]
+            ]
+        -- Disable the thief recruitment mission (the only thieves' guild mission, coincidentally).
+        thievesGuild =
+            [
+                [ ("^mission guild_recruit_agent guild_recruit_spy.+?\\}.+?\\}\\r\\n", nil)
+                ]
+            ]
 
 _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMerchantPrincessSpy ++ addTrueTest mtePurse ++ mineFuncs capsSecs ++ addTrueTest giveRoads
     where
@@ -210,6 +224,56 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMercha
                 ]
             ,
                 [ ("character[^\\r]+spy.+?\\r\\n.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("^ancillaries catamite\\r\\n", nil)
+                ]
+            ,
+                -- Remove all references to princess names.
+                -- Cecilia, Constance, Agnes, Urraca, Teresa, Matilda, Anna, Antonina, Ingrid,
+                -- Maria, Agnes, Pioska
+                [ ("^relative\\s+William.+?", id)
+                , ("Cecilia,", nil)
+                ]
+            ,
+                [ ("^relative\\s+Philip.+?", id)
+                , ("Constance,", nil)
+                ]
+            ,
+                [ ("^relative\\s+Heinrich.+?", id)
+                , ("Agnes,", nil)
+                ]
+            ,
+                [ ("^relative\\s+Alfonso.+?", id)
+                , ("Urraca,\\s+Teresa,", nil)
+                ]
+            ,
+                [ ("^relative\\s+Roger.+?", id)
+                , ("Matilda,", nil)
+                ]
+            ,
+                [ ("^relative\\s+Alexius.+?", id)
+                , ("Anna,", nil)
+                ]
+            ,
+                [ ("^relative\\s+Ysevolod.+?", id)
+                , ("Antonina,", nil)
+                ]
+            ,
+                [ ("^relative\\s+Knud.+?", id)
+                , ("Ingrid,", nil)
+                ]
+            ,
+                [ ("^relative\\s+Henrique.+?", id)
+                , ("Maria,", nil)
+                ]
+            ,
+                [ ("^relative\\s+Wladyslaw.+?", id)
+                , ("Agnes,", nil)
+                ]
+            ,
+                [ ("^relative\\s+Laszlo.+?", id)
+                , ("Pioska,", nil)
                 ]
             ]
         showResource :: String -> (Int, Int) -> String
@@ -358,6 +422,13 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMercha
                 ]
             ]
 
+_DSF_FUNCS = addTrueTest [r1]
+    where
+        -- Prevent all factions from getting princesses
+        r1 =    [ ("^can_have_princess[^\\r]+?", id)
+                , ("yes", only "no")
+                ]
+
 _DSK_FUNCS = addTrueTest [r1, r2, r3]
     where
         -- Diplomats/princesses: remove annoying "conduct diplomacy" animation
@@ -484,10 +555,28 @@ _DW_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
                 , (multRoundInt 8)
                 ]
 
-_EDCT_FUNCS = addTrueTest [rN]
+_EDCT_FUNCS = addTrueTest [r1, r2, r3]
     where
         -- Remove corruption trigger based on high treasury
-        rN =    [ ("^Trigger corruption.+?;-+", nil)
+        r1 =    [ ("^Trigger corruption.+?;-+", nil)
+                ]
+        -- Give good assassins a line of sight bonus, just like for spies.
+        r2 =    [ ("^Trait GoodAssassin.+?", id)
+                , ("Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 1\r\n")
+                , (".+?Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 2\r\n")
+                , (".+?Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 3\r\n")
+                , (".+?Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 4\r\n")
+                , (".+?Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 5\r\n")
+                ]
+        -- Remove all references to thieves guild.
+        r3 =    [ ("^Trigger spyinit4.+?;-+\\r\\n", nil)
+                , ("^Trigger spyinit5.+?;-+\\r\\n", nil)
+                , ("^Trigger spyinit6.+?;-+\\r\\n", nil)
                 ]
 
 _EDA_FUNCS = addTrueTest [r1, r2]
@@ -498,7 +587,13 @@ _EDA_FUNCS = addTrueTest [r1, r2]
         r2 =    [ ("^Trigger 1064.+?;-+\r\n", nil)
                 ]
 
-_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16] ++ addTrueTest rN
+_EDAN_FUNCS = addTrueTest [r1]
+    where
+        -- Remove reference to thieves guild.
+        r1 =    [ ("^Trigger spymaster_vnv_trigger2.+?;-+\r\n", nil)
+                ]
+
+_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild] ++ addTrueTest noMerchantSpy ++ addTrueTest rN
     where
         -- Mining income 75x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
@@ -620,6 +715,20 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
         r16 =   [ ("^building\\s+guild_swordsmiths_guild.+?heavy_cavalry_bonus.+?heavy_cavalry_bonus\\s+bonus\\s+", id)
                 , (_REGEX_INT, only "2")
                 ]
+        -- Disable recruitment of merchants and spies.
+        noMerchantSpy =
+            [
+                [ ("^\\s+agent merchant.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("^\\s+agent spy.+?\\r\\n", nil)
+                ]
+            ]
+        -- Disable thieves' guild building.
+        noThievesGuild =
+                [ ("^building guild_thiefs_guild.+", only ";")
+                ]
+
         -- For every type of building (barracks, archery range, city hall, etc.), let all levels of
         -- that building be able to recruit all units; no more waiting idly until your city becomes
         -- a Huge City to be able to recruit elite units.
@@ -920,13 +1029,22 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                     ]
                 ]
 
-
-_EDBE_FUNCS = addTrueTest [r1, r2]
+_EDBE_FUNCS = addTrueTest [r1, r2, thieves]
     where
         -- Remove all references to mines+1 and c_mines+1
-        r1 =    [ ("^mines\\+.+?\r\n", nil)
+        r1 =    [ ("^mines\\+.+?\\r\\n", nil)
                 ]
-        r2 =    [ ("^c_mines\\+.+?\r\n", nil)
+        r2 =    [ ("^c_mines\\+.+?\\r\\n", nil)
+                ]
+        -- Remove all references to thieves guild buildings.
+        thieves =
+                [ ("^[^\\r]*?thieves.+?\\r\\n", nil)
+                ]
+
+_EDG_FUNCS = addTrueTest [r1]
+    where
+        -- Remove thieves guild.
+        r1 =    [ ("^Guild thiefs.+?;-+\\r\\n", nil)
                 ]
 
 _EDU_FUNCS = addTrueTest [r1, r2, r3] ++ [rN]

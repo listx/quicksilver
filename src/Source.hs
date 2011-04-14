@@ -8,14 +8,17 @@ _DCL    = "descr_cultures.txt"
 _DFS    = "descr_faction_standing.txt"
 _DM     = "descr_missions.txt"
 _DS     = "world/maps/campaign/imperial_campaign/descr_strat.txt"
+_DSF    = "descr_sm_factions.txt"
 _DSK    = "descr_skeleton.txt"
 _DSM    = "descr_settlement_mechanics.xml"
 _DSR    = "descr_sm_resources.txt"
 _DW     = "descr_walls.txt"
 _EDA    = "export_descr_advice.txt"
+_EDAN   = "export_descr_ancillaries.txt"
 _EDB    = "export_descr_buildings.txt"
 _EDBE   = "export_descr_buildings_enums.txt"
 _EDCT   = "export_descr_character_traits.txt"
+_EDG    = "export_descr_guilds.txt"
 _EDU    = "export_descr_unit.txt"
 _PDAT   = "animations/pack.dat"
 _PIDX   = "animations/pack.idx"
@@ -35,14 +38,17 @@ _TO_EDIT =
     , _DFS
     , _DM
     , _DS
+    , _DSF
     , _DSK
     , _DSM
     , _DSR
     , _DW
     , _EDA
+    , _EDAN
     , _EDB
     , _EDBE
     , _EDCT
+    , _EDG
     , _EDU
     ]
 
@@ -61,14 +67,17 @@ _SHA1_UDD_SOURCES =
     , (0x0d121a3b5567f1d326abde8f7f270c8fe6469952, _DCL)
     , (0x6e9bc8a4ec4e938ba5124e049079758efe8e2ed2, _DFS)
     , (0xe1016813ec6e0f1f621d01c73c6b1e9465777bc3, _DM)
+    , (0x40e74a92a91c4ac10e6d798b0de25664cab45ea1, _DSF)
     , (0x97e3caf49d8ceb7e09192fa18e28eb278a0f56fe, _DSK)
     , (0x25a82cb8d15146a1c58f7b1cfeb09c7bb2fb5953, _DSM)
     , (0x5783e8565f7d43acf9054b833272bebca5423998, _DSR)
     , (0x959d554513c313b12be95ac9579bff3b4aa49521, _DW)
     , (0xb604c776df95aaa51e9fae9bf3b1ccbf34df8138, _EDA)
+    , (0xc106543e9a05abe82bd56b245674e9e7c14a3d81, _EDAN)
     , (0xca2018a694fbabcaf5a058f4e87889acc3d35f89, _EDB)
     , (0x2c1095e9bb17d078d4719e57cc7bf52a959ef6a9, _EDBE)
     , (0x2a95300126b5f78294caffa0af8658f4576a2d40, _EDCT)
+    , (0x2c533185c43f1c025cf5817111437c19fc993117, _EDG)
     , (0x140f93465e48577a5262d6e104630518426a7a13, _EDU)
     ]
 
