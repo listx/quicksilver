@@ -179,7 +179,7 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTrueTest
                 ]
             ]
 
-_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMerchantPrincessSpy ++ addTrueTest mtePurse ++ mineFuncs capsSecs ++ addTrueTest giveRoads
+_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMerchantPrincessSpy ++ addTrueTest mtePurse ++ mineFuncs capsSecs ++ mineFuncs capsSecs' ++ addTrueTest giveRoads
     where
         -- Rebel spawn rate 20x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -349,26 +349,31 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMercha
             \\t{\r\n\
             \\t\ttype hinterland_mines mines\r\n\
             \\t}"
-        mineFuncs :: [String] -> [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
-        mineFuncs strs = concatMap makeFunc strs
+        c_mine =
+            "\r\n\tbuilding\r\n\
+            \\t{\r\n\
+            \\t\ttype hinterland_castle_mines c_mines\r\n\
+            \\t}"
+        mineFuncs :: (Bool, [String]) -> [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
+        mineFuncs (b, strs) = concatMap makeFunc strs
             where
                 makeFunc str = addTrueTest
                     [
                         [ (str ++ "_.+?", id)
-                        , ("\\r\\n\\}", prepend mine)
+                        , ("\\r\\n\\}", prepend chooseMine)
                         ]
                     ]
-        capsSecs =
+                chooseMine = if b
+                    then mine
+                    else c_mine
+        capsSecs = -- cities
+            ( True,
             [ "Cordoba"
-            , "Granada"
             , "Lisbon"
-            , "Pamplona"
             , "Leon"
-            , "Toledo"
             , "Paris"
             , "Rheims"
             , "London"
-            , "Nottingham"
             , "Edinburgh"
             , "Arhus"
             , "Frankfurt"
@@ -376,22 +381,31 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMercha
             , "Milan"
             , "Genoa"
             , "Venice"
-            , "Ragusa"
             , "Roman" -- "Rome" in-game
             , "Naples"
-            , "Palermo"
             , "Novgorod"
-            , "Halych"
             , "Cracow" -- "Krakow" in-game
             , "Budapest"
-            , "Bran"
             , "Constantinople"
             , "Nicaea"
             , "Iconium"
-            , "Caesarea"
             , "Cairo"
+            ]
+            )
+        capsSecs' = -- castles
+            ( False,
+            [ "Granada"
+            , "Pamplona"
+            , "Toledo"
+            , "Nottingham"
+            , "Ragusa"
+            , "Palermo"
+            , "Halych"
+            , "Bran"
+            , "Caesarea"
             , "Gaza"
             ]
+            )
         -- Give all settlements paved roads.
         roads =
             "\r\n\tbuilding\r\n\
