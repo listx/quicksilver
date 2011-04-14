@@ -53,9 +53,9 @@ _DCD_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10]
         r4 =    [ ("max_heretics uint.+?\"", id)
                 , (multRoundInt 0.25)
                 ]
-        -- Reduce inquisitor denounce success rate by 50%
-        r5 =    [ ("denounce_inquisitor_base_chance.+?\"", id)
-                , (multDouble 0.5)
+        -- Remove inquisitors.
+        r5 =    [ ("max_inquisitors\\s.+?\"", id)
+                , (_REGEX_INT, only "0")
                 ]
         -- Improve priest denouncing power (against heretics/witches) 2x
         r6 =    [ ("denounce_priest_base_chance.+?\"", id)
