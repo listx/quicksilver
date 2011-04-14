@@ -718,11 +718,11 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                 ,
                     -- castle_siege
                     [ ("^building\\s+castle_siege.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ _CASTLE_SIEGE_RECRUITS _RP2)
+                    , ("\\s+recruit_pool.+?", only $ _SIEGE_RECRUITS _RP2)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ _CASTLE_SIEGE_RECRUITS _RP3)
+                    , ("\\s+recruit_pool.+?", only $ _SIEGE_RECRUITS _RP3)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ _CASTLE_SIEGE_RECRUITS _RP4)
+                    , ("\\s+recruit_pool.+?", only $ _SIEGE_RECRUITS _RP4)
                     , ("^            }", id)
                     ]
                 ,
@@ -744,13 +744,13 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                     -- the city version to keep it fair (since more expensive buildings cost more
                     -- anyway)
                     [ ("^building\\s+castle_cannon.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ _CASTLE_CANNON_RECRUITS _RP3)
+                    , ("\\s+recruit_pool.+?", only $ _CANNON_RECRUITS _RP3)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ _CASTLE_CANNON_RECRUITS _RP4)
+                    , ("\\s+recruit_pool.+?", only $ _CANNON_RECRUITS _RP4)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ _CASTLE_CANNON_RECRUITS _RP5)
+                    , ("\\s+recruit_pool.+?", only $ _CANNON_RECRUITS _RP5)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ _CASTLE_CANNON_RECRUITS _RP6)
+                    , ("\\s+recruit_pool.+?", only $ _CANNON_RECRUITS _RP6)
                     , ("^            }", id)
                     ]
                 ,
@@ -776,13 +776,13 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                 ,
                     -- castle_port
                     [ ("^building\\s+castle_port.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ _CASTLE_PORT_RECRUITS _RP2)
+                    , ("\\s+recruit_pool.+?", only $ _PORT_RECRUITS _RP2)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ _CASTLE_PORT_RECRUITS _RP3)
+                    , ("\\s+recruit_pool.+?", only $ _PORT_RECRUITS _RP3)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ _CASTLE_PORT_RECRUITS _RP4)
+                    , ("\\s+recruit_pool.+?", only $ _PORT_RECRUITS _RP4)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ _CASTLE_PORT_RECRUITS _RP5)
+                    , ("\\s+recruit_pool.+?", only $ _PORT_RECRUITS _RP5)
                     , ("^            }", id)
                     ]
                 ,
