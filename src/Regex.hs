@@ -574,18 +574,18 @@ _EDCT_FUNCS = addTrueTest [r1, r2, r3]
         -- Remove corruption trigger based on high treasury
         r1 =    [ ("^Trigger corruption.+?;-+", nil)
                 ]
-        -- Give good assassins a line of sight bonus, just like for spies.
+        -- Give good assassins a line of sight bonus with increased skill.
         r2 =    [ ("^Trait GoodAssassin.+?", id)
                 , ("Effect Subterfuge.+?", id)
-                , ("\\r\\n", only "\r\n        Effect LineOfSight 1\r\n")
-                , (".+?Effect Subterfuge.+?", id)
                 , ("\\r\\n", only "\r\n        Effect LineOfSight 2\r\n")
                 , (".+?Effect Subterfuge.+?", id)
                 , ("\\r\\n", only "\r\n        Effect LineOfSight 3\r\n")
                 , (".+?Effect Subterfuge.+?", id)
-                , ("\\r\\n", only "\r\n        Effect LineOfSight 4\r\n")
-                , (".+?Effect Subterfuge.+?", id)
                 , ("\\r\\n", only "\r\n        Effect LineOfSight 5\r\n")
+                , (".+?Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 8\r\n")
+                , (".+?Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 9\r\n")
                 ]
         -- Remove all references to thieves guild.
         r3 =    [ ("^Trigger spyinit4.+?;-+\\r\\n", nil)
