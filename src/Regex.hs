@@ -37,45 +37,33 @@ _DC_FUNCS = addTrueTest [r1, r2, r3, r4, rN]
                 , (multRoundInt 3)
                 ]
 
-_DCD_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10]
+_DCD_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7]
     where
-        -- Reduce random heretic/witch spawn rate by 75%
-        r1 =    [ ("witch_creation_modifier.+?\"", id)
-                , (multDouble 0.25)
-                ]
-        r2 =    [ ("heretic_creation_modifier.+?\"", id)
-                , (multDouble 0.25)
-                ]
-        -- Reduce heretic/witch max (allowed on campaign map) by 75%
-        r3 =    [ ("max_witches uint.+?\"", id)
-                , (multRoundInt 0.25)
-                ]
-        r4 =    [ ("max_heretics uint.+?\"", id)
-                , (multRoundInt 0.25)
-                ]
-        -- Remove inquisitors.
-        r5 =    [ ("max_inquisitors\\s.+?\"", id)
+        -- Remove witches, heretics, and inquisitors.
+        r1 =    [ ("max_witches uint.+?\"", id)
                 , (_REGEX_INT, only "0")
                 ]
-        -- Improve priest denouncing power (against heretics/witches) 2x
-        r6 =    [ ("denounce_priest_base_chance.+?\"", id)
-                , (multDouble 2)
+        r2 =    [ ("max_heretics uint.+?\"", id)
+                , (_REGEX_INT, only "0")
+                ]
+        r3 =    [ ("max_inquisitors\\s.+?\"", id)
+                , (_REGEX_INT, only "0")
                 ]
         -- Improve effectiveness of assassins 2x
-        r7 =    [ ("assassinate_base_chance.+?\"", id)
+        r4 =    [ ("assassinate_base_chance.+?\"", id)
                 , (multRoundInt 2)
                 ]
         -- Assassin's minimum success chance changed from 5% to 17% (1 out of 6, just like rolling a
         -- die; so a newbie assassin should be able to succeed more easily), and maximum chance
         -- changed from 95% to 99%
-        r8 =    [ ("assassinate_chance_min.+?\"", id)
+        r5 =    [ ("assassinate_chance_min.+?\"", id)
                 , (_REGEX_INT, only "17")
                 ]
-        r9 =    [ ("assassinate_chance_max.+?\"", id)
+        r6 =    [ ("assassinate_chance_max.+?\"", id)
                 , (_REGEX_INT, only "99")
                 ]
         -- Allow a settlement to recruit 2 agents of the same type in a single turn.
-        r10 =   [ ("max_agents_per_turn.+?\"", id)
+        r7 =    [ ("max_agents_per_turn.+?\"", id)
                 , (multRoundInt 2)
                 ]
 
