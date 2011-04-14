@@ -165,7 +165,7 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4']
                 , (_REGEX_INT, only "15")
                 ]
 
-_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest mtePurse ++ mineFuncs capsSecs ++ addTrueTest giveRoads
+_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMerchantPrincessSpy ++ addTrueTest mtePurse ++ mineFuncs capsSecs ++ addTrueTest giveRoads
     where
         -- Rebel spawn rate 20x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -200,6 +200,18 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest mtePurse
         -- second city)
         r7 =    [ ("^resource\\s+silver,\\s+4,\\s+123\\r\\n", addResource "silver" silverCoords, alwaysTrue)
                 ]
+        -- Remove all merchants, princesses, and spies from the starting map.
+        noMerchantPrincessSpy =
+            [
+                [ ("character[^\\r]+merchant.+?\\r\\n.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("character[^\\r]+princess.+?\\r\\n.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("character[^\\r]+spy.+?\\r\\n.+?\\r\\n", nil)
+                ]
+            ]
         showResource :: String -> (Int, Int) -> String
         showResource res (x, y) = "resource\t" ++ res ++ ",\t" ++ show x ++ ",\t" ++ show y ++ "\r\n"
         addResource :: String -> [(Int, Int)] -> BC.ByteString -> BC.ByteString
