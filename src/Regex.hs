@@ -288,7 +288,7 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (noMerch
             , (66, 105) -- Spain
             , (57, 81) -- Portugal
             , (69, 74) -- Moors
-            , (127, 107) -- Milan
+            , (130, 108) -- Milan
             , (151, 66) -- Sicily
             , (148, 93) -- Papal States (Rome region)
             , (145, 91) -- Papal States (Rome region)
