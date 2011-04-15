@@ -995,13 +995,13 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                     -- castle_port
                     [ ("^building\\s+castle_port.+?            \\{\\r\\n", id)
                     , ("\\s+recruit_pool.+?", only $ _PORT_RECRUITS _RP2)
-                    , ("^            }.+?capability.+?\\{\\r\\n", id)
+                    , ("                trade.+?\\r\\n^            }.+?capability.+?\\{\\r\\n", id)
                     , ("\\s+recruit_pool.+?", only $ _PORT_RECRUITS _RP3)
-                    , ("^            }.+?capability.+?\\{\\r\\n", id)
+                    , ("                trade.+?\\r\\n^            }.+?capability.+?\\{\\r\\n", id)
                     , ("\\s+recruit_pool.+?", only $ _PORT_RECRUITS _RP4)
-                    , ("^            }.+?capability.+?\\{\\r\\n", id)
+                    , ("                trade.+?\\r\\n^            }.+?capability.+?\\{\\r\\n", id)
                     , ("\\s+recruit_pool.+?", only $ _PORT_RECRUITS _RP5)
-                    , ("^            }", id)
+                    , ("                trade.+?\\r\\n^            }", id)
                     ]
                 ,
                     -- markets (transilvanian peasants --- hungary)
