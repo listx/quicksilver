@@ -666,7 +666,7 @@ _EDAN_FUNCS = addTrueTest [r1]
         r1 =    [ ("^Trigger spymaster_vnv_trigger2.+?;-+\r\n", nil)
                 ]
 
-_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild] ++ addTrueTest (noMerchantSpy ++ mergeFarmsTavernsWharves ++ recruitment)
+_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild] ++ addTrueTest (noMerchantSpy ++ mergeFarmsTavernsWharves ++ fastPorts ++ recruitment)
     where
         -- Mining income 75x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
@@ -849,6 +849,30 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                 ,
                     -- remove merchant wharves
                     [ ("^building sea_trade.+", only ";")
+                    ]
+                ]
+        fastPorts =
+                [
+                    -- remove gunpowder and world_is_round requirements for advanced port buildings
+                    -- (city and castle)
+                    [ ("^\\s+dockyard city.+?\\}", id)
+                    , (".+?", nil)
+                    , ("\\r", id)
+                    ]
+                ,
+                    [ ("^\\s+naval_drydock city.+?\\}", id)
+                    , (".+?", nil)
+                    , ("\\r", id)
+                    ]
+                ,
+                    [ ("^\\s+c_dockyard castle.+?\\}", id)
+                    , (".+?", nil)
+                    , ("\\r", id)
+                    ]
+                ,
+                    [ ("^\\s+c_naval_drydock castle.+?\\}", id)
+                    , (".+?", nil)
+                    , ("\\r", id)
                     ]
                 ]
         -- For every type of building (barracks, archery range, city hall, etc.), let all levels of
