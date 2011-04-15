@@ -601,7 +601,7 @@ _EDCT_FUNCS = addTrueTest [r1, r2, r3]
                 , ("^Trigger spyinit6.+?;-+\\r\\n", nil)
                 ]
 
-_EDA_FUNCS = addTrueTest [r1, r2] ++ addTrueTest farmsTaverns
+_EDA_FUNCS = addTrueTest [r1, r2] ++ addTrueTest farmsTavernsWharves
     where
         -- Remove advice for mines+1 and c_mines+1 (since they are removed from EDB)
         r1 =    [ ("^Trigger 1062.+?;-+\r\n", nil)
@@ -609,7 +609,7 @@ _EDA_FUNCS = addTrueTest [r1, r2] ++ addTrueTest farmsTaverns
         r2 =    [ ("^Trigger 1064.+?;-+\r\n", nil)
                 ]
         -- Remove advice for farms and taverns.
-        farmsTaverns =
+        farmsTavernsWharves =
             [
                 -- farms
                 [ ("^Trigger 0734.+?;-+\r\n", nil)
@@ -645,6 +645,19 @@ _EDA_FUNCS = addTrueTest [r1, r2] ++ addTrueTest farmsTaverns
             ,
                 [ ("^Trigger 1117.+?;-+\r\n", nil)
                 ]
+            ,
+                -- wharves
+                [ ("^AdviceThread Construction_Sea_Trade_Advice_Thread.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 1110.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 1111.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 1112.+?;-+\r\n", nil)
+                ]
             ]
 
 _EDAN_FUNCS = addTrueTest [r1]
@@ -653,7 +666,7 @@ _EDAN_FUNCS = addTrueTest [r1]
         r1 =    [ ("^Trigger spymaster_vnv_trigger2.+?;-+\r\n", nil)
                 ]
 
-_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild] ++ addTrueTest (noMerchantSpy ++ mergeFarmsTaverns ++ recruitment)
+_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild] ++ addTrueTest (noMerchantSpy ++ mergeFarmsTavernsWharves ++ recruitment)
     where
         -- Mining income 75x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
@@ -790,7 +803,9 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                 ]
         happiness n = replicate 16 ' ' ++ "happiness_bonus bonus " ++ n ++ "\r\n"
         assassin = replicate 16 ' ' ++ "agent assassin  0  requires factions { northern_european, middle_eastern, eastern_european, greek, southern_european, } \r\n"
-        mergeFarmsTaverns =
+        tradeFleet n = replicate 16 ' ' ++ "trade_fleet " ++ n ++ "\r\n"
+        tradeBaseIncomeBonus n = replicate 16 ' ' ++ "trade_base_income_bonus bonus " ++ n ++ "\r\n"
+        mergeFarmsTavernsWharves =
                 [
                     -- merge farms into city and castle walls (capability farming_level 1, 2, 3, 4),
                     -- and remove farms
@@ -823,6 +838,17 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                 ,
                     -- remove taverns
                     [ ("^building taverns.+", only ";")
+                    ]
+                ,
+                    -- merge merchant's wharf into ports (only city ports, NOT castle ports!)
+                    [ ("^building\\s+port.+?capability.+?capability.+?", id)
+                    , ("\\{\\r\\n", add $ tradeFleet "1" ++ tradeBaseIncomeBonus "2")
+                    , (".+?capability.+?\\{\\r\\n", add $ tradeFleet "2" ++ tradeBaseIncomeBonus "3")
+                    , (".+?capability.+?\\{\\r\\n", add $ tradeFleet "3" ++ tradeBaseIncomeBonus "4")
+                    ]
+                ,
+                    -- remove merchant wharves
+                    [ ("^building sea_trade.+", only ";")
                     ]
                 ]
         -- For every type of building (barracks, archery range, city hall, etc.), let all levels of
@@ -1125,7 +1151,7 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                     ]
                 ]
 
-_EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (thieves ++ farms ++ taverns)
+_EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (thieves ++ farms ++ taverns ++ wharves)
     where
         -- Remove all references to mines+1 and c_mines+1
         r1 =    [ ("^mines\\+.+?\\r\\n", nil)
@@ -1169,6 +1195,21 @@ _EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (thieves ++ farms ++ taverns)
                 ]
             ,
                 [ ("^taverns_name.+?\\r\\n", nil)
+                ]
+            ]
+        -- Remove all references to wharves
+        wharves =
+            [
+                [ ("^merchants_wharf.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("^warehouse.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("^docklands.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("^sea_trade.+?\\r\\n", nil)
                 ]
             ]
 
