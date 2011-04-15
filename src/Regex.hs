@@ -179,7 +179,7 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTrueTest
                 ]
             ]
 
-_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMerchantPrincessSpy ++ addTrueTest mtePurse ++ mineFuncs capsSecs ++ mineFuncs capsSecs' ++ addTrueTest giveRoads
+_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMerchantPrincessSpy ++ addTrueTest mtePurse ++ mineFuncs capsSecs ++ mineFuncs capsSecs' ++ addTrueTest noFarms ++ addTrueTest giveRoads
     where
         -- Rebel spawn rate 20x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -435,6 +435,11 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMercha
                 , ("\\r\\n\\}", prepend roadsCastle)
                 ]
             ]
+        noFarms =
+            [
+                [ ("^\\s+building\\r\\n\\s+\\{\\r\\n\\s+type\\s+hinterland_farms\\s+farms\\r\\n\\s+\\}\\r\\n", nil)
+                ]
+            ]
 
 _DSF_FUNCS = addTrueTest [r1]
     where
@@ -593,13 +598,31 @@ _EDCT_FUNCS = addTrueTest [r1, r2, r3]
                 , ("^Trigger spyinit6.+?;-+\\r\\n", nil)
                 ]
 
-_EDA_FUNCS = addTrueTest [r1, r2]
+_EDA_FUNCS = addTrueTest [r1, r2] ++ addTrueTest farms
     where
         -- Remove advice for mines+1 and c_mines+1 (since they are removed from EDB)
         r1 =    [ ("^Trigger 1062.+?;-+\r\n", nil)
                 ]
         r2 =    [ ("^Trigger 1064.+?;-+\r\n", nil)
                 ]
+        -- Remove advice for farms.
+        farms =
+            [
+                [ ("^Trigger 0734.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 1053.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 1054.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 1055.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 1056.+?;-+\r\n", nil)
+                ]
+            ]
 
 _EDAN_FUNCS = addTrueTest [r1]
     where
@@ -607,7 +630,7 @@ _EDAN_FUNCS = addTrueTest [r1]
         r1 =    [ ("^Trigger spymaster_vnv_trigger2.+?;-+\r\n", nil)
                 ]
 
-_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild] ++ addTrueTest noMerchantSpy ++ addTrueTest rN
+_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild] ++ addTrueTest noMerchantSpy ++ addTrueTest recruitment ++ addTrueTest mergeFarms
     where
         -- Mining income 75x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
@@ -746,7 +769,8 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
         -- For every type of building (barracks, archery range, city hall, etc.), let all levels of
         -- that building be able to recruit all units; no more waiting idly until your city becomes
         -- a Huge City to be able to recruit elite units.
-        rN =   [
+        recruitment =
+                [
                     -- core_building
                     [ ("^building\\s+core_building.+?            \\{\\r\\n", id)
                     , ("\\s+recruit_pool.+?", only $ _CORE_BUILDING_RECRUITS _RP0)
@@ -1042,18 +1066,54 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                     , ("^                archer_bonus", id)
                     ]
                 ]
+        mergeFarms =
+                [
+                    -- merge farms into city and castle walls (capability farming_level 1, 2, 3, 4),
+                    -- and remove farms
+                    [ ("^building\\s+core_building.+?", id)
+                    , ("^\\s+wall_level 0\\r\\n", add "                farming_level 1\r\n")
+                    , (".+?wall_level 1\\r\\n", add "                farming_level 2\r\n")
+                    , (".+?wall_level 2\\r\\n", add "                farming_level 3\r\n")
+                    , (".+?wall_level 3\\r\\n", add "                farming_level 4\r\n")
+                    ]
+                ,
+                    [ ("^building\\s+core_castle_building.+?", id)
+                    , ("^\\s+wall_level 0\\r\\n", add "                farming_level 1\r\n")
+                    , (".+?wall_level 1\\r\\n", add "                farming_level 2\r\n")
+                    , (".+?wall_level 2\\r\\n", add "                farming_level 3\r\n")
+                    , (".+?wall_level 3\\r\\n", add "                farming_level 4\r\n")
+                    ]
+                ,
+                    -- remove farms
+                    [ ("^building hinterland_farms.+", only ";")
+                    ]
+                ]
 
-_EDBE_FUNCS = addTrueTest [r1, r2, thieves]
+_EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest thieves ++ addTrueTest farms
     where
         -- Remove all references to mines+1 and c_mines+1
         r1 =    [ ("^mines\\+.+?\\r\\n", nil)
                 ]
         r2 =    [ ("^c_mines\\+.+?\\r\\n", nil)
                 ]
-        -- Remove all references to thieves guild buildings.
+        -- Remove all references to thieves guild buildings
         thieves =
+            [
                 [ ("^[^\\r]*?thieves.+?\\r\\n", nil)
                 ]
+            ,
+                [ ("^guild_thiefs.+?\\r\\n", nil)
+                ]
+            ]
+        -- Remove all references to farms.
+        farms =
+            [
+                [ ("^farms.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("^hinterland_farms.+?\\r\\n", nil)
+                ]
+            ]
 
 _EDG_FUNCS = addTrueTest [r1]
     where
