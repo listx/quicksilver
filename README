@@ -54,8 +54,7 @@
 - Reduce "religious unrest" penalty by 50%
 - Disable all mission penalties
 - Disable the "cease hostilities" mission
-- Fix guild_assassin_payback bug (10 guild points (obvious typo) instead of 100 guild points) in descr_missions.txt
-  NOTE: This may be a silent bug (AFAIK I've never encountered it), but it's still a bug nevertheless.
+- Successful assassination gives 5 assassins guild points instead of 10.
 - Increase every mission's monetary reward (the higher the reward, the greater the increase); see descr_missions.txt for details.
 - Fix council_min/mod_money bug in descr_missions.txt (the lines starting with "    cash ..." were not correctly mapped to their intended paybacks)
     - Also, increase the cash threshold 10x for triggering the major/mod/min money rewards (since quicksilver's other modifications make it so that the player has a large cash reserve most of the time).

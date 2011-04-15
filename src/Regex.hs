@@ -107,10 +107,9 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTrueTest
                 ]
         r2 =    [ ("^mission\\s+cease.+?^\\}\\r\\n\\r\\n\\r\\n", nil)
                 ]
-        -- Fix guild_assassin_payback bug (10 guild points (obvious typo) instead of 100 guild
-        -- points)
+        -- Reduce assassins' guild payback to 5 from 10.
         r3 =    [ ("guild_money\\s+", id)
-                , (_REGEX_INT, only "100")
+                , (_REGEX_INT, only "5")
                 , ("\\s+assassins_guild", id)
                 ]
         -- Increase all missions' monetary rewards with this formula:
