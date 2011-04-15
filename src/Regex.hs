@@ -585,8 +585,6 @@ _EDCT_FUNCS = addTrueTest [r1, r2, r3]
         -- Give good assassins a line of sight bonus with increased skill.
         r2 =    [ ("^Trait GoodAssassin.+?", id)
                 , ("Effect Subterfuge.+?", id)
-                , ("\\r\\n", only "\r\n        Effect LineOfSight 2\r\n")
-                , (".+?Effect Subterfuge.+?", id)
                 , ("\\r\\n", only "\r\n        Effect LineOfSight 3\r\n")
                 , (".+?Effect Subterfuge.+?", id)
                 , ("\\r\\n", only "\r\n        Effect LineOfSight 5\r\n")
@@ -594,6 +592,8 @@ _EDCT_FUNCS = addTrueTest [r1, r2, r3]
                 , ("\\r\\n", only "\r\n        Effect LineOfSight 8\r\n")
                 , (".+?Effect Subterfuge.+?", id)
                 , ("\\r\\n", only "\r\n        Effect LineOfSight 9\r\n")
+                , (".+?Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 10\r\n")
                 ]
         -- Remove all references to thieves guild.
         r3 =    [ ("^Trigger spyinit4.+?;-+\\r\\n", nil)
