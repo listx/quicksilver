@@ -1236,11 +1236,41 @@ _EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (thieves ++ farms ++ taverns +
                 ]
             ]
 
-_EDG_FUNCS = addTrueTest [r1]
+_EDG_FUNCS = addTrueTest [r1] ++ addTrueTest (taverns ++ wharves)
     where
         -- Remove thieves guild.
         r1 =    [ ("^Guild thiefs.+?;-+\\r\\n", nil)
                 ]
+        -- Change tavern buildings references into markets.
+        taverns =
+            [
+                [ ("brothel", only "corn_exchange")
+                ]
+            ,
+                [ ("inn", only "market")
+                ]
+            ,
+                [ ("tavern", only "fairground")
+                ]
+            ,
+                [ ("coaching_house", only "great_market")
+                ]
+            ,
+                [ ("pleasure_palace", only "merchants_quarter")
+                ]
+            ]
+        -- Change wharves buildings references into ports.
+        wharves =
+            [
+                [ ("merchants_wharf", only "shipwright")
+                ]
+            ,
+                [ ("warehouse", only "dockyard")
+                ]
+            ,
+                [ ("docklands", only "naval_drydock")
+                ]
+            ]
 
 _EDU_FUNCS = addTrueTest [r1, r2, r3] ++ [rN]
     where
