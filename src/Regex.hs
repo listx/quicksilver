@@ -36,35 +36,70 @@ _DC_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest assassin
                 ]
             ]
 
-_DCD_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7]
+_DCD_FUNCS = addTrueTest [agent] ++ addTrueTest (witchesHereticsInquisitors ++ assassin)
     where
-        -- Remove witches, heretics, and inquisitors.
-        r1 =    [ ("max_witches uint.+?\"", id)
-                , (_REGEX_INT, only "0")
-                ]
-        r2 =    [ ("max_heretics uint.+?\"", id)
-                , (_REGEX_INT, only "0")
-                ]
-        r3 =    [ ("max_inquisitors\\s.+?\"", id)
-                , (_REGEX_INT, only "0")
-                ]
-        -- Improve effectiveness of assassins 2x
-        r4 =    [ ("assassinate_base_chance.+?\"", id)
+        -- Allow a settlement to recruit 2 agents of the same type in a single turn.
+        agent =
+                [ ("max_agents_per_turn.+?\"", id)
                 , (multRoundInt 2)
                 ]
-        -- Assassin's minimum success chance changed from 5% to 17% (1 out of 6, just like rolling a
-        -- die; so a newbie assassin should be able to succeed more easily), and maximum chance
-        -- changed from 95% to 99%
-        r5 =    [ ("assassinate_chance_min.+?\"", id)
+        -- Remove witches, heretics, and inquisitors.
+        witchesHereticsInquisitors =
+            [
+                [ ("max_witches uint.+?\"", id)
+                , (_REGEX_INT, only "0")
+                ]
+            ,
+                [ ("max_witches_per_region uint.+?\"", id)
+                , (_REGEX_INT, only "0")
+                ]
+            ,
+                [ ("witch_creation.+?\"", id)
+                , (_REGEX_DOUBLE, only "0.0")
+                ]
+            ,
+                [ ("max_heretics uint.+?\"", id)
+                , (_REGEX_INT, only "0")
+                ]
+            ,
+                [ ("max_heretics_per_region uint.+?\"", id)
+                , (_REGEX_INT, only "0")
+                ]
+            ,
+                [ ("heretic_creation.+?\"", id)
+                , (_REGEX_DOUBLE, only "0.0")
+                ]
+            ,
+                [ ("max_inquisitors uint.+?\"", id)
+                , (_REGEX_INT, only "0")
+                ]
+            ,
+                [ ("max_inquisitors_per_region uint.+?\"", id)
+                , (_REGEX_INT, only "0")
+                ]
+            ,
+                [ ("inquisitor_creation.+?\"", id)
+                , (_REGEX_DOUBLE, only "0.0")
+                ]
+            ]
+        assassin =
+            [
+                -- Improve effectiveness of assassins 2x
+                [ ("assassinate_base_chance.+?\"", id)
+                , (multRoundInt 2)
+                ]
+            ,
+                -- Assassin's minimum success chance changed from 5% to 17% (1 out of 6, just like
+                -- rolling a die; so a newbie assassin should be able to succeed more easily), and
+                -- maximum chance changed from 95% to 99%
+                [ ("assassinate_chance_min.+?\"", id)
                 , (_REGEX_INT, only "17")
                 ]
-        r6 =    [ ("assassinate_chance_max.+?\"", id)
+            ,
+                [ ("assassinate_chance_max.+?\"", id)
                 , (_REGEX_INT, only "99")
                 ]
-        -- Allow a settlement to recruit 2 agents of the same type in a single turn.
-        r7 =    [ ("max_agents_per_turn.+?\"", id)
-                , (multRoundInt 2)
-                ]
+            ]
 
 _DCAD_FUNCS = addTrueTest [r1]
     where
