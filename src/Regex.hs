@@ -100,7 +100,7 @@ _DFS_FUNCS = addTrueTest [rN]
         rN =    [ ("^;Trigger 0102_city_razed.+?;-+", nil)
                 ]
 
-_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTrueTest merchantsGuild ++ addTrueTest thievesGuild
+_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTrueTest (merchantsGuild ++ thievesGuild)
     where
         -- Disable all mission penalties, and disable the "cease hostilities" mission
         r1 =    [ ("^\\s+penalty\\r\\n.+?\\}\\r\\n", nil)
@@ -179,7 +179,7 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTrueTest
                 ]
             ]
 
-_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMerchantPrincessSpy ++ addTrueTest mtePurse ++ mineFuncs capsSecs ++ mineFuncs capsSecs' ++ addTrueTest noFarms ++ addTrueTest giveRoads
+_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (noMerchantPrincessSpy ++ mtePurse) ++ mineFuncs capsSecs ++ mineFuncs capsSecs' ++ addTrueTest (noFarmsTaverns ++ giveRoads)
     where
         -- Rebel spawn rate 20x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -435,9 +435,12 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest noMercha
                 , ("\\r\\n\\}", prepend roadsCastle)
                 ]
             ]
-        noFarms =
+        noFarmsTaverns =
             [
                 [ ("^\\s+building\\r\\n\\s+\\{\\r\\n\\s+type\\s+hinterland_farms\\s+farms\\r\\n\\s+\\}\\r\\n", nil)
+                ]
+            ,
+                [ ("^\\s+building\\r\\n\\s+\\{\\r\\n\\s+type\\s+taverns.+?\\r\\n\\s+\\}\\r\\n", nil)
                 ]
             ]
 
@@ -598,16 +601,17 @@ _EDCT_FUNCS = addTrueTest [r1, r2, r3]
                 , ("^Trigger spyinit6.+?;-+\\r\\n", nil)
                 ]
 
-_EDA_FUNCS = addTrueTest [r1, r2] ++ addTrueTest farms
+_EDA_FUNCS = addTrueTest [r1, r2] ++ addTrueTest farmsTaverns
     where
         -- Remove advice for mines+1 and c_mines+1 (since they are removed from EDB)
         r1 =    [ ("^Trigger 1062.+?;-+\r\n", nil)
                 ]
         r2 =    [ ("^Trigger 1064.+?;-+\r\n", nil)
                 ]
-        -- Remove advice for farms.
-        farms =
+        -- Remove advice for farms and taverns.
+        farmsTaverns =
             [
+                -- farms
                 [ ("^Trigger 0734.+?;-+\r\n", nil)
                 ]
             ,
@@ -622,6 +626,25 @@ _EDA_FUNCS = addTrueTest [r1, r2] ++ addTrueTest farms
             ,
                 [ ("^Trigger 1056.+?;-+\r\n", nil)
                 ]
+            ,
+                -- taverns
+                [ ("^AdviceThread Construction_Taverns_Advice_Thread.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 1113.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 1114.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 1115.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 1116.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 1117.+?;-+\r\n", nil)
+                ]
             ]
 
 _EDAN_FUNCS = addTrueTest [r1]
@@ -630,7 +653,7 @@ _EDAN_FUNCS = addTrueTest [r1]
         r1 =    [ ("^Trigger spymaster_vnv_trigger2.+?;-+\r\n", nil)
                 ]
 
-_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild] ++ addTrueTest noMerchantSpy ++ addTrueTest recruitment ++ addTrueTest mergeFarms
+_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild] ++ addTrueTest (noMerchantSpy ++ mergeFarmsTaverns ++ recruitment)
     where
         -- Mining income 75x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
@@ -765,7 +788,43 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
         noThievesGuild =
                 [ ("^building guild_thiefs_guild.+", only ";")
                 ]
-
+        happiness n = replicate 16 ' ' ++ "happiness_bonus bonus " ++ n ++ "\r\n"
+        assassin = replicate 16 ' ' ++ "agent assassin  0  requires factions { northern_european, middle_eastern, eastern_european, greek, southern_european, } \r\n"
+        mergeFarmsTaverns =
+                [
+                    -- merge farms into city and castle walls (capability farming_level 1, 2, 3, 4),
+                    -- and remove farms
+                    [ ("^building\\s+core_building.+?", id)
+                    , ("^\\s+wall_level 0\\r\\n", add "                farming_level 1\r\n")
+                    , (".+?wall_level 1\\r\\n", add "                farming_level 2\r\n")
+                    , (".+?wall_level 2\\r\\n", add "                farming_level 3\r\n")
+                    , (".+?wall_level 3\\r\\n", add "                farming_level 4\r\n")
+                    ]
+                ,
+                    [ ("^building\\s+core_castle_building.+?", id)
+                    , ("^\\s+wall_level 0\\r\\n", add "                farming_level 1\r\n")
+                    , (".+?wall_level 1\\r\\n", add "                farming_level 2\r\n")
+                    , (".+?wall_level 2\\r\\n", add "                farming_level 3\r\n")
+                    , (".+?wall_level 3\\r\\n", add "                farming_level 4\r\n")
+                    ]
+                ,
+                    -- remove farms
+                    [ ("^building hinterland_farms.+", only ";")
+                    ]
+                  -- merge taverns into markets (transilvanian peasant recruitment is added by the (recruitment) function below)
+                ,
+                    [ ("^building\\s+market.+?", id)
+                    , ("^\\s+agent_limit merchant 1\\r\\n", add $ assassin ++ happiness "1")
+                    , (".+?agent_limit merchant 1\\r\\n", add $ assassin ++ happiness "2")
+                    , (".+?agent_limit merchant 1\\r\\n", add $ assassin ++ happiness "3")
+                    , (".+?agent_limit merchant 1\\r\\n", add $ assassin ++ happiness "4")
+                    , (".+?agent_limit merchant 1\\r\\n", add $ assassin ++ happiness "5")
+                    ]
+                ,
+                    -- remove taverns
+                    [ ("^building taverns.+", only ";")
+                    ]
+                ]
         -- For every type of building (barracks, archery range, city hall, etc.), let all levels of
         -- that building be able to recruit all units; no more waiting idly until your city becomes
         -- a Huge City to be able to recruit elite units.
@@ -945,14 +1004,13 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                     , ("^            }", id)
                     ]
                 ,
-                    -- taverns (transilvanian peasants --- hungary)
-                    [ ("^building\\s+taverns.+?capability.+?capability.+?capability.+?assassin[^\\r]+?southern_european.+?\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ _TAVERNS_RECRUITS _RP3)
-                    , ("^                happiness.+?capability.+?assassin[^\\r]+?southern_european.+?\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ _TAVERNS_RECRUITS _RP4)
-                    , ("^                happiness.+?capability.+?assassin[^\\r]+?southern_european.+?\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ _TAVERNS_RECRUITS _RP5)
-                    , ("^                happiness", id)
+                    -- markets (transilvanian peasants --- hungary)
+                    [ ("^building\\s+market.+?capability.+?capability.+?capability.+?", id)
+                    , ("trade_base.+?\\r\\n", add $ _TAVERNS_RECRUITS _RP3)
+                    , (".+?capability.+?", id)
+                    , ("trade_base.+?\\r\\n", add $ _TAVERNS_RECRUITS _RP4)
+                    , (".+?capability.+?", id)
+                    , ("trade_base.+?\\r\\n", add $ _TAVERNS_RECRUITS _RP5)
                     ]
                 ,
                     -- city_hall
@@ -1066,30 +1124,8 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                     , ("^                archer_bonus", id)
                     ]
                 ]
-        mergeFarms =
-                [
-                    -- merge farms into city and castle walls (capability farming_level 1, 2, 3, 4),
-                    -- and remove farms
-                    [ ("^building\\s+core_building.+?", id)
-                    , ("^\\s+wall_level 0\\r\\n", add "                farming_level 1\r\n")
-                    , (".+?wall_level 1\\r\\n", add "                farming_level 2\r\n")
-                    , (".+?wall_level 2\\r\\n", add "                farming_level 3\r\n")
-                    , (".+?wall_level 3\\r\\n", add "                farming_level 4\r\n")
-                    ]
-                ,
-                    [ ("^building\\s+core_castle_building.+?", id)
-                    , ("^\\s+wall_level 0\\r\\n", add "                farming_level 1\r\n")
-                    , (".+?wall_level 1\\r\\n", add "                farming_level 2\r\n")
-                    , (".+?wall_level 2\\r\\n", add "                farming_level 3\r\n")
-                    , (".+?wall_level 3\\r\\n", add "                farming_level 4\r\n")
-                    ]
-                ,
-                    -- remove farms
-                    [ ("^building hinterland_farms.+", only ";")
-                    ]
-                ]
 
-_EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest thieves ++ addTrueTest farms
+_EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (thieves ++ farms ++ taverns)
     where
         -- Remove all references to mines+1 and c_mines+1
         r1 =    [ ("^mines\\+.+?\\r\\n", nil)
@@ -1112,6 +1148,27 @@ _EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest thieves ++ addTrueTest farms
                 ]
             ,
                 [ ("^hinterland_farms.+?\\r\\n", nil)
+                ]
+            ]
+        -- Remove all references to taverns.
+        taverns =
+            [
+                [ ("^brothel.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("^inn.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("^tavern.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("^coaching.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("^pleasure.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("^taverns_name.+?\\r\\n", nil)
                 ]
             ]
 
