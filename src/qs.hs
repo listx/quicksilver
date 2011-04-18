@@ -27,11 +27,10 @@ data SourceParent =
 
 main :: IO ()
 main = do
-    args <- getArgs
-    when (null args) $ putStrLn "Use -h or --help." >> exitWith ExitSuccess
     hSetBuffering stdout NoBuffering
     hSetBuffering stderr NoBuffering
-    opts <- getOpts
+    args <- getArgs
+    opts <- (if null args then withArgs ["--help"] else Prelude.id) getOpts
     putStrLn $ "Data path: " ++ (enquote $ installed_data_dir opts)
     putStrLn $ "Unpacked data path: " ++ (enquote $ unpacked_data_dir opts)
     checkOpts opts
