@@ -36,7 +36,7 @@ _DC_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest assassin
                 ]
             ]
 
-_DCD_FUNCS = addTrueTest [agent] ++ addTrueTest (witchesHereticsInquisitors ++ assassin)
+_DCD_FUNCS = addTrueTest [agent, rebels] ++ addTrueTest (witchesHereticsInquisitors ++ assassin)
     where
         -- Allow a settlement to recruit 2 agents of the same type in a single turn.
         agent =
@@ -100,6 +100,10 @@ _DCD_FUNCS = addTrueTest [agent] ++ addTrueTest (witchesHereticsInquisitors ++ a
                 , (_REGEX_INT, only "99")
                 ]
             ]
+        rebels =
+                [ ("min_turn_keep_rebel_garrison.+?\"", id)
+                , (_REGEX_INT, only "0")
+                ]
 
 _DCAD_FUNCS = addTrueTest [r1]
     where
@@ -213,7 +217,7 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTrueTest
                 ]
             ]
 
-_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (noMerchantPrincessSpy ++ mtePurse) ++ mineFuncs capsSecs ++ mineFuncs capsSecs' ++ addTrueTest (noFarmsTaverns ++ giveRoads)
+_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (noMerchantPrincessSpy ++ mtePurse) ++ mineFuncs capsSecs ++ mineFuncs capsSecs' ++ addTrueTest (noFarmsTaverns ++ giveRoads ++ rebels)
     where
         -- Rebel spawn rate 20x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -475,6 +479,22 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (noMerch
                 ]
             ,
                 [ ("^\\s+building\\r\\n\\s+\\{\\r\\n\\s+type\\s+taverns.+?\\r\\n\\s+\\}\\r\\n", nil)
+                ]
+            ]
+        rebels =
+            [
+                -- give rebels 5,000,000 gold to start with
+                [ ("slave.+?denari.+?", id)
+                , (_REGEX_INT, only "5000000")
+                ]
+            ,
+                -- give rebels 500,000 gold per turn
+                [ ("slave.+?denari_kings_purse.+?", id)
+                , (_REGEX_INT, only "500000")
+                ]
+            ,
+                -- change AI from rebels to default (just like all the non-catholic factions)
+                [ ("slave_faction", only "default")
                 ]
             ]
 
