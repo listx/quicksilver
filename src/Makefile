@@ -1,5 +1,5 @@
 all:
-	ghc -O2 --make qs
+	ghc -O2 -Wall -Werror --make qs
 
 prof:
 	ghc -O2 -rtsopts -prof -auto-all --make qs -v

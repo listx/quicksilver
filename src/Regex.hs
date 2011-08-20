@@ -7,13 +7,14 @@ import Text.Regex.PCRE hiding (match)
 import qualified Text.Printf as TP
 
 import Data
-import Option
 import Util
 
+_REGEX_INT, _REGEX_DOUBLE, _REGEX_LINE :: String
 _REGEX_INT = "\\d+"
 _REGEX_DOUBLE = "\\d+\\.\\d+"
 _REGEX_LINE = "[^\\r]+\\r\\n"
 
+_DC_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _DC_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest assassin
     where
         -- Ship movement speed 3x
@@ -36,6 +37,7 @@ _DC_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest assassin
                 ]
             ]
 
+_DCD_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _DCD_FUNCS = addTrueTest [agent, rebels] ++ addTrueTest (witchesHereticsInquisitors ++ assassin)
     where
         -- Allow a settlement to recruit 2 agents of the same type in a single turn.
@@ -105,6 +107,7 @@ _DCD_FUNCS = addTrueTest [agent, rebels] ++ addTrueTest (witchesHereticsInquisit
                 , (_REGEX_INT, only "0")
                 ]
 
+_DCAD_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _DCAD_FUNCS = addTrueTest [r1]
     where
         -- Stop Papal States from capturing rebel settlements (helps land-strapped factions like Milan and Sicily expand into Africa more easily)
@@ -126,6 +129,7 @@ _DCAD_FUNCS = addTrueTest [r1]
                 , ("\\r\\n\\s+<decision_entry>", id)
                 ]
 
+_DCL_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _DCL_FUNCS = addTrueTest [rN]
     where
         -- Assassin recruitment cost 3x
@@ -133,12 +137,14 @@ _DCL_FUNCS = addTrueTest [rN]
                 , (multRoundInt 3)
                 ]
 
+_DFS_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _DFS_FUNCS = addTrueTest [rN]
     where
         -- Fixed faction standing bug
         rN =    [ ("^;Trigger 0102_city_razed.+?;-+", nil)
                 ]
 
+_DM_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTrueTest (merchantsGuild ++ thievesGuild)
     where
         -- Disable all mission penalties, and disable the "cease hostilities" mission
@@ -217,6 +223,7 @@ _DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTrueTest
                 ]
             ]
 
+_DS_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (noMerchantPrincessSpy ++ mtePurse) ++ mineFuncs capsSecs ++ mineFuncs capsSecs' ++ addTrueTest (noFarmsTaverns ++ giveRoads ++ rebels)
     where
         -- Rebel spawn rate 20x lower
@@ -498,6 +505,7 @@ _DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (noMerch
                 ]
             ]
 
+_DSF_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _DSF_FUNCS = addTrueTest [r1]
     where
         -- Prevent all factions from getting princesses
@@ -505,6 +513,7 @@ _DSF_FUNCS = addTrueTest [r1]
                 , ("yes", only "no")
                 ]
 
+_DSK_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _DSK_FUNCS = addTrueTest [r1, r2, r3]
     where
         -- Diplomats/princesses: remove annoying "conduct diplomacy" animation
@@ -516,6 +525,7 @@ _DSK_FUNCS = addTrueTest [r1, r2, r3]
         r3 =    [ ("^anim\\s+selected_to_stand[^\\r]+?Stratmap_Princess.+?\\r\\n", nil)
                 ]
 
+_DSM_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _DSM_FUNCS = addTrueTest [r1, r2, r3, r4]
     where
         -- Reduce "distance to capital" penalty by 75%
@@ -569,6 +579,7 @@ _DSM_FUNCS = addTrueTest [r1, r2, r3, r4]
                 , (multRoundInt 0.9)
                 ]
 
+_DSR_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _DSR_FUNCS = addTrueTest [r1, r2, r3, r4]
     where
         -- Gold resource worth 2
@@ -597,6 +608,7 @@ _DSR_FUNCS = addTrueTest [r1, r2, r3, r4]
                 , ("\\r\\nhas_mine", nil)
                 ]
 
+_DW_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _DW_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
     where
         -- Walls and gate HP 5x
@@ -631,6 +643,7 @@ _DW_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
                 , (multRoundInt 8)
                 ]
 
+_EDCT_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _EDCT_FUNCS = addTrueTest [r1, r2, r3]
     where
         -- Remove corruption trigger based on high treasury
@@ -655,6 +668,7 @@ _EDCT_FUNCS = addTrueTest [r1, r2, r3]
                 , ("^Trigger spyinit6.+?;-+\\r\\n", nil)
                 ]
 
+_EDA_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _EDA_FUNCS = addTrueTest [r1, r2] ++ addTrueTest farmsTavernsWharves
     where
         -- Remove advice for mines+1 and c_mines+1 (since they are removed from EDB)
@@ -714,12 +728,14 @@ _EDA_FUNCS = addTrueTest [r1, r2] ++ addTrueTest farmsTavernsWharves
                 ]
             ]
 
+_EDAN_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _EDAN_FUNCS = addTrueTest [r1]
     where
         -- Remove reference to thieves guild.
         r1 =    [ ("^Trigger spymaster_vnv_trigger2.+?;-+\r\n", nil)
                 ]
 
+_EDB_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild] ++ addTrueTest (noMerchantSpy ++ mergeFarmsTavernsWharves ++ fastPorts ++ recruitment)
     where
         -- Mining income 75x
@@ -1229,6 +1245,7 @@ _EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12
                     ]
                 ]
 
+_EDBE_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (thieves ++ farms ++ taverns ++ wharves)
     where
         -- Remove all references to mines+1 and c_mines+1
@@ -1291,6 +1308,7 @@ _EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (thieves ++ farms ++ taverns +
                 ]
             ]
 
+_EDG_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _EDG_FUNCS = addTrueTest [r1] ++ addTrueTest (taverns ++ wharves)
     where
         -- Remove thieves guild.
@@ -1327,6 +1345,7 @@ _EDG_FUNCS = addTrueTest [r1] ++ addTrueTest (taverns ++ wharves)
                 ]
             ]
 
+_EDU_FUNCS :: [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 _EDU_FUNCS = addTrueTest [r1, r2, r3] ++ [rN]
     where
         -- Bodyguard soldiers (cavalry and infantry types) reduced 0.5x; costs reduced accordingly
@@ -1366,7 +1385,7 @@ _EDU_FUNCS = addTrueTest [r1, r2, r3] ++ [rN]
                 ]
 
 nil :: BC.ByteString -> BC.ByteString
-nil str = BC.empty
+nil _ = BC.empty
 
 only :: String -> BC.ByteString -> BC.ByteString
 only repl _ = BC.pack repl
@@ -1396,13 +1415,13 @@ multDouble m = (_REGEX_DOUBLE, mult' m)
 
 -- Produce an integer value.
 mult :: Double -> BC.ByteString -> BC.ByteString
-mult d n = BC.pack . show . round $ n' * d
+mult d n = BC.pack $ show ((round $ n' * d)::Integer)
     where
         n' :: Double
         n' = if BC.isInfixOf (BC.pack ".") n
                 then read (BC.unpack n)::Double
                 else case BC.readInt n of
-                    Just (n, _) -> fromIntegral n
+                    Just (num, _) -> fromIntegral num
                     _ -> 0.0
 
 -- Produce a double value, with up to 4 digits after the decimal point.
@@ -1412,7 +1431,7 @@ mult' d n = BC.pack . TP.printf "%.4f" $ n' * d
         n' = if BC.isInfixOf (BC.pack ".") n
                 then read (BC.unpack n)::Double
                 else case BC.readInt n of
-                    Just (n, _) -> fromIntegral n
+                    Just (num, _) -> fromIntegral num
                     _ -> 0.0
 
 applyFormula :: (Double -> Int) -> [Int] -> [Int]
@@ -1426,7 +1445,7 @@ gradCost formula i = BC.pack . show . formula $ fromIntegral i'
                 _ -> 0
 
 getChgFactors :: [Int] -> [Int] -> [Double]
-getChgFactors n o = map getChgFactor (zip n o)
+getChgFactors new old = map getChgFactor (zip new old)
     where
         getChgFactor :: (Int, Int) -> Double
         getChgFactor (n, o) = (fromIntegral n)/(fromIntegral o)
@@ -1491,7 +1510,7 @@ sub cnt re funcs src =
             where
                 kvs = assocs minfo
                 tests = map test kvs
-                test (k, v@(str, (_, _))) = case lookup k funcs'' of
+                test (k, (str, (_, _))) = case lookup k funcs'' of
                     Just func -> func str
                     _ -> True -- since minfo includes the entire regex's full match info as the first (k, v), we will always visit this codepath (since we zip up the replacment functions starting from k = 1, and the full match info's k is 0), so we need to let the k = 0 case succeed.
 
@@ -1502,12 +1521,12 @@ sub' matchInfo assocFuncs src =
     BC.append (BC.append (BC.take (fromIntegral pos) src) replacement) (BC.drop (fromIntegral (pos + bytes)) src)
     where
         kvs = assocs matchInfo
-        (fullMatchStr, (pos, bytes)) = matchInfo!0
+        (_, (pos, bytes)) = matchInfo!0
         -- We use foldl' here to incrementally construct the full replacement bytestring; if we were
         -- to use BC.concat $ map ..., then the thunk size will grow (possibly very large) depending
         -- on the number of regex groups.
         replacement = foldl' BC.append BC.empty $ map replaceGrps kvs
-        replaceGrps (k, v@(str, (_, _))) = case lookup k assocFuncs of
+        replaceGrps (k, (str, (_, _))) = case lookup k assocFuncs of
             Just func -> func str
             _ -> BC.empty -- we will always visit this codepath because k = 0 exists for the fullMatchStr case; since we only do replacments on a per-group (k = 1, k = 2, etc.) basis, we skip the fullMatchStr case by making it an empty string
 

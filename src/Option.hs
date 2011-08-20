@@ -4,10 +4,10 @@ module Option where
 
 import Control.Monad (when)
 import System.Console.CmdArgs.Implicit
-import System.Console.CmdArgs.Verbosity
 
 import Error
 
+_QS_NAME, _QS_VERSION, _QS_INFO, _COPYRIGHT :: String
 _QS_NAME = "quicksilver"
 _QS_VERSION = "0.08"
 _QS_INFO = _QS_NAME ++ " version " ++ _QS_VERSION

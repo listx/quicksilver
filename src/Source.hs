@@ -1,5 +1,33 @@
 module Source where
 
+_DC :: String
+_DCD :: String
+_DCAD :: String
+_DCL :: String
+_DFS :: String
+_DM :: String
+_DS :: String
+_DSF :: String
+_DSK :: String
+_DSM :: String
+_DSR :: String
+_DW :: String
+_EDA :: String
+_EDAN :: String
+_EDB :: String
+_EDBE :: String
+_EDCT :: String
+_EDG :: String
+_EDU :: String
+_PDAT :: String
+_PIDX :: String
+_SDAT :: String
+_SIDX :: String
+_PDAT' :: String
+_PIDX' :: String
+_SDAT' :: String
+_SIDX' :: String
+
 -- Edited files
 _DC     = "descr_character.txt"
 _DCD    = "descr_campaign_db.xml"
@@ -30,6 +58,7 @@ _PIDX'  = "bdiff/pack.idx.bdiff"
 _SDAT'  = "bdiff/skeletons.dat.bdiff"
 _SIDX'  = "bdiff/skeletons.idx.bdiff"
 
+_TO_EDIT :: [String]
 _TO_EDIT =
     [ _DC
     , _DCD
@@ -52,6 +81,7 @@ _TO_EDIT =
     , _EDU
     ]
 
+_TO_DIFF :: [String]
 _TO_DIFF =
     [ _PDAT
     , _PIDX
@@ -60,6 +90,7 @@ _TO_DIFF =
     ]
 
 
+_SHA1_UDD_SOURCES :: [(Integer, String)]
 _SHA1_UDD_SOURCES =
     [ (0x9505d63491e7c90debba66016f4a837173fa8374, _DC)
     , (0xe9896f7ab02de7d308b590b2ebbbc2918fe375c8, _DCD)
@@ -81,6 +112,7 @@ _SHA1_UDD_SOURCES =
     , (0x140f93465e48577a5262d6e104630518426a7a13, _EDU)
     ]
 
+_SHA1_IDD_SOURCES :: [(Integer, String)]
 _SHA1_IDD_SOURCES =
     [ (0xdb22c7400f27ce863dd7c92201eea6183ba30335, _PDAT)
     , (0x044a8a79011589ba340a3bffc87642a02bc87c7a, _PIDX)

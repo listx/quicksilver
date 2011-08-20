@@ -5,7 +5,6 @@ import qualified Data.ByteString.Char8 as BC
 import IO
 import System.Directory
 import System.Environment
-import System.Exit
 import System.FilePath
 import System.Process
 
@@ -16,6 +15,7 @@ import Regex
 import Source
 import Util
 
+_GEN_PATH, _MOD_PATH_DATA, _MOD_PATH_TOP :: String
 _GEN_PATH       = "gen/"
 _MOD_PATH_DATA  = _GEN_PATH ++ _QS_NAME ++ "/data/"
 _MOD_PATH_TOP   = _GEN_PATH
@@ -101,14 +101,14 @@ applyBinaryDiff parentDir fpath
     | otherwise = return ()
     where
         bdiff :: FilePath -> FilePath -> FilePath -> IO ()
-        bdiff parentDir fpath delta = do
+        bdiff parentDir' fpath' delta = do
             putStr $ "Resolving deltas for " ++ enquote dest ++ "... "
-            (sin, sout, serr, p) <- createProcess diffCmd
-            waitForProcess p
+            (_, _, _, p) <- createProcess diffCmd
+            _ <- waitForProcess p
             putStrLn "done"
             where
-                sourcePath = parentDir ++ "/" ++ fpath
-                dest = _MOD_PATH_DATA ++ fpath
+                sourcePath = parentDir' ++ "/" ++ fpath'
+                dest = _MOD_PATH_DATA ++ fpath'
                 diffCmd = CreateProcess
                     { cmdspec = ShellCommand ("xdelta3 -d -s " ++ dquote sourcePath ++ " " ++ dquote delta ++ " " ++ dquote dest)
                     , cwd = Nothing
@@ -122,12 +122,12 @@ applyBinaryDiff parentDir fpath
 diffFile :: FilePath -> FilePath -> IO ()
 diffFile parentDir fpath = do
     putStr $ "Writing diff " ++ enquote patchDest ++ "... "
-    (sin, sout, serr, p) <- createProcess diffCmd
+    (_, sout, _, p) <- createProcess diffCmd
     diffData <- case sout of
         Just h -> hGetContents h
         Nothing -> return ""
     writeFile patchDest diffData
-    waitForProcess p
+    _ <- waitForProcess p
     putStrLn "done"
     where
         sourcePath = parentDir ++ "/" ++ fpath
@@ -153,7 +153,6 @@ copyFile' parentDir fpath = do
     where
         dest = _MOD_PATH_DATA ++ fpath
         modSubdir = _MOD_PATH_DATA ++ fst (splitFileName fpath)
-        fname = snd $ splitFileName fpath
         sourcePath = parentDir ++ "/" ++ fpath
 
 editFile :: FilePath -> FilePath -> IO ()
@@ -165,7 +164,6 @@ editFile parentDir fpath = do
     putStrLn "done"
     where
         dest = _MOD_PATH_DATA ++ fpath
-        fname = snd $ splitFileName fpath
         sourcePath = parentDir ++ "/" ++ fpath
         transformFile :: BC.ByteString -> BC.ByteString
         transformFile

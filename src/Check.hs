@@ -5,7 +5,6 @@ import Control.Monad (when)
 import qualified Data.ByteString.Lazy as BL
 import Data.Digest.Pure.SHA
 import System.Directory
-import System.FilePath
 
 import Error
 import Option
