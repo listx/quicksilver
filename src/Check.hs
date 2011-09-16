@@ -26,17 +26,12 @@ checkSum sourcePath cksum = do
     putStrLn "OK"
 
 checkFile :: Opts -> FilePath -> FilePath -> ModFile -> IO ()
-checkFile opts idd udd ModFile{..} = checkFile' opts sourcePath sha
+checkFile Opts{..} idd udd ModFile{..}
+    | no_check = return ()
+    | no_sha = checkExists sourcePath
+    | otherwise = checkSum sourcePath sha
     where
         sourcePath = parentDir ++ "/" ++ name
         parentDir = if origin == Installed
             then idd
             else udd
-
-checkFile' :: Opts -> FilePath -> Integer -> IO ()
-checkFile' Opts{..} sourcePath cksum =
-    if (no_check)
-        then return ()
-        else if (no_sha)
-            then checkExists sourcePath
-            else checkSum sourcePath cksum
