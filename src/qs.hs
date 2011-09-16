@@ -21,9 +21,9 @@ getModDataPath :: Game -> String
 getModDataPath g = getGenPath g ++ _QS_NAME ++ "/data/"
 
 getGenPath :: Game -> String
-getGenPath g = case g of
-    RTW -> "genRTW/"
-    _ -> "genM2TW/"
+getGenPath g = "quicksilver" ++ case g of
+    RTW -> "RTW/"
+    _ -> "M2TW/"
 
 data SourceParent =
       IFolder
