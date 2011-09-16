@@ -97,7 +97,6 @@ m2twInstalledCopy =
     , (0x0c83daa7d00daf9aa6387c786054c18eecf3f0c9, "world/maps/campaign/imperial_campaign/map_venice.tga")
     , (0xb21580837fdb838c040d0a75b79c637fb504d1d7, "world/maps/campaign/imperial_campaign/radar_map1.tga")
     , (0x35ff31c70473de547b31d8456d823e75621e3380, "world/maps/campaign/imperial_campaign/radar_map2.tga")
-    , (0x04336836571352041fc1a2dda7cc73d3d23c4c57, "world/maps/campaign/imperial_campaign/unlocked.txt")
     , (0x40d15e747ac1f0c46c5722b374438efdaa0e26ea, "world/maps/campaign/imperial_campaign/vc_byzantium.tga")
     , (0xfa7cc39df35d0accc0fac325cd27609479a8e35b, "world/maps/campaign/imperial_campaign/vc_denmark.tga")
     , (0x2858924f2a29302afb67098df78225a9e0ca443a, "world/maps/campaign/imperial_campaign/vc_egypt.tga")
