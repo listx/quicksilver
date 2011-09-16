@@ -31,6 +31,10 @@ showIntChanges = concatMap showChg
     where
         showChg (o, n, diff) = ";    " ++ show o ++ " -> " ++ show n ++ TP.printf " (%.2fx)\r\n" diff
 
+-- Show a (string) double value, with up to 4 digits after the decimal point.
+showD :: Double -> String
+showD = TP.printf "%.6f"
+
 showHex :: Integer -> String
 showHex a
     | a < 0 = "negative value!"
