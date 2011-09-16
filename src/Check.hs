@@ -25,13 +25,13 @@ checkSum sourcePath cksum = do
     when (integerDigest (sha1 sourceBytes) /= cksum) $ abort (enquote sourcePath ++ ": SHA-1 mismatch", 2)
     putStrLn "OK"
 
-checkFile :: Opts -> FilePath -> FilePath -> ModFile -> IO ()
-checkFile Opts{..} idd udd ModFile{..}
+checkFile :: Opts -> ModFile -> IO ()
+checkFile Opts{..} ModFile{..}
     | no_check = return ()
     | no_sha = checkExists sourcePath
     | otherwise = checkSum sourcePath sha
     where
         sourcePath = parentDir ++ "/" ++ name
         parentDir = if origin == Installed
-            then idd
-            else udd
+            then installed_data_dir
+            else unpacked_data_dir
