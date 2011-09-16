@@ -1,124 +1,52 @@
-module Source where
+module Data.M2TW where
 
-_DC :: String
-_DCD :: String
-_DCAD :: String
-_DCL :: String
-_DFS :: String
-_DM :: String
-_DS :: String
-_DSF :: String
-_DSK :: String
-_DSM :: String
-_DSR :: String
-_DW :: String
-_EDA :: String
-_EDAN :: String
-_EDB :: String
-_EDBE :: String
-_EDCT :: String
-_EDG :: String
-_EDU :: String
-_PDAT :: String
-_PIDX :: String
-_SDAT :: String
-_SIDX :: String
-_PDAT' :: String
-_PIDX' :: String
-_SDAT' :: String
-_SIDX' :: String
+import Data
+import Regex.M2TW
 
--- Edited files
-_DC     = "descr_character.txt"
-_DCD    = "descr_campaign_db.xml"
-_DCAD   = "descr_campaign_ai_db.xml"
-_DCL    = "descr_cultures.txt"
-_DFS    = "descr_faction_standing.txt"
-_DM     = "descr_missions.txt"
-_DS     = "world/maps/campaign/imperial_campaign/descr_strat.txt"
-_DSF    = "descr_sm_factions.txt"
-_DSK    = "descr_skeleton.txt"
-_DSM    = "descr_settlement_mechanics.xml"
-_DSR    = "descr_sm_resources.txt"
-_DW     = "descr_walls.txt"
-_EDA    = "export_descr_advice.txt"
-_EDAN   = "export_descr_ancillaries.txt"
-_EDB    = "export_descr_buildings.txt"
-_EDBE   = "export_descr_buildings_enums.txt"
-_EDCT   = "export_descr_character_traits.txt"
-_EDG    = "export_descr_guilds.txt"
-_EDU    = "export_descr_unit.txt"
-_PDAT   = "animations/pack.dat"
-_PIDX   = "animations/pack.idx"
-_SDAT   = "animations/skeletons.dat"
-_SIDX   = "animations/skeletons.idx"
--- Binary diff sources (should be packaged with qs)
-_PDAT'  = "bdiff/pack.dat.bdiff"
-_PIDX'  = "bdiff/pack.idx.bdiff"
-_SDAT'  = "bdiff/skeletons.dat.bdiff"
-_SIDX'  = "bdiff/skeletons.idx.bdiff"
+qsM2TW :: Mod
+qsM2TW = (M2TW,
+    -- Text files to mod
+    map (\f -> makeModFileModText f Unpacked) m2twUnpackedModText
+    ++
+    [ ModFile 0x852dd3c9a4a6647f38af2f84eb07874de152acf8 _M2TW_DS Installed
+		(ModText _M2TW_DS_FUNCS ("^\\r\\n\\r\\n", "\r\n\r\n"))]
+    ++
+    -- Binary files to modify (with binary diffs)
+    [ ModFile 0xdb22c7400f27ce863dd7c92201eea6183ba30335 _M2TW_PDAT Installed (ModBinary _M2TW_PDAT)
+    , ModFile 0x044a8a79011589ba340a3bffc87642a02bc87c7a _M2TW_PIDX Installed (ModBinary _M2TW_PIDX)
+    , ModFile 0x47deb00beb5bdb2d2bfd4aa7bb8d1452ed6747b5 _M2TW_SDAT Installed (ModBinary _M2TW_SDAT)
+    , ModFile 0x70b656a6831c1f2da80eb04448011472a69865fc _M2TW_SIDX Installed (ModBinary _M2TW_SIDX)
+    ]
+    ++
+    -- Misc files to copy over
+    map (\f -> makeModFile f Installed Copy) m2twInstalledCopy
+    )
 
-_TO_EDIT :: [String]
-_TO_EDIT =
-    [ _DC
-    , _DCD
-    , _DCAD
-    , _DCL
-    , _DFS
-    , _DM
-    , _DS
-    , _DSF
-    , _DSK
-    , _DSM
-    , _DSR
-    , _DW
-    , _EDA
-    , _EDAN
-    , _EDB
-    , _EDBE
-    , _EDCT
-    , _EDG
-    , _EDU
+m2twUnpackedModText :: [(Integer, String, Operation)]
+m2twUnpackedModText =
+    [ (0x9505d63491e7c90debba66016f4a837173fa8374, _M2TW_DC  , ModText _M2TW_DC_FUNCS   ("", ""))
+    , (0xe9896f7ab02de7d308b590b2ebbbc2918fe375c8, _M2TW_DCD , ModText _M2TW_DCD_FUNCS  ("", ""))
+    , (0x3dbe5d41d1a0754a63e9673ccc42070c0ea61ac6, _M2TW_DCAD, ModText _M2TW_DCAD_FUNCS ("", ""))
+    , (0x0d121a3b5567f1d326abde8f7f270c8fe6469952, _M2TW_DCL , ModText _M2TW_DCL_FUNCS  ("", ""))
+    , (0x6e9bc8a4ec4e938ba5124e049079758efe8e2ed2, _M2TW_DFS , ModText _M2TW_DFS_FUNCS  ("", ""))
+    , (0xe1016813ec6e0f1f621d01c73c6b1e9465777bc3, _M2TW_DM  , ModText _M2TW_DM_FUNCS   ("", ""))
+    , (0x40e74a92a91c4ac10e6d798b0de25664cab45ea1, _M2TW_DSF , ModText _M2TW_DSF_FUNCS  ("", ""))
+    , (0x97e3caf49d8ceb7e09192fa18e28eb278a0f56fe, _M2TW_DSK , ModText _M2TW_DSK_FUNCS  ("", ""))
+    , (0x25a82cb8d15146a1c58f7b1cfeb09c7bb2fb5953, _M2TW_DSM , ModText _M2TW_DSM_FUNCS  ("", ""))
+    , (0x5783e8565f7d43acf9054b833272bebca5423998, _M2TW_DSR , ModText _M2TW_DSR_FUNCS  ("", ""))
+    , (0x959d554513c313b12be95ac9579bff3b4aa49521, _M2TW_DW  , ModText _M2TW_DW_FUNCS   ("", ""))
+    , (0xb604c776df95aaa51e9fae9bf3b1ccbf34df8138, _M2TW_EDA , ModText _M2TW_EDA_FUNCS  ("", ""))
+    , (0xc106543e9a05abe82bd56b245674e9e7c14a3d81, _M2TW_EDAN, ModText _M2TW_EDAN_FUNCS ("", ""))
+    , (0xca2018a694fbabcaf5a058f4e87889acc3d35f89, _M2TW_EDB , ModText _M2TW_EDB_FUNCS  ("^\\}\\r\\n", "}\r\n"))
+    , (0x2c1095e9bb17d078d4719e57cc7bf52a959ef6a9, _M2TW_EDBE, ModText _M2TW_EDBE_FUNCS ("", ""))
+    , (0x2a95300126b5f78294caffa0af8658f4576a2d40, _M2TW_EDCT, ModText _M2TW_EDCT_FUNCS ("", ""))
+    , (0x2c533185c43f1c025cf5817111437c19fc993117, _M2TW_EDG,  ModText _M2TW_EDG_FUNCS  ("", ""))
+    , (0x140f93465e48577a5262d6e104630518426a7a13, _M2TW_EDU,  ModText _M2TW_EDU_FUNCS  (" \\r\\n \\r\\n", " \r\n \r\n"))
     ]
 
-_TO_DIFF :: [String]
-_TO_DIFF =
-    [ _PDAT
-    , _PIDX
-    , _SDAT
-    , _SIDX
-    ]
-
-
-_SHA1_UDD_SOURCES :: [(Integer, String)]
-_SHA1_UDD_SOURCES =
-    [ (0x9505d63491e7c90debba66016f4a837173fa8374, _DC)
-    , (0xe9896f7ab02de7d308b590b2ebbbc2918fe375c8, _DCD)
-    , (0x3dbe5d41d1a0754a63e9673ccc42070c0ea61ac6, _DCAD)
-    , (0x0d121a3b5567f1d326abde8f7f270c8fe6469952, _DCL)
-    , (0x6e9bc8a4ec4e938ba5124e049079758efe8e2ed2, _DFS)
-    , (0xe1016813ec6e0f1f621d01c73c6b1e9465777bc3, _DM)
-    , (0x40e74a92a91c4ac10e6d798b0de25664cab45ea1, _DSF)
-    , (0x97e3caf49d8ceb7e09192fa18e28eb278a0f56fe, _DSK)
-    , (0x25a82cb8d15146a1c58f7b1cfeb09c7bb2fb5953, _DSM)
-    , (0x5783e8565f7d43acf9054b833272bebca5423998, _DSR)
-    , (0x959d554513c313b12be95ac9579bff3b4aa49521, _DW)
-    , (0xb604c776df95aaa51e9fae9bf3b1ccbf34df8138, _EDA)
-    , (0xc106543e9a05abe82bd56b245674e9e7c14a3d81, _EDAN)
-    , (0xca2018a694fbabcaf5a058f4e87889acc3d35f89, _EDB)
-    , (0x2c1095e9bb17d078d4719e57cc7bf52a959ef6a9, _EDBE)
-    , (0x2a95300126b5f78294caffa0af8658f4576a2d40, _EDCT)
-    , (0x2c533185c43f1c025cf5817111437c19fc993117, _EDG)
-    , (0x140f93465e48577a5262d6e104630518426a7a13, _EDU)
-    ]
-
-_SHA1_IDD_SOURCES :: [(Integer, String)]
-_SHA1_IDD_SOURCES =
-    [ (0xdb22c7400f27ce863dd7c92201eea6183ba30335, _PDAT)
-    , (0x044a8a79011589ba340a3bffc87642a02bc87c7a, _PIDX)
-    , (0x47deb00beb5bdb2d2bfd4aa7bb8d1452ed6747b5, _SDAT)
-    , (0x70b656a6831c1f2da80eb04448011472a69865fc, _SIDX)
-    , (0x82c4a8ce1d5c474b379ca7eed4273f969ebe6f10, "sounds/events.dat")
+m2twInstalledCopy :: [(Integer, String)]
+m2twInstalledCopy =
+    [ (0x82c4a8ce1d5c474b379ca7eed4273f969ebe6f10, "sounds/events.dat")
     , (0x2ea5c502f5366dec134cc8671bcce2bd7c82b9bc, "sounds/events.idx")
     , (0xc444b41da651a0e6499c047d17eec5e74bc10065, "world/maps/base/descr_disasters.txt")
     , (0x52566bb7ea9e26791fc0697db8c76483e3130234, "world/maps/base/descr_regions.txt")
@@ -144,7 +72,6 @@ _SHA1_IDD_SOURCES =
     , (0xf6fa1461772edde8da9ba98e7dd7423bd1c96962, "world/maps/campaign/imperial_campaign/description_venice.txt")
     , (0xa2fe4ed7369472728c6480bea8597cd8bdcab84f, "world/maps/campaign/imperial_campaign/descr_mercenaries.txt")
     , (0x451c4fe24a4cd3739aecb3c4e8e7a8dbbed40788, "world/maps/campaign/imperial_campaign/descr_regions_and_settlement_name_lookup.txt")
-    , (0x852dd3c9a4a6647f38af2f84eb07874de152acf8, _DS)
     , (0x7b760c91ac51d9832de2d06e9d270964ce4fe352, "world/maps/campaign/imperial_campaign/descr_win_conditions.txt")
     , (0x3f7167403a6a7b4d19125600fe830aa5197dd3dd, "world/maps/campaign/imperial_campaign/disasters.tga")
     , (0x0e08d40de99cc811057620c2fe18398efa274800, "world/maps/campaign/imperial_campaign/map_aztecs.tga")
@@ -206,3 +133,65 @@ _SHA1_IDD_SOURCES =
     , (0x8aea23c1fa7ffdfe9251f84ffc4ed50f571c0901, "world/maps/campaign/imperial_campaign/vc_turks.tga")
     , (0x94a6b833cc41daec7a320bd5d7b59cbd6e0fe30f, "world/maps/campaign/imperial_campaign/vc_venice.tga")
     ]
+
+-- Short names for some common game files
+_M2TW_DC :: String
+_M2TW_DCD :: String
+_M2TW_DCAD :: String
+_M2TW_DCL :: String
+_M2TW_DFS :: String
+_M2TW_DM :: String
+_M2TW_DS :: String
+_M2TW_DSF :: String
+_M2TW_DSK :: String
+_M2TW_DSM :: String
+_M2TW_DSR :: String
+_M2TW_DW :: String
+_M2TW_EDA :: String
+_M2TW_EDAN :: String
+_M2TW_EDB :: String
+_M2TW_EDBE :: String
+_M2TW_EDCT :: String
+_M2TW_EDG :: String
+_M2TW_EDU :: String
+-- binary files
+_M2TW_PDAT :: String
+_M2TW_PIDX :: String
+_M2TW_SDAT :: String
+_M2TW_SIDX :: String
+-- .bdiff files
+_M2TW_PDAT' :: String
+_M2TW_PIDX' :: String
+_M2TW_SDAT' :: String
+_M2TW_SIDX' :: String
+
+-- Text files
+_M2TW_DC     = "descr_character.txt"
+_M2TW_DCD    = "descr_campaign_db.xml"
+_M2TW_DCAD   = "descr_campaign_ai_db.xml"
+_M2TW_DCL    = "descr_cultures.txt"
+_M2TW_DFS    = "descr_faction_standing.txt"
+_M2TW_DM     = "descr_missions.txt"
+_M2TW_DSF    = "descr_sm_factions.txt"
+_M2TW_DSK    = "descr_skeleton.txt"
+_M2TW_DSM    = "descr_settlement_mechanics.xml"
+_M2TW_DSR    = "descr_sm_resources.txt"
+_M2TW_DW     = "descr_walls.txt"
+_M2TW_EDA    = "export_descr_advice.txt"
+_M2TW_EDAN   = "export_descr_ancillaries.txt"
+_M2TW_EDB    = "export_descr_buildings.txt"
+_M2TW_EDBE   = "export_descr_buildings_enums.txt"
+_M2TW_EDCT   = "export_descr_character_traits.txt"
+_M2TW_EDG    = "export_descr_guilds.txt"
+_M2TW_EDU    = "export_descr_unit.txt"
+_M2TW_DS     = "world/maps/campaign/imperial_campaign/descr_strat.txt"
+-- Binary files
+_M2TW_PDAT   = "animations/pack.dat"
+_M2TW_PIDX   = "animations/pack.idx"
+_M2TW_SDAT   = "animations/skeletons.dat"
+_M2TW_SIDX   = "animations/skeletons.idx"
+-- Binary diff sources (should be packaged with qs)
+_M2TW_PDAT'  = "bdiff/pack.dat.bdiff"
+_M2TW_PIDX'  = "bdiff/pack.idx.bdiff"
+_M2TW_SDAT'  = "bdiff/skeletons.dat.bdiff"
+_M2TW_SIDX'  = "bdiff/skeletons.idx.bdiff"

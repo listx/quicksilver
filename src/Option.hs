@@ -5,6 +5,7 @@ module Option where
 import Control.Monad (when)
 import System.Console.CmdArgs.Implicit
 
+import Data hiding (name)
 import Error
 
 _QS_NAME, _QS_VERSION, _QS_INFO, _COPYRIGHT :: String
@@ -18,14 +19,16 @@ data Opts = Opts
     , installed_data_dir :: FilePath
     , no_check :: Bool
     , no_sha :: Bool
+    , game :: Game
     } deriving (Data, Typeable, Show, Eq)
 
 qsOpts :: Opts
 qsOpts = Opts
-    { unpacked_data_dir = def &= typDir &= help "path to the `data' directory created by the official M2TW unpacker.exe tool"
-    , installed_data_dir = def &= typDir &= help "path to the `data' directory inside your M2TW installation folder"
+    { unpacked_data_dir = def &= typDir &= help "(M2TW only) path to the `data' directory created by the official M2TW unpacker.exe tool"
+    , installed_data_dir = def &= typDir &= help "path to the `data' directory inside your RTW/M2TW installation folder"
     , no_check = def &= help "disable both file existence checks and SHA-1 checks on source files"
     , no_sha = def &= help "disable SHA-1 checks on source files (existence checking still performed)"
+    , game = RTW &= help "game type; either \"M2TW\" or \"RTW\" (default RTW)"
     }
 
 getOpts :: IO Opts
@@ -33,12 +36,12 @@ getOpts = cmdArgs $ qsOpts
     &= verbosityArgs [explicit, name "Verbose", name "V"] []
     &= versionArg [explicit, name "version", name "v", summary _QS_INFO]
     &= summary (_QS_INFO ++ ", " ++ _COPYRIGHT)
-    &= help "quicksilver M2TW mod generator"
+    &= help "quicksilver RTW/M2TW mod generator"
     &= helpArg [explicit, name "help", name "h"]
     &= program _QS_NAME
 
 -- Basic option sanity check, as well as ensuring that source files are the official originals.
 checkOpts :: Opts -> IO ()
 checkOpts Opts{..} = do
-    when (null unpacked_data_dir) $ abort ("--unpacked-data-path is empty", 1)
+    when (null unpacked_data_dir && game == M2TW) $ abort ("--unpacked-data-path is empty", 1)
     when (null installed_data_dir) $ abort ("--data-path is empty", 1)

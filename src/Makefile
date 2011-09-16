@@ -5,7 +5,10 @@ prof:
 	ghc -O2 -rtsopts -prof -auto-all --make qs -v
 
 clean:
-	rm -rf gen *.o *.hi
+	rm -rf gen* *.o *.hi Data/*.o Data/*.hi Regex/*.o Regex/*.hi
 
-refresh:
-	rm -rf gen
+refreshRTW:
+	rm -rf genRTW
+
+refreshM2TW:
+	rm -rf genM2TW

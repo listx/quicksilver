@@ -6,6 +6,7 @@ import qualified Data.ByteString.Lazy as BL
 import Data.Digest.Pure.SHA
 import System.Directory
 
+import Data
 import Error
 import Option
 import Util
@@ -24,10 +25,13 @@ checkSum sourcePath cksum = do
     when (integerDigest (sha1 sourceBytes) /= cksum) $ abort (enquote sourcePath ++ ": SHA-1 mismatch", 2)
     putStrLn "OK"
 
-checkFile :: Opts -> FilePath -> (Integer, FilePath) -> IO ()
-checkFile opts parentDir (cksum, fpath) = checkFile' opts sourcePath cksum
+checkFile :: Opts -> FilePath -> FilePath -> ModFile -> IO ()
+checkFile opts idd udd ModFile{..} = checkFile' opts sourcePath sha
     where
-        sourcePath = parentDir ++ "/" ++ fpath
+        sourcePath = parentDir ++ "/" ++ name
+        parentDir = if origin == Installed
+            then idd
+            else udd
 
 checkFile' :: Opts -> FilePath -> Integer -> IO ()
 checkFile' Opts{..} sourcePath cksum =
