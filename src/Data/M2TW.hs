@@ -12,10 +12,10 @@ qsM2TW = (M2TW,
 		(ModText _M2TW_DS_FUNCS ("^\\r\\n\\r\\n", "\r\n\r\n"))]
     ++
     -- Binary files to modify (with binary diffs)
-    [ ModFile 0xdb22c7400f27ce863dd7c92201eea6183ba30335 _M2TW_PDAT Installed (ModBinary _M2TW_PDAT)
-    , ModFile 0x044a8a79011589ba340a3bffc87642a02bc87c7a _M2TW_PIDX Installed (ModBinary _M2TW_PIDX)
-    , ModFile 0x47deb00beb5bdb2d2bfd4aa7bb8d1452ed6747b5 _M2TW_SDAT Installed (ModBinary _M2TW_SDAT)
-    , ModFile 0x70b656a6831c1f2da80eb04448011472a69865fc _M2TW_SIDX Installed (ModBinary _M2TW_SIDX)
+    [ ModFile 0xdb22c7400f27ce863dd7c92201eea6183ba30335 _M2TW_PDAT Installed (ModBinary _M2TW_PDAT')
+    , ModFile 0x044a8a79011589ba340a3bffc87642a02bc87c7a _M2TW_PIDX Installed (ModBinary _M2TW_PIDX')
+    , ModFile 0x47deb00beb5bdb2d2bfd4aa7bb8d1452ed6747b5 _M2TW_SDAT Installed (ModBinary _M2TW_SDAT')
+    , ModFile 0x70b656a6831c1f2da80eb04448011472a69865fc _M2TW_SIDX Installed (ModBinary _M2TW_SIDX')
     ]
     ++
     -- Misc files to copy over
