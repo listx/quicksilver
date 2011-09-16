@@ -177,10 +177,12 @@ editFile game parentDir mf@ModFile{..} = do
     src <- BC.readFile sourcePath
     -- apply one (or more) transformations on the source file
     putStr $ "Writing new " ++ enquote dest ++ "... "
+    when (elem '/' name) $ createDirectoryIfMissing True (takeDirectory dest)
     BC.writeFile dest $ transform mf src
     putStrLn "done"
     where
-        dest = getModDataPath game ++ name
+        mpd = getModDataPath game
+        dest = mpd ++ name
         sourcePath = parentDir ++ "/" ++ name
 
 transform :: ModFile -> BC.ByteString -> BC.ByteString
