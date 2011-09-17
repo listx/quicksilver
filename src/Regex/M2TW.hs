@@ -34,7 +34,8 @@ _M2TW_DC_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest assassin
 _M2TW_DCD_FUNCS :: TextRegex
 _M2TW_DCD_FUNCS = addTrueTest [agent, rebels] ++ addTrueTest (witchesHereticsInquisitors ++ assassin)
     where
-        -- Allow a settlement to recruit 2 agents of the same type in a single turn.
+        -- Allow a settlement to recruit 2 agents of the same type in a single
+        -- turn.
         agent =
                 [ ("max_agents_per_turn.+?\"", id)
                 , (multRoundInt 2)
@@ -85,9 +86,10 @@ _M2TW_DCD_FUNCS = addTrueTest [agent, rebels] ++ addTrueTest (witchesHereticsInq
                 , (multRoundInt 2)
                 ]
             ,
-                -- Assassin's minimum success chance changed from 5% to 17% (1 out of 6, just like
-                -- rolling a die; so a newbie assassin should be able to succeed more easily), and
-                -- maximum chance changed from 95% to 99%
+                -- Assassin's minimum success chance changed from 5% to 17% (1
+                -- out of 6, just like rolling a die; so a newbie assassin
+                -- should be able to succeed more easily), and maximum chance
+                -- changed from 95% to 99%
                 [ ("assassinate_chance_min.+?\"", id)
                 , (_REGEX_INT, only "17")
                 ]
@@ -104,7 +106,9 @@ _M2TW_DCD_FUNCS = addTrueTest [agent, rebels] ++ addTrueTest (witchesHereticsInq
 _M2TW_DCAD_FUNCS :: TextRegex
 _M2TW_DCAD_FUNCS = addTrueTest [r1]
     where
-        -- Stop Papal States from capturing rebel settlements (helps land-strapped factions like Milan and Sicily expand into Africa more easily)
+        -- Stop Papal States from capturing rebel settlements (helps
+        -- land-strapped factions like Milan and Sicily expand into Africa more
+        -- easily)
         r1 =    [ ("papal_faction.+?invasion_decisions.+?", id)
                 , ("<decision_entry>.+?", id)
                 , ("<decision_entry>.+?turn_number=\"", id)
@@ -141,12 +145,13 @@ _M2TW_DFS_FUNCS = addTrueTest [rN]
 _M2TW_DM_FUNCS :: TextRegex
 _M2TW_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTrueTest (merchantsGuild ++ thievesGuild)
     where
-        -- Disable all mission penalties, and disable the "cease hostilities" mission
+        -- Disable all mission penalties, and disable the "cease hostilities"
+        -- mission
         r1 =    [ ("^\\s+penalty\\r\\n.+?\\}\\r\\n", nil)
                 ]
         r2 =    [ ("^mission\\s+cease.+?^\\}\\r\\n\\r\\n\\r\\n", nil)
                 ]
-        -- Reduce assassins' guild payback to 5 from 10.
+        -- Reduce assassins' guild payback from 10 to 5 guild points.
         r3 =    [ ("guild_money\\s+", id)
                 , (_REGEX_INT, only "5")
                 , ("\\s+assassins_guild", id)
@@ -157,10 +162,11 @@ _M2TW_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTru
         r4a =   [ ("^\\s+money\\s+", id)
                 , (_REGEX_INT, gradCost moneyFormula)
                 ]
-        -- Fix council_min/mod_money bug (the lines starting with "    cash ..." were not correctly
-        -- mapped to their intended paybacks)
+        -- Fix council_min/mod_money bug (the lines starting with "    cash ..."
+        -- were not correctly mapped to their intended paybacks)
         --
-        -- Also, increase the cash threshold 10x for triggering the major/mod/min money rewards
+        -- Also, increase the cash threshold 10x for triggering the
+        -- major/mod/min money rewards
         r4b =   [ ("^\\s+cash\\s+", id)
                 , (multRoundInt 10)
                 , ("\\s+payback_id\\s+", id)
@@ -192,8 +198,8 @@ _M2TW_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTru
         r5 =    [ ("_unit\\s+\\d+\\s+", id)
                 , (multRoundInt 3)
                 ]
-        -- Decrease mission durations (except for the "convert" mission where you have to convert a
-        -- settlement's religion)
+        -- Decrease mission durations by 33% (except for the "convert" mission
+        -- where you have to convert a settlement's religion)
         r6a =   [ ("\\s+duration\\s+", id)
                 , (multRoundInt 0.66)
                 ]
@@ -210,7 +216,8 @@ _M2TW_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTru
                 [ ("^mission guild_acquisition.+?\\}.+?\\}\\r\\n", nil)
                 ]
             ]
-        -- Disable the thief recruitment mission (the only thieves' guild mission, coincidentally).
+        -- Disable the thief recruitment mission (the only thieves' guild
+        -- mission, coincidentally).
         thievesGuild =
             [
                 [ ("^mission guild_recruit_agent guild_recruit_spy.+?\\}.+?\\}\\r\\n", nil)
@@ -232,14 +239,16 @@ _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (no
         r3 =    [ ("^denari_kings_purse\\s+", id)
                 , (multRoundInt 2)
                 ]
-        -- Replace all gold resources with chocolate in the map, except for Aztecs
+        -- Replace all gold resources with chocolate in the map, except for
+        -- Aztecs
         r4 =    [ ("^resource\\s+", id, alwaysTrue)
                 , ("gold", only "chocolate", alwaysTrue)
                 , (",\\s+", id, alwaysTrue)
                 , (_REGEX_INT, id, numTest (>= 30))
                 , (",\\s+\\d+\\r\\n", id, alwaysTrue)
                 ]
-        -- Replace all silver resources with silk in the the map, except for Aztecs
+        -- Replace all silver resources with silk in the the map, except for
+        -- Aztecs
         r5 =    [ ("^resource\\s+", id, alwaysTrue)
                 , ("silver", only "silk", alwaysTrue)
                 , (",\\s+", id, alwaysTrue)
@@ -249,8 +258,8 @@ _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (no
         -- Add in 1 gold resource for every faction's capital city region
         r6 =    [ ("^resource\\s+gold,\\s+5,\\s+143\\r\\n", addResource "gold" goldCoords, alwaysTrue)
                 ]
-        -- Add in 1 silver resource for every faction's second city (or the capital city if no
-        -- second city)
+        -- Add in 1 silver resource for every faction's second city (or the
+        -- capital city if no second city)
         r7 =    [ ("^resource\\s+silver,\\s+4,\\s+123\\r\\n", addResource "silver" silverCoords, alwaysTrue)
                 ]
         -- Remove all merchants, princesses, and spies from the starting map.
@@ -268,8 +277,8 @@ _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (no
                 [ ("^ancillaries catamite\\r\\n", nil)
                 ]
             ,
-                -- Remove all references to princess names.
-                -- Cecilia, Constance, Agnes, Urraca, Teresa, Matilda, Anna, Antonina, Ingrid,
+                -- Remove all references to princess names: Cecilia, Constance,
+                -- Agnes, Urraca, Teresa, Matilda, Anna, Antonina, Ingrid,
                 -- Maria, Agnes, Pioska
                 [ ("^relative\\s+William.+?", id)
                 , ("Cecilia,", nil)
@@ -319,7 +328,8 @@ _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (no
         showResource res (x, y) = "resource\t" ++ res ++ ",\t" ++ show x ++ ",\t" ++ show y ++ "\r\n"
         addResource :: String -> [(Int, Int)] -> BC.ByteString -> BC.ByteString
         addResource res coords s = BC.append s $ BC.pack (concatMap (showResource res) coords)
-        -- Gold resource locations, one for each faction's capital (except Aztecs)
+        -- Gold resource locations, one for each faction's capital (except
+        -- Aztecs)
         goldCoords =
             [ (97,174) -- Scotland
             , (93, 145) -- England
@@ -366,7 +376,8 @@ _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (no
             , (246, 91) -- Turks
             , (251, 37) -- Egypt
             ]
-        -- Give Moors, Turks, and Egypt extra king's purse --- 50%, 50%, and 75% respectively.
+        -- Give Moors, Turks, and Egypt extra king's purse --- 1.5x, 1.5x, and
+        -- 1.75x, respectively.
         mtePurse =
             [
                 [ ("^faction\\smoors.+?denari_kings_purse\\s+", id)
@@ -381,8 +392,8 @@ _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (no
                 , (multRoundInt 1.75)
                 ]
             ]
-        -- Give mines to all factions' capitals/secondary cities, because the AI is too stupid and
-        -- doesn't always build mines immediately.
+        -- Give mines to all factions' capitals/secondary cities, because the AI
+        -- is too stupid and doesn't always build mines immediately.
         mine =
             "\r\n\tbuilding\r\n\
             \\t{\r\n\
@@ -465,7 +476,8 @@ _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (no
                 [ ("^\\s+building\\r\\n\\s+\\{\\r\\n\\s+type\\s+hinterland_castle_roads\\s+c_roads\\r\\n\\s+\\}\\r\\n", nil)
                 ]
             ,
-                -- now add paved_roads for settlements and c_paved_roads for castles
+                -- now add paved_roads for settlements and c_paved_roads for
+                -- castles
                 [ ("^settlement\\r\\n.+?", id)
                 , ("\\r\\n\\}", prepend roads)
                 ]
@@ -494,7 +506,8 @@ _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (no
                 , (_REGEX_INT, only "500000")
                 ]
             ,
-                -- change AI from rebels to default (just like all the non-catholic factions)
+                -- change AI from rebels to default (just like all the
+                -- non-catholic factions)
                 [ ("slave_faction", only "default")
                 ]
             ]
@@ -507,16 +520,29 @@ _M2TW_DSF_FUNCS = addTrueTest [r1]
                 , ("yes", only "no")
                 ]
 
+-- For the DSK file to be parsed and new packed animation files
+-- ({pack,skeletons}.{dat,idx}) to be generated inside the data/animations
+-- directory by the medieval2.exe binary, the game needs access to the unpacked
+-- animation files (released semi-officially by `Caliban' (of twcenter.net
+-- forums and an ex? employee of Creative Assembly). First, copy over the
+-- unpacked animation files into the `animations' folder. The exe will then
+-- generate new packed animation files and store them under the animations
+-- directory. If we've launched the exe referencing our modfolder, the new
+-- packed files will then be inside the animations folder inside our modfolder
+-- (otherwise, the exe will probably overwrite the old, official packed files).
+-- Then, it's simply a matter of doing a binary diff of the modfolder's packed
+-- animation files versus the old official packed files to generate a bdiff,
+-- which can then be added to our version control for sensible tracking and
+-- quick generation of new packed animation files on subsequent (non-animation)
+-- modifications.
 _M2TW_DSK_FUNCS :: TextRegex
-_M2TW_DSK_FUNCS = addTrueTest [r1, r2, r3]
+_M2TW_DSK_FUNCS = addTrueTest [r1, r2]
     where
-        -- Diplomats/princesses: remove annoying "conduct diplomacy" animation
+        -- Diplomats: remove annoying "conduct diplomacy" animation
         r1 =    [ ("^anim\\s+conduct_diplomacy.+?\\r\\n", nil)
                 ]
-        -- Diplomats/princesses: remove needless bowing animation (same as deselect animation)
+        -- Diplomats: remove needless bowing animation (same as deselect animation)
         r2 =    [ ("^anim\\s+selected_to_stand[^\\r]+?Stratmap_Diplomat.+?\\r\\n", nil)
-                ]
-        r3 =    [ ("^anim\\s+selected_to_stand[^\\r]+?Stratmap_Princess.+?\\r\\n", nil)
                 ]
 
 _M2TW_DSM_FUNCS :: TextRegex
@@ -574,7 +600,7 @@ _M2TW_DSM_FUNCS = addTrueTest [r1, r2, r3, r4]
                 ]
 
 _M2TW_DSR_FUNCS :: TextRegex
-_M2TW_DSR_FUNCS = addTrueTest [r1, r2, r3, r4]
+_M2TW_DSR_FUNCS = addTrueTest [r1, r2, r3]
     where
         -- Gold resource worth 2
         r1 =    [ ("^type\\s+gold\\r\\ntrade_value\\s+", id)
@@ -584,12 +610,8 @@ _M2TW_DSR_FUNCS = addTrueTest [r1, r2, r3, r4]
         r2 =    [ ("^type\\s+silver\\r\\ntrade_value\\s+", id)
                 , (_REGEX_INT, only "1")
                 ]
-        -- Silver resource worth 1
-        r3 =    [ ("^type\\s+silver\\r\\ntrade_value\\s+", id)
-                , (_REGEX_INT, only "1")
-                ]
         -- Only allow gold and silver to be minable.
-        r4 =    [ ("^has_mine.+?", id)
+        r3 =    [ ("^has_mine.+?", id)
                 , ("^has_mine.+?", id)
                 , ("\\r\\nhas_mine", nil)
                 , (".+?", id)
@@ -619,7 +641,7 @@ _M2TW_DW_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
         r4 =    [ ("^\\s+tower.+?full_health\\s", id)
                 , (multRoundInt 2)
                 ]
-        -- Tower non-flaming firing rate 2x
+        -- Tower non-flaming firing rate 2x (i.e., reduce firing delay by 0.5x)
         r5 =    [ ("^\\s+fire_rate\\s+small\\s+", id)
                 , (multRoundInt 0.5)
                 ]
@@ -1072,10 +1094,6 @@ _M2TW_EDB_FUNCS = addTrueTest $ [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r
                     ]
                 ,
                     -- castle_cannon
-                    -- NOTE: since the castle's highest building type is just "large_city", we can't
-                    -- base the _RP{n} values based on the settlement_min value here; we just mirror
-                    -- the city version to keep it fair (since more expensive buildings cost more
-                    -- anyway)
                     [ ("^building\\s+castle_cannon.+?            \\{\\r\\n", id)
                     , ("\\s+recruit_pool.+?", only $ getRecruits Cannon city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
