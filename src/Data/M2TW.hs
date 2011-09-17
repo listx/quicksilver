@@ -37,6 +37,7 @@ readmeM2TW =
     , "- Paved roads for all settlements."
     , "*** Agents"
     , "- Disable diplomat diplomacy animations from the campaign map"
+    , "- Remove merchants (too much micro-management), princesses (use diplomats), and spies (use assassins)."
     , "- Remove heretics, witches, and inquisitors."
     , "- Improve priest denouncing power (against heretics/witches) 2x"
     , "- Improve effectiveness of assassins 2x"
@@ -47,6 +48,9 @@ readmeM2TW =
     , "*** Other"
     , "- Rebel spawn rate 20x lower"
     , "- Pirate spawn rate 20x lower"
+    , "** Guilds"
+    , "- No merchants, so remove Merchants' Guild"
+    , "- No spies, so remove Thieves' Guild"
     -- Settlement defenses
     , "** Settlement defenses"
     , "- City/Castle defense tower activation range 8x"
@@ -82,6 +86,7 @@ readmeM2TW =
     , "- Turks' King's purse 3x (6000 denari)"
     , "- Egypt's King's purse 3.5x (5250 denari)"
     , "- Remove corruption trigger based on high treasury"
+    , "- No merchants (also, no Merchant's Guild)"
     -- Gold/silver-only mining
     , "*** Gold/silver-only mining"
     , "- Only gold and silver are mineable."
@@ -95,6 +100,7 @@ readmeM2TW =
     , "** Settlement mechanics"
     , "- Reduce ``distance to capital'' penalty by 75%"
     , "- Reduce ``religious unrest'' penalty by 50%"
+    , "- Reduce population requirements to upgrade a settlement, such that smaller settlements can get upgraded more quickly. This will help prevent settlements from stagnating as villages and towns (or mottes/baileys). The smaller populations get more population upgrade reductions than the bigger ones."
     -- Missions
     , "** Missions"
     , "- Disable all mission penalties"
@@ -105,10 +111,13 @@ readmeM2TW =
     , "  - Also, increase the cash threshold 10x for triggering the major/mod/min money rewards (since this mod's other modifications make it so that the player has a large cash reserve most of the time)."
     , "- Increase every mission's military rewards 3x"
     , "- Decrease every mission's duration by 33% (except for the ``convert'' mission where you have to convert a settlement's religion)"
+    , "- No spies, so disable all Thieves' Guild Missions"
     -- Game AI
     , "** Game AI"
     , "- Fixed faction standing bug"
     , "- Papal States no longer capture rebel settlements (helps land-strapped factions like Milan and Sicily expand into Africa more easily)"
+    , "*** Rebels"
+    , "- Give rebels lots of money."
     -- Other changes
     , "** Other"
     , "- Unlock all playable factions"
