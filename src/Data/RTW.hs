@@ -4,13 +4,33 @@ import Data
 import Regex.RTW
 
 qsRTW :: Mod
-qsRTW = (RTW,
+qsRTW = Mod RTW "quicksilverRTW" "0.01" readmeRTW miscFilesRTW $
     [ ModFile 0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6 _RTW_EDB Installed
 		(ModText _RTW_EDB_FUNCS ("^\\}\\r\\n", "}\r\n"))]
     ++
     -- Misc files to copy over
     map (\f -> makeModFile f Installed Copy) rtwInstalledCopy
-	)
+
+readmeRTW :: [String]
+readmeRTW =
+    [ "* Overview"
+    , "- There are many changes to speed up gameplay and to make things feel much more dynamic and fluid. "
+      ++ "The primary aim has been to remove repetitive actions as much as possible. "
+    , "* Full list of changes from vanilla RTW (with 1.5 patch)"
+    , "** Building tree"
+    , "- All building constructions take 1 turn"
+    ]
+
+miscFilesRTW :: [(FilePath, String)]
+miscFilesRTW =
+    [ ("quicksilverRTW.bat", bat)
+    ]
+    where
+        bat = "RomeTW.exe "
+            ++ "-mod:quicksilverRTW "
+            ++ "-enable_editor " -- enable the hisorical battle editor (clickable link in game menu)
+            ++ "-show_err " -- show fatal error messages (after a crash)
+            ++ "-nm " -- disable intro/background movies
 
 rtwInstalledCopy :: [(Integer, String)]
 rtwInstalledCopy =

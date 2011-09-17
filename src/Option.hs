@@ -2,7 +2,6 @@
 
 module Option where
 
-import Control.Monad (when)
 import System.Console.CmdArgs.Implicit
 
 import Data hiding (name)
@@ -42,8 +41,9 @@ getOpts = cmdArgs $ qsOpts
     &= helpArg [explicit, name "help", name "h"]
     &= program _QS_NAME
 
--- Basic option sanity check, as well as ensuring that source files are the official originals.
+-- Basic option sanity check.
 checkOpts :: Opts -> IO ()
-checkOpts Opts{..} = do
-    when (null unpacked_data_dir && game == M2TW) $ abort ("--unpacked-data-path is empty", 1)
-    when (null installed_data_dir) $ abort ("--data-path is empty", 1)
+checkOpts Opts{..}
+    | (null unpacked_data_dir && game == M2TW) = abort ("--unpacked-data-path is empty", 1)
+    | (null installed_data_dir) = abort ("--data-path is empty", 1)
+    | otherwise = return ()

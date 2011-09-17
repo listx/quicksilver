@@ -6,9 +6,3 @@ prof:
 
 clean:
 	rm -rf gen* *.o *.hi Data/*.o Data/*.hi Recruit/*.o Recruit/*.hi Regex/*.o Regex/*.hi
-
-refreshRTW:
-	rm -rf quicksilverRTW
-
-refreshM2TW:
-	rm -rf quicksilverM2TW

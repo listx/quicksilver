@@ -67,7 +67,14 @@ instance Show ModFile where
                 ModBinary _ -> "binary"
                 _ -> "copy"
 
-type Mod = (Game, [ModFile])
+data Mod = Mod
+    { modGame :: Game
+    , modName :: String
+    , modVer :: String
+    , readme :: [String]
+    , miscFiles :: [(FilePath, String)]
+    , modFiles :: [ModFile]
+    }
 
 makeModFileModText :: (Integer, String, Operation) -> DataOrigin -> ModFile
 makeModFileModText (a, b, c) o = ModFile a b o c

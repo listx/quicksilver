@@ -4,7 +4,7 @@ import Data
 import Regex.M2TW
 
 qsM2TW :: Mod
-qsM2TW = (M2TW,
+qsM2TW = Mod M2TW "quicksilverM2TW" "0.08" readmeM2TW miscFilesM2TW $
     -- Text files to mod
     map (\f -> makeModFileModText f Unpacked) m2twUnpackedModText
     ++
@@ -20,7 +20,127 @@ qsM2TW = (M2TW,
     ++
     -- Misc files to copy over
     map (\f -> makeModFile f Installed Copy) m2twInstalledCopy
-    )
+
+readmeM2TW :: [String]
+readmeM2TW =
+    [ "* Overview"
+    , "- There are many changes to speed up gameplay and to make things feel much more dynamic and fluid. "
+      ++ "The primary aim has been to remove repetitive actions as much as possible. "
+    , "* Full list of changes from vanilla M2TW (with 1.3 patch)"
+    , "** Campaign map"
+    , "*** Unit speed"
+    , "- Campaign movement speed 1.75x for all units"
+    , "- Ship movement speed 3x (3x the 1.75x)"
+    , "- Diplomat movement speed 2x (2x the 1.75x)"
+    , "*** Initial provinces and buildings"
+    , "- Give small factions extra settlements. Scotland now starts with Inverness and York, Russia with Smolensk and Moscow, and Denmark with Oslo. Scotland and Russia receive 2 extra settlements, but Denmark only 1, because: in practice, Scotland/Russia is very weak/stagnant, and Denmark is usually very strong as it is."
+    , "- Paved roads for all settlements."
+    , "*** Agents"
+    , "- Disable diplomat diplomacy animations from the campaign map"
+    , "- Remove heretics, witches, and inquisitors."
+    , "- Improve priest denouncing power (against heretics/witches) 2x"
+    , "- Improve effectiveness of assassins 2x"
+    , "- Assassin's minimum success chance changed from 5% to 17% (1 out of 6, just like rolling a die; so a newbie assassin should be able to succeed more easily), and maximum chance changed from 95% to 99%"
+    , "- Assassin recruitment cost 3x"
+    , "- Assassin upkeep cost 3x"
+    , "- Give good assassins a line of sight bonus with increased skill."
+    , "*** Other"
+    , "- Rebel spawn rate 20x lower"
+    , "- Pirate spawn rate 20x lower"
+    -- Settlement defenses
+    , "** Settlement defenses"
+    , "- City/Castle defense tower activation range 8x"
+    , "- Walls and gate HP 5x"
+    , "- Tower HP 2x"
+    -- Building tree
+    , "** Building tree"
+    , "- All building constructions take 1 turn"
+    , "- Farms merged into wall upgrades."
+    , "- Taverns merged into markets."
+    , "- Sea trade buildings merged into ports."
+    , "- Remove gunpowder and world-is-round requirements for advanced port buildings."
+    , "- Reduce city/castle population upgrade requirements. For both cities and castles, there are more reductions for smaller settlements."
+    , "- The more expensive the building, the more it costs. See the comment in the export_descr_buildings.txt file for details. The cheapest building (which costs 400) is the same, but the most expensive ones (15000) cost almost 2x more."
+    -- Recruitment
+    , "** Recruitment"
+    , "- Give free upkeep slots to castles (1, 2, 3, 4, and 5)"
+    , "- All free upkeep slots 2x (castles stacked)"
+    , "- Increase recruitment slots from [city: 1, 2, 2, 3, 3] [castle: 1, 2, 3, 3, 3] to [city: 1, 2, 3, 4, 5] [castle: 2, 3, 4, 5, 6]"
+    , "- Basic infantry have free upkeep (mental up to 5 AND cost up to 650)"
+    , "- For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings bonuses to base unit number, recruitment points gained per turn, maximum recruitment points available, and (most importantly) the starting experience."
+    , "- Allow a settlement to recruit 2 agents of the same type in a single turn."
+    , "- Fix Swordsmiths Guild HQ bonuses bug (vanilla did not give any extra bonsues for getting the HQ level; now it grants 1 more extra bonus point for factionwide heavy_cavalry_bonus (experience of knights))."
+    -- Units
+    , "** Units"
+    , "- Bodyguard soldiers (cavalry and infantry types) reduced 0.5x; costs reduced accordingly"
+    , "- Missile infantry ammo 2x"
+    , "- Pikemen units: fix rubber swords bug (pikemen only use pikes, not their weak secondary swords)"
+    -- Finances
+    , "** Finances"
+    , "- King's purse 2x"
+    , "- Moors' King's purse 3x (4500 denari)"
+    , "- Turks' King's purse 3x (6000 denari)"
+    , "- Egypt's King's purse 3.5x (5250 denari)"
+    , "- Remove corruption trigger based on high treasury"
+    -- Gold/silver-only mining
+    , "*** Gold/silver-only mining"
+    , "- Only gold and silver are mineable."
+    , "- All existing gold and silver resources on the main campaign map (not New World) have been replaced with chocolate and silk, respectively. Each faction now has 1 gold resource at its capital and 1 silver resource at its secondary region (or both at capital if the faction starts out with only 1 region)."
+    , "- The point of this mod is to make each faction's capital and secondary region (if applicable) very valuable. There is an incentive to take an enemy faction's capital before taking their other settlements, for example. It also levels the playing field for those factions without valuable mineable resources, because gold and silver are no longer concentrated in regions like Zagreb/Vienna."
+    , "- To reinforce the idea that gold/silver can only benefit the owner of the region, their trade value has been drastically reduced (to 2 and 1, respectively)."
+    , "- The New World regions still have all of their gold/silver resources, which makes them extremely valuable. Vanilla M2TW made taking the New World regions very boring, but now at least there is an incentive (lots of money!)."
+    , "- For kicks, Rome has 3 gold resources! This makes capturing Rome very tempting..."
+    , "- The redundant ``Mining Network'' building has been removed, since the regular mines alone make enough money."
+    -- Settlement mechanics
+    , "** Settlement mechanics"
+    , "- Reduce ``distance to capital'' penalty by 75%"
+    , "- Reduce ``religious unrest'' penalty by 50%"
+    -- Missions
+    , "** Missions"
+    , "- Disable all mission penalties"
+    , "- Disable the ``cease hostilities'' mission"
+    , "- Successful assassination gives 5 assassins guild points instead of 10."
+    , "- Increase every mission's monetary reward (the higher the reward, the greater the increase); see descr_missions.txt for details."
+    , "- Fix council_min/mod_money bug in descr_missions.txt (the lines starting with ''    cash ...'' were not correctly mapped to their intended paybacks)"
+    , "  - Also, increase the cash threshold 10x for triggering the major/mod/min money rewards (since this mod's other modifications make it so that the player has a large cash reserve most of the time)."
+    , "- Increase every mission's military rewards 3x"
+    , "- Decrease every mission's duration by 33% (except for the ``convert'' mission where you have to convert a settlement's religion)"
+    -- Game AI
+    , "** Game AI"
+    , "- Fixed faction standing bug"
+    , "- Papal States no longer capture rebel settlements (helps land-strapped factions like Milan and Sicily expand into Africa more easily)"
+    -- Other changes
+    , "** Other"
+    , "- Unlock all playable factions"
+    , "- Disable graphics cap during battle (where your reinforcements are denied entry into the battlefield because of M2TW's opinion of your graphics hardware capabilities)"
+    , "- Disable forced combat closeups (gate/wall is destroyed or enemy general is killed)"
+    ]
+
+miscFilesM2TW :: [(FilePath, String)]
+miscFilesM2TW =
+    [ ("quicksilverM2TW.bat", "medieval2.exe @quicksilverM2TW.cfg")
+    , ("quicksilverM2TW.cfg", cfg)
+    ]
+    where
+        cfg :: String
+        cfg = "[features]\n\
+            \mod = quicksilverM2TW\n\
+            \\n\
+            \[log]\n\
+            \to = logs/quicksilverM2TW.log.txt\n\
+            \level = * error\n\
+            \\n\
+            \[game]\n"
+            -- disable forced combat closeups during battle, when an enemy
+            -- general is killed, a gate is broken down, or a wall is destroyed
+            ++ "event_cutscenes = 0\n"
+            -- disable graphics cap during battle (always allow reinforcements
+            -- regardless of M2TW's opinion of user's hardware)
+            ++ "unlimited_men_on_battlefield = 1\n"
+
+            ++ "\n\
+            \[misc]\n\
+            \unlock_campaign = true"
 
 m2twUnpackedModText :: [(Integer, String, Operation)]
 m2twUnpackedModText =

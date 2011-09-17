@@ -17,13 +17,11 @@ import Data.M2TW
 import Regex
 import Util
 
-getModDataPath :: FilePath -> Game -> String
-getModDataPath fpath g = getGenPath fpath g ++ _QS_NAME ++ "/data/"
+getModDataPath :: FilePath -> String -> String
+getModDataPath fpath mname = getGenPath fpath mname ++ mname ++ "/data/"
 
-getGenPath :: FilePath -> Game -> String
-getGenPath fpath g = fpath' ++ "quicksilver" ++ case g of
-    RTW -> "RTW/"
-    _ -> "M2TW/"
+getGenPath :: FilePath -> String -> String
+getGenPath fpath mname = fpath' ++ mname ++ "/"
     where
         fpath' = case last fpath of
             '/' -> fpath
@@ -49,52 +47,40 @@ qs :: Opts -> IO ()
 qs opts@Opts{..} = do
     putStrLn "\nStarting mod generation... "
     createGenDir opts
-    when (game == M2TW) $ createDirectoryIfMissing True $ getModDataPath out game ++ "animations"
-    createLaunchScripts
+    when (game == M2TW) $ createDirectoryIfMissing True $ getModDataPath out (modName pickMod) ++ "animations"
+    mapM_ (checkFile opts) modfiles
     putStr "\n"
-    mapM_ (checkFile opts) (snd (if game == RTW then qsRTW else qsM2TW))
+    mapM_ (modSource opts) modfiles
     putStr "\n"
-    mapM_ (modSource opts) (snd (if game == RTW then qsRTW else qsM2TW))
-    putStrLn $ "\nquicksilver version " ++ _QS_VERSION ++ " successfully generated inside " ++ enquote (getGenPath out game)
+    mapM_ (\(a, b) -> createFile opts a b) miscfiles
+    createReadme opts pickMod
+    putStrLn $ "\nquicksilver version " ++ _QS_VERSION ++ " successfully generated inside " ++ enquote (getGenPath out (modName pickMod))
     where
-        createLaunchScripts = if game == RTW
-            then createFile opts "quicksilver.bat" batRTW
-            else do createFile opts "quicksilver.bat" batM2TW
-                    createFile opts "quicksilver.cfg" cfgM2TW
-        batRTW = "RomeTW.exe "
-            ++ "-mod:quicksilver "
-            ++ "-enable_editor " -- enable the hisorical battle editor (clickable link in game menu)
-            ++ "-show_err " -- show fatal error messages (after a crash)
-            ++ "-nm " -- disable intro/background movies
-        batM2TW = "medieval2.exe @quicksilver.cfg"
-        cfgM2TW = "[features]\n\
-            \mod = quicksilver\n\
-            \\n\
-            \[log]\n\
-            \to = logs/quicksilver.log.txt\n\
-            \level = * error\n\
-            \\n\
-            \[game]\n"
-            -- disable forced combat closeups during battle, when an enemy
-            -- general is killed, a gate is broken down, or a wall is destroyed
-            ++ "event_cutscenes = 0\n"
-            -- disable graphics cap during battle (always allow reinforcements
-            -- regardless of M2TW's opinion of user's hardware)
-            ++ "unlimited_men_on_battlefield = 1\n"
+        pickMod = if game == RTW then qsRTW else qsM2TW
+        modfiles = modFiles pickMod
+        miscfiles = miscFiles pickMod
 
-            ++ "\n\
-            \[misc]\n\
-            \unlock_campaign = true"
+createReadme :: Opts -> Mod -> IO ()
+createReadme Opts{..} Mod{..} = do
+    putStr $ "\nWriting " ++ fname ++ "... "
+    writeFile dest contents
+    putStrLn "done"
+    where
+        contents = header ++ unlines readme
+        header = "#+TITLE: README for " ++ modName ++ " " ++ modVer ++ "\n\n"
+        dest = (getGenPath out modName) ++ fname
+        fname = modName ++ "-README.org"
 
 createGenDir :: Opts -> IO ()
 createGenDir Opts{..} = do
     genExist <- doesDirectoryExist gp
     when genExist $ abort (enquote gp ++ " already exists", 1)
     putStr $ "Ensuring that directory " ++ enquote gp ++ " exists... "
-    createDirectoryIfMissing True (getModDataPath out game)
+    createDirectoryIfMissing True (getModDataPath out (modName pickMod))
     putStrLn "OK"
     where
-        gp = getGenPath out game
+        pickMod = if game == RTW then qsRTW else qsM2TW
+        gp = getGenPath out (modName pickMod)
 
 createFile :: Opts -> String -> String -> IO ()
 createFile Opts{..} fname contents = do
@@ -102,7 +88,8 @@ createFile Opts{..} fname contents = do
     writeFile dest contents
     putStrLn "done"
     where
-        dest = getGenPath out game ++ fname
+        pickMod = if game == RTW then qsRTW else qsM2TW
+        dest = getGenPath out (modName pickMod) ++ fname
 
 modSource :: Opts -> ModFile -> IO ()
 modSource opts@Opts{..} mf@ModFile{..} = case operation of
@@ -121,8 +108,9 @@ applyBinaryDiff Opts{..} parentDir ModFile{..} = do
     _ <- waitForProcess p
     putStrLn "done"
     where
+        pickMod = if game == RTW then qsRTW else qsM2TW
         sourcePath = parentDir ++ "/" ++ name
-        dest = (getModDataPath out game) ++ name
+        dest = (getModDataPath out (modName pickMod)) ++ name
         diffCmd = CreateProcess
             { cmdspec = ShellCommand ("xdelta3 -d -s " ++ dquote sourcePath ++ " " ++ dquote (bdiff operation) ++ " " ++ dquote dest)
             , cwd = Nothing
@@ -145,10 +133,11 @@ diffFile Opts{..} parentDir ModFile{..} = do
     _ <- waitForProcess p
     putStrLn "done"
     where
+        pickMod = if game == RTW then qsRTW else qsM2TW
         sourcePath = parentDir ++ "/" ++ name
-        dest = (getModDataPath out game) ++ name
+        dest = (getModDataPath out (modName pickMod)) ++ name
         fname = snd $ splitFileName name
-        patchDest = getGenPath out game ++ fname ++ ".patch"
+        patchDest = getGenPath out (modName pickMod) ++ fname ++ ".patch"
         diffCmd = CreateProcess
             { cmdspec = ShellCommand ("diff -uN " ++ dquote sourcePath ++ " " ++ dquote dest)
             , cwd = Nothing
@@ -166,10 +155,11 @@ copyFile' Opts{..} parentDir ModFile{..} = do
     copyFile sourcePath dest
     putStrLn "done"
     where
+        pickMod = if game == RTW then qsRTW else qsM2TW
         dest = mpd ++ name
         modSubdir = mpd ++ fst (splitFileName name)
         sourcePath = parentDir ++ "/" ++ name
-        mpd = getModDataPath out game
+        mpd = getModDataPath out (modName pickMod)
 
 editFile :: Opts -> FilePath -> ModFile -> IO ()
 editFile Opts{..} parentDir mf@ModFile{..} = do
@@ -180,7 +170,8 @@ editFile Opts{..} parentDir mf@ModFile{..} = do
     BC.writeFile dest $ transform mf src
     putStrLn "done"
     where
-        mpd = getModDataPath out game
+        pickMod = if game == RTW then qsRTW else qsM2TW
+        mpd = getModDataPath out (modName pickMod)
         dest = mpd ++ name
         sourcePath = parentDir ++ "/" ++ name
 
