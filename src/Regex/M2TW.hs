@@ -5,7 +5,6 @@ import qualified Data.ByteString.Char8 as BC
 import Option
 import Regex
 import Data
-import Data.Recruit
 import Data.Recruit.M2TW
 import Util
 
@@ -731,7 +730,8 @@ _M2TW_EDAN_FUNCS = addTrueTest [r1]
                 ]
 
 _M2TW_EDB_FUNCS :: TextRegex
-_M2TW_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild] ++ addTrueTest (noMerchantSpy ++ mergeFarmsTavernsWharves ++ fastPorts ++ recruitment)
+_M2TW_EDB_FUNCS = addTrueTest $ [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild]
+    ++ noMerchantSpy ++ mergeFarmsTavernsWharves ++ fastPorts ++ recruitment
     where
         -- Mining income 75x
         r1 =    [ ("^\\s+mine_resource\\s+", id)
@@ -947,295 +947,295 @@ _M2TW_EDB_FUNCS = addTrueTest [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11
                 [
                     -- core_building
                     [ ("^building\\s+core_building.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Core _M2TW_RP0)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Core village)
                     , ("^\\s+wall_level.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Core _M2TW_RP1)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Core town)
                     , ("^\\s+wall_level.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Core _M2TW_RP2)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Core largeTown)
                     , ("^\\s+wall_level.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Core _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Core city)
                     , ("^\\s+wall_level.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Core _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Core largeCity)
                     , ("^\\s+wall_level", id)
                     ]
                 ,
                     -- core_castle_building
                     [ ("^building\\s+core_castle_building.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Castle _M2TW_RP0)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Castle village)
                     , ("^\\s+wall_level.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Castle _M2TW_RP1)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Castle town)
                     , ("^\\s+wall_level.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Castle _M2TW_RP2)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Castle largeTown)
                     , ("^\\s+wall_level.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Castle _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Castle city)
                     , ("^\\s+wall_level.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Castle _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Castle largeCity)
                     , ("^\\s+wall_level", id)
                     ]
                 ,
                     -- equestrian
                     [ ("^building\\s+equestrian.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Equestrian _M2TW_RP0)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Equestrian village)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Equestrian _M2TW_RP1)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Equestrian town)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Equestrian _M2TW_RP2)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Equestrian largeTown)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Equestrian _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Equestrian city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Equestrian _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Equestrian largeCity)
                     , ("^            }", id)
                     ]
                 ,
                     -- barracks
                     [ ("^building\\s+barracks.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks _M2TW_RP0)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks village)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks _M2TW_RP1)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks town)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks _M2TW_RP2)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks largeTown)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks largeCity)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks hugeCity1)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks _M2TW_RP6)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Barracks hugeCity2)
                     , ("^            }", id)
                     ]
                 ,
                     -- castle_barracks
                     [ ("^building\\s+castle_barracks.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits CastleBarracks _M2TW_RP0)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits CastleBarracks village)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits CastleBarracks _M2TW_RP1)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits CastleBarracks town)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits CastleBarracks _M2TW_RP2)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits CastleBarracks largeTown)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits CastleBarracks _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits CastleBarracks city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits CastleBarracks _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits CastleBarracks largeCity)
                     , ("^            }", id)
                     ]
                 ,
                     -- professional_military
                     [ ("^building\\s+professional_military.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits ProfessionalMilitary _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits ProfessionalMilitary hugeCity1)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits ProfessionalMilitary _M2TW_RP6)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits ProfessionalMilitary hugeCity2)
                     , ("^            }", id)
                     ]
                 ,
                     -- missiles
                     [ ("^building\\s+missiles.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Missiles _M2TW_RP1)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Missiles town)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Missiles _M2TW_RP2)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Missiles largeTown)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Missiles _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Missiles city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Missiles _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Missiles largeCity)
                     , ("^            }", id)
                     ]
                 ,
                     -- siege
                     [ ("^building\\s+siege.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Siege _M2TW_RP2)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Siege largeTown)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Siege _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Siege city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Siege _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Siege largeCity)
                     , ("^            }", id)
                     ]
                 ,
                     -- castle_siege
                     [ ("^building\\s+castle_siege.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Siege _M2TW_RP2)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Siege largeTown)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Siege _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Siege city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Siege _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Siege largeCity)
                     , ("^            }", id)
                     ]
                 ,
                     -- cannon
                     [ ("^building\\s+cannon.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon largeCity)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon hugeCity1)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon _M2TW_RP6)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon hugeCity2)
                     , ("^            }", id)
                     ]
                 ,
                     -- castle_cannon
                     -- NOTE: since the castle's highest building type is just "large_city", we can't
-                    -- base the _M2TW_RP{n} values based on the settlement_min value here; we just mirror
+                    -- base the _RP{n} values based on the settlement_min value here; we just mirror
                     -- the city version to keep it fair (since more expensive buildings cost more
                     -- anyway)
                     [ ("^building\\s+castle_cannon.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon largeCity)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon hugeCity1)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon _M2TW_RP6)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Cannon hugeCity2)
                     , ("^            }", id)
                     ]
                 ,
                     -- urban_equestrian (racing track)
                     [ ("^building\\s+urban_equestrian.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits UrbanEquestrian _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits UrbanEquestrian city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits UrbanEquestrian _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits UrbanEquestrian largeCity)
                     , ("^            }", id)
                     ]
                 ,
                     -- port (ships)
                     [ ("^building\\s+port.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Port _M2TW_RP2)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Port largeTown)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Port _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Port city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Port _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Port largeCity)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Port _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Port hugeCity1)
                     , ("^            }", id)
                     ]
                 ,
                     -- castle_port
                     [ ("^building\\s+castle_port.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Port _M2TW_RP2)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Port largeTown)
                     , ("                trade.+?\\r\\n^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Port _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Port city)
                     , ("                trade.+?\\r\\n^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Port _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Port largeCity)
                     , ("                trade.+?\\r\\n^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Port _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Port hugeCity1)
                     , ("                trade.+?\\r\\n^            }", id)
                     ]
                 ,
                     -- markets (transilvanian peasants --- hungary)
                     [ ("^building\\s+market.+?capability.+?capability.+?capability.+?", id)
-                    , ("trade_base.+?\\r\\n", add $ getRecruits Taverns _M2TW_RP3)
+                    , ("trade_base.+?\\r\\n", add $ getRecruits Taverns city)
                     , (".+?capability.+?", id)
-                    , ("trade_base.+?\\r\\n", add $ getRecruits Taverns _M2TW_RP4)
+                    , ("trade_base.+?\\r\\n", add $ getRecruits Taverns largeCity)
                     , (".+?capability.+?", id)
-                    , ("trade_base.+?\\r\\n", add $ getRecruits Taverns _M2TW_RP5)
+                    , ("trade_base.+?\\r\\n", add $ getRecruits Taverns hugeCity1)
                     ]
                 ,
                     -- city_hall
                     [ ("^building\\s+city_hall.+?            \\{", id)
-                    , ("\\r\\n", add $ getRecruits CityHall _M2TW_RP2)
+                    , ("\\r\\n", add $ getRecruits CityHall largeTown)
                     , (".+?diplomat[^\\r]+?southern_european.+?\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n.+?\\r\\n", only $ getRecruits CityHall _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?\\r\\n.+?\\r\\n", only $ getRecruits CityHall city)
                     , (".+?diplomat[^\\r]+?southern_european.+?\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n.+?\\r\\n.+?\\r\\n", only $ getRecruits CityHall _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?\\r\\n.+?\\r\\n.+?\\r\\n", only $ getRecruits CityHall largeCity)
                     , (".+?diplomat[^\\r]+?southern_european.+?\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n.+?\\r\\n.+?\\r\\n.+?\\r\\n.+?\\r\\n", only $ getRecruits CityHall _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?\\r\\n.+?\\r\\n.+?\\r\\n.+?\\r\\n.+?\\r\\n", only $ getRecruits CityHall hugeCity1)
                     ]
                 ,
                     -- bullring (jinetes)
                     [ ("^building\\s+bullring.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?", only $ getRecruits Bullring _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?", only $ getRecruits Bullring city)
                     , ("^                happiness", id)
                     ]
                 ,
                     -- caravan
                     [ ("^building\\s+caravan.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits Caravan _M2TW_RP2) -- large town
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits Caravan largeTown) -- large town
                     , ("^                trade_level.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits Caravan _M2TW_RP4) -- large city
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits Caravan largeCity) -- large city
                     , ("^                trade_level", id)
                     ]
                 ,
                     -- guild_assassins_guild (battlefield assassins --- hungary)
                     [ ("^building\\s+guild_assassins_guild.+?capability.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits AssassinsGuild _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits AssassinsGuild largeCity)
                     , ("^                law_bonus.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits AssassinsGuild _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits AssassinsGuild hugeCity1)
                     , ("^                law_bonus", id)
                     ]
                 ,
                     -- guild_assassins_muslim_guild (hashishim)
                     [ ("^building\\s+guild_assassins_muslim_guild.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits AssassinsMuslimGuild _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits AssassinsMuslimGuild city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits AssassinsMuslimGuild _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits AssassinsMuslimGuild largeCity)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits AssassinsMuslimGuild _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits AssassinsMuslimGuild hugeCity1)
                     , ("^            }", id)
                     ]
                 ,
                     -- guild_masons_guild
                     [ ("^building\\s+guild_masons_guild.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits MasonsGuild _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits MasonsGuild city)
                     , ("^                construction.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits MasonsGuild _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits MasonsGuild largeCity)
                     , ("^                construction.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits MasonsGuild _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits MasonsGuild hugeCity1)
                     , ("^                construction", id)
                     ]
                 ,
                     -- guild_merchants_guild
                     [ ("^building\\s+guild_merchants_guild.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits MerchantsGuild _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits MerchantsGuild city)
                     , ("^                trade_base.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits MerchantsGuild _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits MerchantsGuild largeCity)
                     , ("^                trade_base.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits MerchantsGuild _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits MerchantsGuild hugeCity1)
                     , ("^                trade_base", id)
                     ]
                 ,
                     -- guild_templars_chapter_house
                     [ ("^building\\s+guild_templars_chapter_house.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits TemplarsChapterHouse _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits TemplarsChapterHouse city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits TemplarsChapterHouse _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits TemplarsChapterHouse largeCity)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits TemplarsChapterHouse _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits TemplarsChapterHouse hugeCity1)
                     , ("^            }", id)
                     ]
                 ,
                     -- guild_st_johns_chapter_house
                     [ ("^building\\s+guild_st_johns_chapter_house.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits StJohnsChapterHouse _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits StJohnsChapterHouse city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits StJohnsChapterHouse _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits StJohnsChapterHouse largeCity)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits StJohnsChapterHouse _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits StJohnsChapterHouse hugeCity1)
                     , ("^            }", id)
                     ]
                 ,
                     -- guild_teutonic_knights_chapter_house
                     [ ("^building\\s+guild_teutonic_knights_chapter_house.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits TeutonicKnightsChapterHouse _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits TeutonicKnightsChapterHouse city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits TeutonicKnightsChapterHouse _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits TeutonicKnightsChapterHouse largeCity)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits TeutonicKnightsChapterHouse _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits TeutonicKnightsChapterHouse hugeCity1)
                     , ("^            }", id)
                     ]
                 ,
                     -- guild_knights_of_santiago_chapter_house
                     [ ("^building\\s+guild_knights_of_santiago_chapter_house.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits KnightsOfSantiagoChapterHouse _M2TW_RP3)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits KnightsOfSantiagoChapterHouse city)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits KnightsOfSantiagoChapterHouse _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits KnightsOfSantiagoChapterHouse largeCity)
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits KnightsOfSantiagoChapterHouse _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits KnightsOfSantiagoChapterHouse hugeCity1)
                     , ("^            }", id)
                     ]
                 ,
                     -- guild_woodsmens_guild
                     [ ("^building\\s+guild_woodsmens_guild.+?capability.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits WoodsmensGuild _M2TW_RP4)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits WoodsmensGuild largeCity)
                     , ("^                archer_bonus.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits WoodsmensGuild _M2TW_RP5)
+                    , ("\\s+recruit_pool.+?\\r\\n", only $ getRecruits WoodsmensGuild hugeCity1)
                     , ("^                archer_bonus", id)
                     ]
                 ]

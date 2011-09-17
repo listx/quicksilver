@@ -19,6 +19,9 @@ readmeRTW =
     , "* Full list of changes from vanilla RTW (with 1.5 patch)"
     , "** Building tree"
     , "- All building constructions take 1 turn"
+    -- Recruitment
+    , "** Recruitment"
+    , "- For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings an experience bonus."
     ]
 
 miscFilesRTW :: [(FilePath, String)]
