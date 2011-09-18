@@ -86,13 +86,13 @@ instance Show Building where
 
 
 village, town, largeTown, city, largeCity, hugeCity1, hugeCity2 :: (Int, Double, Int, Int)
-village = (0, 0.0, 0, 0) -- town
-town = (1, 0.10, 1, 1) -- town
-largeTown = (2, 0.10, 2, 2) -- large_town
-city = (3, 0.15, 3, 3) -- city ("Minor City" in-game)
-largeCity = (4, 0.20, 4, 5) -- large_city
-hugeCity1 = (6, 0.30, 6, 7) -- huge_city
-hugeCity2 = (7, 0.35, 7, 7) -- huge_city
+village     = (0, 0.00, 0, 0) -- village
+town        = (0, 0.10, 0, 0) -- town
+largeTown   = (1, 0.15, 1, 1) -- large_town
+city        = (2, 0.20, 2, 2) -- city ("Minor City" in-game)
+largeCity   = (3, 0.25, 3, 3) -- large_city
+hugeCity1   = (4, 0.30, 4, 4) -- huge_city
+hugeCity2   = (5, 0.35, 5, 5) -- huge_city
 
 -- recruitment:
 --      recruit_pool

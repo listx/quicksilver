@@ -61,11 +61,11 @@ instance Show Building where
         _ -> "temple_of_viking" --TempleOfViking
 
 town, largeTown, city, largeCity, hugeCity :: Int
-town = 1 -- town
-largeTown = 2 -- large_town
-city = 3 -- city ("Minor City" in-game)
-largeCity = 5 -- large_city
-hugeCity = 7 -- huge_city
+town        = 0 -- town
+largeTown   = 1 -- large_town
+city        = 2 -- city ("Minor City" in-game)
+largeCity   = 3 -- large_city
+hugeCity    = 4 -- huge_city
 
 modRecruit :: Int -> RecruitPool -> String
 modRecruit e RecruitPool{..} = show RecruitPool
