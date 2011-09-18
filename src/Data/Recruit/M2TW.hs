@@ -31,10 +31,13 @@ data Building
     | ProfessionalMilitary
     | Missiles
     | Siege
+    | CastleSiege
     | Cannon
+    | CastleCannon
     | UrbanEquestrian
     | Port
-    | Taverns
+    | CastlePort
+    | Tavern
     | CityHall
     | Bullring
     | Caravan
@@ -50,6 +53,37 @@ data Building
     -- there are other buildings as well, but we only concern ourselves with
     -- those buildings that give unit recruitment abilities, for now
     deriving (Eq)
+
+instance Show Building where
+    show b = case b of
+        Core                          -> "core_building"
+        Castle                        -> "core_castle_building"
+        Equestrian                    -> "equestrian"
+        Barracks                      -> "barracks"
+        CastleBarracks                -> "castle_barracks"
+        ProfessionalMilitary          -> "professional_military"
+        Missiles                      -> "missiles"
+        Siege                         -> "siege"
+        CastleSiege                   -> "castle_siege"
+        Cannon                        -> "cannon"
+        CastleCannon                  -> "castle_cannon"
+        UrbanEquestrian               -> "urban_equestrian"
+        Port                          -> "port"
+        CastlePort                    -> "castle_port"
+        Tavern                        -> "tavern"
+        CityHall                      -> "city_hall"
+        Bullring                      -> "bullring"
+        Caravan                       -> "caravan"
+        AssassinsGuild                -> "guild_assassins_guild"
+        AssassinsMuslimGuild          -> "guild_assassins_muslim_guild"
+        MasonsGuild                   -> "guild_masons_guild"
+        MerchantsGuild                -> "guild_merchants_guild"
+        TemplarsChapterHouse          -> "guild_templars_chapter_house"
+        StJohnsChapterHouse           -> "guild_st_johns_chapter_house"
+        TeutonicKnightsChapterHouse   -> "guild_teutonic_knights_chapter_house"
+        KnightsOfSantiagoChapterHouse -> "guild_knights_of_santiago_chapter_house"
+        _                             -> "guild_woodsmens_guild"
+
 
 village, town, largeTown, city, largeCity, hugeCity1, hugeCity2 :: (Int, Double, Int, Int)
 village = (0, 0.0, 0, 0) -- town
@@ -435,53 +469,10 @@ _RECRUIT_DATA =
     , RecruitPool "Sudanese Javelinmen" 1 0.7 6 0 "requires factions { moors, }"
     , RecruitPool "ME Peasant Archers" 1 0.7 6 0 "requires factions { egypt, turks, mongols, timurids, }"
     ]
-    ++ zip (repeat Siege)
-    [ RecruitPool "NE Trebuchet" 1 0.4 3 0 "requires factions { england, scotland, france, hre, denmark, spain, portugal, milan, venice, papal_states, sicily, }"
-    , RecruitPool "EE Trebuchet" 1 0.4 3 0 "requires factions { poland, russia, hungary, }"
-    , RecruitPool "GR Trebuchet" 1 0.4 3 0 "requires factions { byzantium, }"
-    , RecruitPool "ME Trebuchet" 1 0.4 3 0 "requires factions { moors, egypt, turks, }"
-    , RecruitPool "AS Trebuchet" 1 0.4 3 0 "requires factions { mongols, timurids, }"
-    , RecruitPool "NE Catapult" 1 0.4 3 0 "requires factions { england, scotland, france, hre, denmark, spain, portugal, milan, venice, papal_states, sicily, Normans, }"
-    , RecruitPool "EE Catapult" 1 0.4 3 0 "requires factions { poland, russia, hungary, }"
-    , RecruitPool "GR Catapult" 1 0.4 3 0 "requires factions { byzantium, }"
-    , RecruitPool "ME Catapult" 1 0.4 3 0 "requires factions { moors, egypt, turks, }"
-    , RecruitPool "AS Catapult" 1 0.4 3 0 "requires factions { mongols, timurids, }"
-    , RecruitPool "NE Ballista" 1 0.4 3 0 "requires factions { england, scotland, france, hre, denmark, spain, portugal, milan, venice, papal_states, sicily, Normans, }"
-    , RecruitPool "EE Ballista" 1 0.4 3 0 "requires factions { poland, russia, hungary, }"
-    , RecruitPool "GR Ballista" 1 0.4 3 0 "requires factions { byzantium, }"
-    , RecruitPool "ME Ballista" 1 0.4 3 0 "requires factions { moors, egypt, turks, }"
-    , RecruitPool "AS Ballista" 1 0.4 3 0 "requires factions { mongols, timurids, }"
-    ]
-    ++ zip (repeat Cannon)
-    [ RecruitPool "NE Basilisk" 1 0.4 3 0 "requires factions { france, hre, spain, portugal, }"
-    , RecruitPool "NE Monster Ribault" 1 0.4 3 0 "requires factions { milan, venice, }"
-    , RecruitPool "EE Basilisk" 1 0.4 3 0 "requires factions { russia, hungary, }"
-    , RecruitPool "ME Monster Bombard" 1 0.4 3 0 "requires factions { turks, }"
-    , RecruitPool "NE Culverin" 1 0.4 3 0 "requires factions { england, scotland, france, spain, portugal, milan, venice, papal_states, }"
-    , RecruitPool "NE Cannon" 1 0.4 3 0 "requires factions { hre, sicily, }"
-    , RecruitPool "NE Serpentine" 1 0.4 3 0 "requires factions { denmark, }"
-    , RecruitPool "EE Serpentine" 1 0.4 3 0 "requires factions { poland, hungary, }"
-    , RecruitPool "EE Cannon" 1 0.4 3 0 "requires factions { russia, }"
-    , RecruitPool "ME Cannon" 1 0.4 3 0 "requires factions { moors, egypt, turks, }"
-    , RecruitPool "AS Cannon" 1 0.4 3 0 "requires factions { timurids, }"
-    , RecruitPool "NE Serpentine" 1 0.4 3 0 "requires factions { france, hre, }"
-    , RecruitPool "NE Cannon" 1 0.4 3 0 "requires factions { denmark, }"
-    , RecruitPool "EE Cannon" 1 0.4 3 0 "requires factions { poland, }"
-    , RecruitPool "NE Mortar" 1 0.4 3 0 "requires factions { england, scotland, venice, papal_states, sicily, }"
-    , RecruitPool "NE Grand Bombard" 1 0.4 3 0 "requires factions { france, hre, spain, portugal, milan, }"
-    , RecruitPool "NE Ribault" 1 0.4 3 0 "requires factions { denmark, }"
-    , RecruitPool "EE Ribault" 1 0.4 3 0 "requires factions { poland, hungary, }"
-    , RecruitPool "EE Grand Bombard" 1 0.4 3 0 "requires factions { russia, }"
-    , RecruitPool "ME Grand Bombard" 1 0.4 3 0 "requires factions { moors, egypt, turks, }"
-    , RecruitPool "AS Grand Bombard" 1 0.4 3 0 "requires factions { timurids, }"
-    , RecruitPool "NE Ribault" 1 0.4 3 0 "requires factions { england, scotland, spain, portugal, milan, venice, papal_states, sicily, }"
-    , RecruitPool "NE Bombard" 1 0.4 3 0 "requires factions { england, scotland, france, hre, denmark, spain, portugal, milan, venice, papal_states, sicily, }"
-    , RecruitPool "EE Bombard" 1 0.4 3 0 "requires factions { poland, russia, hungary, }"
-    , RecruitPool "GR Bombard" 1 0.4 3 0 "requires factions { byzantium, }"
-    , RecruitPool "ME Bombard" 1 0.4 3 0 "requires factions { moors, egypt, turks, }"
-    , RecruitPool "AS Rocket Launcher" 1 0.4 3 0 "requires factions { mongols, }"
-    , RecruitPool "AS Bombard" 1 0.4 3 0 "requires factions { timurids, }"
-    ]
+    ++ zip (repeat Siege) siegeRecruits
+    ++ zip (repeat CastleSiege) siegeRecruits
+    ++ zip (repeat Cannon) cannonRecruits
+    ++ zip (repeat CastleCannon) cannonRecruits
     ++ zip (repeat UrbanEquestrian)
     [ RecruitPool "Arab Cavalry" 1 0.5 4 0 "requires factions { moors, egypt, }"
     , RecruitPool "Turkomans" 1 0.5 4 0 "requires factions { turks, timurids, }"
@@ -491,38 +482,9 @@ _RECRUIT_DATA =
     , RecruitPool "Sipahis" 1 0.4 3 0 "requires factions { turks, }"
     , RecruitPool "Mongol Heavy Archers" 1 0.4 3 0 "requires factions { mongols, timurids, }"
     ]
-    ++ zip (repeat Port)
-    [ RecruitPool "cog" 1 1 3 0 "requires factions { hre, france, scotland, england, }"
-    , RecruitPool "longboat" 1 1 3 0 "requires factions { denmark, }"
-    , RecruitPool "holk" 1 1 3 0 "requires factions { hre, scotland, france, england, }"
-    , RecruitPool "dragon boat" 1 1 3 0 "requires factions { denmark, }"
-    , RecruitPool "gun holk" 1 1 3 0 "requires factions { northern_european, }"
-    , RecruitPool "carrack" 1 1 3 0 "requires factions { northern_european, } and event_counter world_is_round 1"
-    , RecruitPool "dhow" 1 1 3 0 "requires factions { middle_eastern, }"
-    , RecruitPool "war galley" 1 1 3 0 "requires factions { egypt, moors, turks, }"
-    , RecruitPool "lanternas" 1 1 3 0 "requires factions { egypt, moors, turks, }"
-    , RecruitPool "baghlah" 1 1 3 0 "requires factions { egypt, moors, turks, } and event_counter world_is_round 1"
-    , RecruitPool "cog" 1 1 3 0 "requires factions { hungary, poland, }"
-    , RecruitPool "ladya" 1 1 3 0 "requires factions { russia, }"
-    , RecruitPool "war galley" 1 1 3 0 "requires factions { hungary, }"
-    , RecruitPool "holk" 1 1 3 0 "requires factions { russia, poland, }"
-    , RecruitPool "gun holk" 1 1 3 0 "requires factions { russia, poland, }"
-    , RecruitPool "lanternas" 1 1 3 0 "requires factions { hungary, }"
-    , RecruitPool "carrack" 1 1 3 0 "requires factions { eastern_european, } and event_counter world_is_round 1"
-    , RecruitPool "dromon" 1 1 3 0 "requires factions { greek, }"
-    , RecruitPool "fire ship" 1 1 3 0 "requires factions { greek, }"
-    , RecruitPool "lanternas" 1 1 3 0 "requires factions { greek, }"
-    , RecruitPool "carrack" 1 1 3 0 "requires factions { greek, } and event_counter world_is_round 1"
-    , RecruitPool "galley" 1 1 3 0 "requires factions { sicily, papal_states, milan, venice, }"
-    , RecruitPool "cog" 1 1 3 0 "requires factions { portugal, spain, }"
-    , RecruitPool "war galley" 1 1 3 0 "requires factions { southern_european, }"
-    , RecruitPool "lanternas" 1 1 3 0 "requires factions { portugal, spain, papal_states, milan, sicily, }"
-    , RecruitPool "caravel" 1 1 3 0 "requires factions { portugal, spain, } and event_counter world_is_round 1"
-    , RecruitPool "galleass" 1 1 3 0 "requires factions { venice, }"
-    , RecruitPool "carrack" 1 1 3 0 "requires factions { papal_states, sicily, milan, venice, } and event_counter world_is_round 1"
-    , RecruitPool "grande carrack" 1 1 3 0 "requires factions { portugal, spain, } and event_counter world_is_round 1"
-    ]
-    ++ zip (repeat Taverns)
+    ++ zip (repeat Port) portRecruits
+    ++ zip (repeat CastlePort) portRecruits
+    ++ zip (repeat Tavern)
     [ RecruitPool "Transilvanian Peasants" 1 0.5 4 0 "requires factions { hungary, }"
     ]
     ++ zip (repeat CityHall)
@@ -589,3 +551,82 @@ _RECRUIT_DATA =
     ++ zip (repeat WoodsmensGuild)
     [ RecruitPool"Sherwood Archers" 1 0.4 3 0 "requires factions { england, }"
     ]
+    where
+        siegeRecruits =
+            [ RecruitPool "NE Trebuchet" 1 0.4 3 0 "requires factions { england, scotland, france, hre, denmark, spain, portugal, milan, venice, papal_states, sicily, }"
+            , RecruitPool "EE Trebuchet" 1 0.4 3 0 "requires factions { poland, russia, hungary, }"
+            , RecruitPool "GR Trebuchet" 1 0.4 3 0 "requires factions { byzantium, }"
+            , RecruitPool "ME Trebuchet" 1 0.4 3 0 "requires factions { moors, egypt, turks, }"
+            , RecruitPool "AS Trebuchet" 1 0.4 3 0 "requires factions { mongols, timurids, }"
+            , RecruitPool "NE Catapult" 1 0.4 3 0 "requires factions { england, scotland, france, hre, denmark, spain, portugal, milan, venice, papal_states, sicily, Normans, }"
+            , RecruitPool "EE Catapult" 1 0.4 3 0 "requires factions { poland, russia, hungary, }"
+            , RecruitPool "GR Catapult" 1 0.4 3 0 "requires factions { byzantium, }"
+            , RecruitPool "ME Catapult" 1 0.4 3 0 "requires factions { moors, egypt, turks, }"
+            , RecruitPool "AS Catapult" 1 0.4 3 0 "requires factions { mongols, timurids, }"
+            , RecruitPool "NE Ballista" 1 0.4 3 0 "requires factions { england, scotland, france, hre, denmark, spain, portugal, milan, venice, papal_states, sicily, Normans, }"
+            , RecruitPool "EE Ballista" 1 0.4 3 0 "requires factions { poland, russia, hungary, }"
+            , RecruitPool "GR Ballista" 1 0.4 3 0 "requires factions { byzantium, }"
+            , RecruitPool "ME Ballista" 1 0.4 3 0 "requires factions { moors, egypt, turks, }"
+            , RecruitPool "AS Ballista" 1 0.4 3 0 "requires factions { mongols, timurids, }"
+            ]
+        cannonRecruits =
+            [ RecruitPool "NE Basilisk" 1 0.4 3 0 "requires factions { france, hre, spain, portugal, }"
+            , RecruitPool "NE Monster Ribault" 1 0.4 3 0 "requires factions { milan, venice, }"
+            , RecruitPool "EE Basilisk" 1 0.4 3 0 "requires factions { russia, hungary, }"
+            , RecruitPool "ME Monster Bombard" 1 0.4 3 0 "requires factions { turks, }"
+            , RecruitPool "NE Culverin" 1 0.4 3 0 "requires factions { england, scotland, france, spain, portugal, milan, venice, papal_states, }"
+            , RecruitPool "NE Cannon" 1 0.4 3 0 "requires factions { hre, sicily, }"
+            , RecruitPool "NE Serpentine" 1 0.4 3 0 "requires factions { denmark, }"
+            , RecruitPool "EE Serpentine" 1 0.4 3 0 "requires factions { poland, hungary, }"
+            , RecruitPool "EE Cannon" 1 0.4 3 0 "requires factions { russia, }"
+            , RecruitPool "ME Cannon" 1 0.4 3 0 "requires factions { moors, egypt, turks, }"
+            , RecruitPool "AS Cannon" 1 0.4 3 0 "requires factions { timurids, }"
+            , RecruitPool "NE Serpentine" 1 0.4 3 0 "requires factions { france, hre, }"
+            , RecruitPool "NE Cannon" 1 0.4 3 0 "requires factions { denmark, }"
+            , RecruitPool "EE Cannon" 1 0.4 3 0 "requires factions { poland, }"
+            , RecruitPool "NE Mortar" 1 0.4 3 0 "requires factions { england, scotland, venice, papal_states, sicily, }"
+            , RecruitPool "NE Grand Bombard" 1 0.4 3 0 "requires factions { france, hre, spain, portugal, milan, }"
+            , RecruitPool "NE Ribault" 1 0.4 3 0 "requires factions { denmark, }"
+            , RecruitPool "EE Ribault" 1 0.4 3 0 "requires factions { poland, hungary, }"
+            , RecruitPool "EE Grand Bombard" 1 0.4 3 0 "requires factions { russia, }"
+            , RecruitPool "ME Grand Bombard" 1 0.4 3 0 "requires factions { moors, egypt, turks, }"
+            , RecruitPool "AS Grand Bombard" 1 0.4 3 0 "requires factions { timurids, }"
+            , RecruitPool "NE Ribault" 1 0.4 3 0 "requires factions { england, scotland, spain, portugal, milan, venice, papal_states, sicily, }"
+            , RecruitPool "NE Bombard" 1 0.4 3 0 "requires factions { england, scotland, france, hre, denmark, spain, portugal, milan, venice, papal_states, sicily, }"
+            , RecruitPool "EE Bombard" 1 0.4 3 0 "requires factions { poland, russia, hungary, }"
+            , RecruitPool "GR Bombard" 1 0.4 3 0 "requires factions { byzantium, }"
+            , RecruitPool "ME Bombard" 1 0.4 3 0 "requires factions { moors, egypt, turks, }"
+            , RecruitPool "AS Rocket Launcher" 1 0.4 3 0 "requires factions { mongols, }"
+            , RecruitPool "AS Bombard" 1 0.4 3 0 "requires factions { timurids, }"
+            ]
+        portRecruits =
+            [ RecruitPool "cog" 1 1 3 0 "requires factions { hre, france, scotland, england, }"
+            , RecruitPool "longboat" 1 1 3 0 "requires factions { denmark, }"
+            , RecruitPool "holk" 1 1 3 0 "requires factions { hre, scotland, france, england, }"
+            , RecruitPool "dragon boat" 1 1 3 0 "requires factions { denmark, }"
+            , RecruitPool "gun holk" 1 1 3 0 "requires factions { northern_european, }"
+            , RecruitPool "carrack" 1 1 3 0 "requires factions { northern_european, } and event_counter world_is_round 1"
+            , RecruitPool "dhow" 1 1 3 0 "requires factions { middle_eastern, }"
+            , RecruitPool "war galley" 1 1 3 0 "requires factions { egypt, moors, turks, }"
+            , RecruitPool "lanternas" 1 1 3 0 "requires factions { egypt, moors, turks, }"
+            , RecruitPool "baghlah" 1 1 3 0 "requires factions { egypt, moors, turks, } and event_counter world_is_round 1"
+            , RecruitPool "cog" 1 1 3 0 "requires factions { hungary, poland, }"
+            , RecruitPool "ladya" 1 1 3 0 "requires factions { russia, }"
+            , RecruitPool "war galley" 1 1 3 0 "requires factions { hungary, }"
+            , RecruitPool "holk" 1 1 3 0 "requires factions { russia, poland, }"
+            , RecruitPool "gun holk" 1 1 3 0 "requires factions { russia, poland, }"
+            , RecruitPool "lanternas" 1 1 3 0 "requires factions { hungary, }"
+            , RecruitPool "carrack" 1 1 3 0 "requires factions { eastern_european, } and event_counter world_is_round 1"
+            , RecruitPool "dromon" 1 1 3 0 "requires factions { greek, }"
+            , RecruitPool "fire ship" 1 1 3 0 "requires factions { greek, }"
+            , RecruitPool "lanternas" 1 1 3 0 "requires factions { greek, }"
+            , RecruitPool "carrack" 1 1 3 0 "requires factions { greek, } and event_counter world_is_round 1"
+            , RecruitPool "galley" 1 1 3 0 "requires factions { sicily, papal_states, milan, venice, }"
+            , RecruitPool "cog" 1 1 3 0 "requires factions { portugal, spain, }"
+            , RecruitPool "war galley" 1 1 3 0 "requires factions { southern_european, }"
+            , RecruitPool "lanternas" 1 1 3 0 "requires factions { portugal, spain, papal_states, milan, sicily, }"
+            , RecruitPool "caravel" 1 1 3 0 "requires factions { portugal, spain, } and event_counter world_is_round 1"
+            , RecruitPool "galleass" 1 1 3 0 "requires factions { venice, }"
+            , RecruitPool "carrack" 1 1 3 0 "requires factions { papal_states, sicily, milan, venice, } and event_counter world_is_round 1"
+            , RecruitPool "grande carrack" 1 1 3 0 "requires factions { portugal, spain, } and event_counter world_is_round 1"
+            ]
