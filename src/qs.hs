@@ -54,11 +54,12 @@ qs opts@Opts{..} = do
     putStr "\n"
     mapM_ (\(a, b) -> createFile opts a b) miscfiles
     createReadme opts pickMod
-    putStrLn $ "\nquicksilver version " ++ _QS_VERSION ++ " successfully generated inside " ++ enquote (getGenPath out (modName pickMod))
+    putStrLn $ "\n" ++ modinfo ++ " successfully generated inside " ++ enquote (getGenPath out (modName pickMod))
     where
         pickMod = if game == RTW then qsRTW else qsM2TW
         modfiles = modFiles pickMod
         miscfiles = miscFiles pickMod
+        modinfo = modName pickMod ++ " version " ++ modVer pickMod
 
 createReadme :: Opts -> Mod -> IO ()
 createReadme Opts{..} Mod{..} = do
