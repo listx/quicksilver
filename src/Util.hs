@@ -2,6 +2,11 @@ module Util where
 
 import qualified Text.Printf as TP
 
+data Lang
+    = XML
+    | Script
+    deriving (Eq)
+
 dquote :: String -> String
 dquote s = "\"" ++ s ++ "\""
 
@@ -14,15 +19,17 @@ concatRep n str = concat $ replicate n str
 cmtRuler :: String -> String
 cmtRuler s = replicate (length s) ';' ++ "\r\n"
 
-cmtBox :: String -> String
-cmtBox s = horiz ++ ";; " ++ s ++ " ;;\r\n" ++ horiz
+cmtBox :: Lang -> String -> String
+cmtBox lang s = case lang of
+    XML -> horizXML ++ "<!-- " ++ s ++ " -->\r\n" ++ horizXML
+    _ -> horizS ++ ";; " ++ s ++ " ;;\r\n" ++ horizS
     where
-        horiz = replicate (length s + 6) ';' ++ "\r\n"
+        horizXML = "<!--" ++ replicate (length s + 2) ' ' ++ "-->" ++ "\r\n"
+        horizS = replicate (length s + 6) ';' ++ "\r\n"
 
-costsDiffNote :: String -> String -> [Int] -> [Int] -> [Double] -> String
-costsDiffNote s msg old new chg =
-    cmtBox msg
-    ++ "\r\n; " ++ s ++ " changes from vanilla M2TW:\r\n"
+costsDiffNote :: String -> [Int] -> [Int] -> [Double] -> String
+costsDiffNote s old new chg =
+    "\r\n; " ++ s ++ " changes from vanilla:\r\n"
     ++ showIntChanges (zip3 old new chg)
     ++ "\r\n\r\n"
 

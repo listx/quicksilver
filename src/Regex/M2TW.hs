@@ -2,7 +2,6 @@ module Regex.M2TW where
 
 import qualified Data.ByteString.Char8 as BC
 
-import Option
 import Regex
 import Data
 import Data.Recruit.M2TW
@@ -179,7 +178,7 @@ _M2TW_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTru
         moneyFormula :: Double -> Int
         moneyFormula n = round $ n + (((n - 100)/100) * 2000)
         -- Make a note about the changes in the DM file (comments)
-        r4' =   [ ("^; descr_missions.+?\\r\\n", prepend $ costsDiffNote "Mission money reward" _QS_INFO old new chg)
+        r4' =   [ ("^; descr_missions.+?\\r\\n", prepend $ costsDiffNote "Mission money reward" old new chg)
                 ]
             where
                 old =   [ 100
@@ -755,7 +754,7 @@ _M2TW_EDB_FUNCS :: TextRegex
 _M2TW_EDB_FUNCS = addTrueTest $ [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild]
     ++ noMerchantSpy ++ mergeFarmsTavernsWharves ++ fastPorts ++ recruitment
     where
-        -- Mining income 75x
+        -- Mining income 75x (income from 1 mine = mine_resource * 20 * (trade value of resource))
         r1 =    [ ("^\\s+mine_resource\\s+", id)
                 , (multRoundInt 75)
                 ]
@@ -772,7 +771,7 @@ _M2TW_EDB_FUNCS = addTrueTest $ [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r
         gradFormula :: Double -> Int
         gradFormula n = round $ n + (((n - 400)/400) * 400)
         -- Make a note about the changes in the EDB file (comments)
-        r3' =   [ ("^;This.+?by hand.+?\\r\\n", prepend $ costsDiffNote "Building cost" _QS_INFO old new chg)
+        r3' =   [ ("^;This.+?by hand.+?\\r\\n", prepend $ costsDiffNote "Building cost" old new chg)
                 ]
             where
                 old =   [ 400

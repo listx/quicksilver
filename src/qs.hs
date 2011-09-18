@@ -167,14 +167,17 @@ editFile Opts{..} parentDir mf@ModFile{..} = do
     -- apply one (or more) transformations on the source file
     putStr $ "Writing new " ++ enquote dest ++ "... "
     when (elem '/' name) $ createDirectoryIfMissing True (takeDirectory dest)
-    BC.writeFile dest $ transform mf src
+    BC.writeFile dest . BC.append (BC.pack $ cmtBox lang modinfo) $ transform mf src
     putStrLn "done"
     where
         pickMod = if game == RTW then qsRTW else qsM2TW
         mpd = getModDataPath out (modName pickMod)
         dest = mpd ++ name
         sourcePath = parentDir ++ "/" ++ name
-
+        modinfo = modName pickMod ++ " version " ++ modVer pickMod
+        lang = case (reverse . take 3 . reverse $ name) of
+            "xml" -> XML
+            _ -> Script
 transform :: ModFile -> BC.ByteString -> BC.ByteString
 transform ModFile{..} src
     | null . fst . partition $ operation = compose (map grpGsub (regexes operation)) $ src
