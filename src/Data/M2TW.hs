@@ -70,7 +70,7 @@ readmeM2TW =
     , "- Remove sea trade buildings (merchant's wharf, etc.); their capabilities have been merged into ports."
     , "- Remove gunpowder and world_is_round requirements for advanced port buildings (drydocks and dockyards)."
     , "  - NOTE: However, ocean-capable ships (carracks+) are not recruitable until the world_is_round event."
-    , "- Reduce city/castle population upgrade requirements. For both cities and castles, there are more reductions for smaller settlements."
+    , "- Reduce city/castle population upgrade requirements. For both cities and castles, there are more reductions for smaller settlements. See `Settlement mechanics'."
     , "- The more expensive the building, the more it costs. See the comment in the export_descr_buildings.txt file for details. The cheapest building (which costs 400) is the same, but the most expensive ones (15000) cost almost 2x more."
     , "- No spies, so disable all Thieves' Guild buildings"
     -- Recruitment
@@ -136,9 +136,8 @@ readmeM2TW =
     -- Other changes
     , "** Other"
     , "- Unlock all playable factions"
-    , "- Disable graphics cap during battle (where your reinforcements are denied entry into the battlefield because of M2TW's opinion of your graphics hardware capabilities)"
     , "- Disable forced combat closeups (gate/wall is destroyed or enemy general is killed)"
-    , "- Allow unlimited men on the battlefield (i.e., all armies can enter battle at the same time)"
+    , "- Allow unlimited men on the battlefield (i.e., all armies (main armies + reinforcments) can enter the battle map at the same time)"
     ]
 
 miscFilesM2TW :: [(FilePath, String)]
