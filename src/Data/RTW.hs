@@ -22,6 +22,7 @@ readmeRTW =
     -- Recruitment
     , "** Recruitment"
     , "- For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings an experience bonus."
+    , "  -  Roman gladiators (Julii, Scipii, Senate) are now all recruitable starting at the city level (in vanilla, only Brutii had access to gladiators starting from city level)."
     ]
 
 miscFilesRTW :: [(FilePath, String)]
