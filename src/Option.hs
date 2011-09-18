@@ -9,7 +9,7 @@ import Error
 
 _QS_NAME, _QS_VERSION, _QS_INFO, _COPYRIGHT :: String
 _QS_NAME = "quicksilver"
-_QS_VERSION = "0.08"
+_QS_VERSION = "0.09"
 _QS_INFO = _QS_NAME ++ " version " ++ _QS_VERSION
 _COPYRIGHT = "(C) Linus Arver 2011"
 
