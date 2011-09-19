@@ -131,3 +131,33 @@ _RTW_EDB_FUNCS = addTrueTest $ [r1]
             , "roman"
             ]
         diplomat = replicate 16 ' ' ++ "agent diplomat 0 requires factions "
+
+_RTW_EDU_FUNCS :: RegexSets
+_RTW_EDU_FUNCS = addTrueTest unitTurns
+    where
+        -- All units take 0 turns to recruit, but they cost cost 1.33x, 1.66x,
+        -- and 2x more (initial cost) based on their original turn count.
+        unitTurns =
+            [
+            -- First multiply the initial costs appropriately, depending on
+            -- original turn count.
+                [ ("^stat_cost\\s+", id)
+                , ("1,\\s+", id )
+                , (multRoundInt 1.33)
+                ]
+            ,
+                [ ("^stat_cost\\s+", id)
+                , ("2,\\s+", id )
+                , (multRoundInt 1.66)
+                ]
+            ,
+                [ ("^stat_cost\\s+", id)
+                , ("3,\\s+", id )
+                , (multRoundInt 2)
+                ]
+            ,
+            -- Now set the turn count for all units to 0.
+                [ ("^stat_cost\\s+", id)
+                , (_REGEX_INT, only "0")
+                ]
+            ]

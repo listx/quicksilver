@@ -5,8 +5,8 @@ import Regex.RTW
 
 qsRTW :: Mod
 qsRTW = Mod RTW "quicksilverRTW" "0.01" readmeRTW miscFilesRTW $
-    [ ModFile 0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6 _RTW_EDB Installed
-		(ModText _RTW_EDB_FUNCS ("^\\}\\r\\n", "}\r\n"))]
+    -- Text files to mod
+    map (\f -> makeModFileModText f Installed) rtwInstalledModText
     ++
     -- Misc files to copy over
     map (\f -> makeModFile f Installed Copy) rtwInstalledCopy
@@ -23,6 +23,7 @@ readmeRTW =
     , "** Recruitment"
     , "- For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings an experience bonus."
     , "  -  Roman gladiators (Julii, Scipii, Senate) are now all recruitable starting at the city level (in vanilla, only Brutii had access to gladiators starting from city level)."
+    , "- All units take 0 turns to complete, but they cost 1.33x, 1.66x, and 2x more (initial cost only) based on their original turn count. (FYI: The Scipii Decere unit is the only unit in vanilla that took 3 turns to complete.)."
     ]
 
 miscFilesRTW :: [(FilePath, String)]
@@ -35,6 +36,12 @@ miscFilesRTW =
             ++ "-enable_editor " -- enable the hisorical battle editor (clickable link in game menu)
             ++ "-show_err " -- show fatal error messages (after a crash)
             ++ "-nm " -- disable intro/background movies
+
+rtwInstalledModText :: [(Integer, String, Operation)]
+rtwInstalledModText =
+    [ (0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6, _RTW_EDB , ModText _RTW_EDB_FUNCS  ("^\\}\\r\\n", "}\r\n"))
+    , (0x55b56dc9ac99161de270c28f5efed2c791d318ca, _RTW_EDU,  ModText _RTW_EDU_FUNCS  (" \\r\\n \\r\\n", " \r\n \r\n"))
+    ]
 
 rtwInstalledCopy :: [(Integer, String)]
 rtwInstalledCopy =
@@ -103,4 +110,6 @@ rtwInstalledCopy =
 	]
 
 _RTW_EDB :: String
+_RTW_EDU :: String
 _RTW_EDB     = "export_descr_buildings.txt"
+_RTW_EDU     = "export_descr_unit.txt"
