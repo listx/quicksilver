@@ -39,7 +39,7 @@ readmeM2TW =
     , "- Disable diplomacy animations from the campaign map; specifically, the `conduct diplomacy' and bowing animations have been removed"
     , "- Remove merchants (too much micro-management)."
     , "- Remove princesses (use diplomats instead)."
-    , "- Remove spies (use assassins; spies are over-powered anyway with their 'open gate' ability)."
+    , "- Remove spies (use assassins instead; spies are over-powered anyway with their 'open gate' ability)."
     , "- Remove heretics, witches, and inquisitors."
     , "**** Assassins"
     , "- Increase effectiveness 2x"
