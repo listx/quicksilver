@@ -62,8 +62,8 @@ readmeM2TW =
     , "- Tower HP 2x"
     , "- Tower firing rate at all levels 2x"
     , "  - Exception: Flaming arrows, flaming ballistas, and cannons (both regular and flaming) remain at default settings"
-    -- Building tree
-    , "** Building tree"
+    -- Buildings
+    , "** Buildings"
     , "- All building constructions take 1 turn"
     , "- Remove farms; farm capabilities have been merged into walls (the wall upgrades when transitioning into a larger town/city)."
     , "- Remove taverns; tavern capabilities have been merged into markets."
@@ -71,7 +71,7 @@ readmeM2TW =
     , "- Remove gunpowder and world_is_round requirements for advanced port buildings (drydocks and dockyards)."
     , "  - NOTE: However, ocean-capable ships (carracks+) are not recruitable until the world_is_round event."
     , "- Reduce city/castle population upgrade requirements. For both cities and castles, there are more reductions for smaller settlements. See `Settlement mechanics'."
-    , "- The more expensive the building, the more it costs. See the comment in the export_descr_buildings.txt file for details. The cheapest building (which costs 400) is the same, but the most expensive ones (15000) cost almost 2x more."
+    , "- The more expensive the building, the more it costs. See the comment in the export_descr_buildings.txt file for details. The cheapest building (which costs 400) is the same, but the most expensive ones cost almost 2x more."
     , "- No spies, so disable all Thieves' Guild buildings"
     -- Recruitment
     , "** Recruitment"
