@@ -4,6 +4,8 @@ import Regex
 import qualified Data.ByteString.Char8 as BC
 import Data.Recruit.RTW
 
+import Util
+
 _RTW_DC_FUNCS :: RegexSets
 _RTW_DC_FUNCS = addTrueTest [r1, r2]
     where
@@ -103,13 +105,40 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (noSpies) ++ addTrueTest [gi
             ]
 
 _RTW_EDB_FUNCS :: RegexSets
-_RTW_EDB_FUNCS = addTrueTest $ [r1]
+_RTW_EDB_FUNCS = addTrueTest $ [r1, r2, r2']
     ++ recruitment
     where
         -- All building constructions take 1 turn
         r1 =    [ ("^\\s+construction\\s+", id)
                 , (_REGEX_INT, only "1")
                 ]
+        -- Increased building cost. The extra costs are graduated, with the following formula:
+        --      NEW = OLD + (((OLD - 400)/400) * 400)
+        --
+        r2 =    [ ("^\\s+cost\\s+", id)
+                , (_REGEX_INT, gradCost gradFormula)
+                ]
+        gradFormula :: Double -> Int
+        gradFormula n = round $ n + (((n - 400)/400) * 400)
+        -- Make a note about the changes in the EDB file (comments)
+        r2' =   [ ("^;This.+?by hand.+?\\r\\n", prepend $ costsDiffNote "Building cost" old new chg)
+                ]
+            where
+                old =   [ 400
+                        , 600
+                        , 800
+                        , 1200
+                        , 1600
+                        , 2000
+                        , 2400
+                        , 3200
+                        , 3500
+                        , 4800
+                        , 6400
+                        , 9600
+                        ]
+                new = applyFormula gradFormula old
+                chg = getChgFactors new old
         -- For every type of building (barracks, archery range, city hall, etc.), let all levels of
         -- that building be able to recruit all units; no more waiting idly until your city becomes
         -- a Huge City to be able to recruit elite units.
