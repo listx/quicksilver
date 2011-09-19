@@ -4,11 +4,35 @@ import Regex
 import Data.Recruit.RTW
 
 _RTW_DC_FUNCS :: RegexSets
-_RTW_DC_FUNCS = addTrueTest [r1]
+_RTW_DC_FUNCS = addTrueTest [r1, r2]
     where
         -- Campaign movement speed 1.75x
         r1 =    [ ("^starting_action_points\\s+", id)
                 , (multRoundInt 1.75)
+                ]
+        r2 =
+                -- Assassin upkeep cost 3x
+                [ ("^type\\s+assassin\\s+[\\w\\s,]+?\\r\\nwage_base\\s+", id)
+                , (multRoundInt 3)
+                ]
+
+_RTW_DCL_FUNCS :: RegexSets
+_RTW_DCL_FUNCS = addTrueTest [r1, r2, r3]
+    where
+        -- Diplomats and assassins take 0 turns to recruit
+        r1 =    [ ("^diplomat.+?", id)
+                , ("1", only "0")
+                , (".+?", id)
+                , ("1", only "0")
+                ]
+        r2 =    [ ("^assassin.+?", id)
+                , ("1", only "0")
+                , (".+?", id)
+                , ("1", only "0")
+                ]
+        -- Assassin recruitment cost 3x
+        r3 =    [ ("^assassin.+?", id)
+                , (multRoundInt 3)
                 ]
 
 _RTW_DS_FUNCS :: RegexSets

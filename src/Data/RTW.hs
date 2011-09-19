@@ -15,16 +15,19 @@ readmeRTW :: [String]
 readmeRTW =
     [ "* Overview"
     , "- There are many changes to speed up gameplay and to make things feel much more dynamic and fluid. "
-      ++ "The primary aim has been to remove repetitive actions as much as possible. "
+      ++ "The primary aim has been to remove repetitive actions as much as possible."
     , "* Full list of changes from vanilla RTW (with 1.5 patch)"
     , "** Building tree"
-    , "- All building constructions take 1 turn"
+    , "- All building constructions take 1 turn."
     , "** Campaign Map"
-    , "- Campaign movement speed 1.75x (the game engine only shows the green movement boundaries up to a certain point; however, the path arrows will still correctly be green past this point, so it is advised that you hold down the right mouse button to make accurate predictions of movement (and cancel out with a left click))"
+    , "- Campaign movement speed 1.75x (the game engine only shows the green movement boundaries up to a certain point; however, the path arrows will still correctly be green past this point, so it is advised that you hold down the right mouse button to make accurate predictions of movement (and cancel out with a left click))."
     , "*** Agents"
     , "- Remove spies (use assassins instead; spies are over-powered anyway with their 'open gate' ability)."
+    , "- Diplomats and assassins take 0 turns to recruit."
     , "**** Assassins"
     , "- Give good assassins a line of sight bonus with increased skill, to emulate spies."
+    , "- Recruitment cost 3x."
+    , "- Upkeep cost 3x."
     -- Recruitment
     , "** Recruitment"
     , "- All units take 0 turns to complete, but they cost 1.33x, 1.66x, and 2x more (initial cost only) based on their original turn count. (FYI: The Scipii Decere unit is the only unit in vanilla that took 3 turns to complete.)."
@@ -46,6 +49,7 @@ miscFilesRTW =
 rtwInstalledModText :: [(Integer, String, Operation)]
 rtwInstalledModText =
     [ (0xebc3c3b4ee4813921ed2265ddf29366a55327c5a, _RTW_DC  , ModText _RTW_DC_FUNCS   ("", ""))
+    , (0x1ce28a66802f22271d493bccc0c8d5f6d1ce53da, _RTW_DCL , ModText _RTW_DCL_FUNCS  ("", ""))
     , (0xd3d5925a47bd4326a6a4d8b2d8e72acd8665adbc, _RTW_DS  , ModText _RTW_DS_FUNCS   ("", ""))
     , (0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6, _RTW_EDB , ModText _RTW_EDB_FUNCS  ("^\\}\\r\\n", "}\r\n"))
     , (0x1dd045b7f252d06f8c2c0fa27a18a6ef802b3422, _RTW_EDCT, ModText _RTW_EDCT_FUNCS ("", ""))
@@ -109,12 +113,14 @@ rtwInstalledCopy =
 	]
 
 _RTW_DC  :: String
+_RTW_DCL :: String
 _RTW_DS  :: String
 _RTW_EDB :: String
 _RTW_EDCT :: String
 _RTW_EDU :: String
 
 _RTW_DC     = "descr_character.txt"
+_RTW_DCL    = "descr_cultures.txt"
 {-
  - NOTE: For descr_strat.txt, the base file is the official file, but modifed so
  - that all 8 unlockable factions are unlocked; this is so that we can lazily
