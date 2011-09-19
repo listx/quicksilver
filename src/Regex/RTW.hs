@@ -265,7 +265,7 @@ _RTW_EDCT_FUNCS = addTrueTest [r1, r2]
                 ]
 
 _RTW_EDU_FUNCS :: RegexSets
-_RTW_EDU_FUNCS = addTrueTest unitTurns
+_RTW_EDU_FUNCS = addTrueTest unitTurns ++ addTrueTest [r1]
     where
         -- All units take 0 turns to recruit, but they cost cost 1.33x, 1.66x,
         -- and 2x more (initial cost) based on their original turn count.
@@ -293,3 +293,21 @@ _RTW_EDU_FUNCS = addTrueTest unitTurns
                 , (_REGEX_INT, only "0")
                 ]
             ]
+        -- General's bodyguard (cavalry) soldiers reduced 0.5x; costs reduced accordingly
+        -- NOTE: It's important to do this _after_ setting the global stat
+        -- costs (it just makes more sense that way --- do the global settings
+        -- first, then do specific customizations such as this).
+        r1 =    [ ("^soldier.+?", id) -- we can lead with this generic regex b/c the text is broken up into 1-unit blocks (no danger of matching over into the next unit(s))
+                , (multRoundInt 0.5) -- soldiers 0.5x
+                , (".+?^attributes.+?general_unit.+?", id)
+                , ("^stat_cost\\s+\\d+,\\s+", id) -- skip recruitment turns cost
+                , (multRoundInt 0.5) -- recruitment cost
+                , (",\\s+", id)
+                , (multRoundInt 0.5) -- upkeep cost
+                , (",\\s+", id)
+                , (multRoundInt 0.5) -- weapon upgrade cost
+                , (",\\s+", id)
+                , (multRoundInt 0.5) -- armor upgrade cost
+                , (",\\s+", id)
+                , (multRoundInt 0.5) -- custom battle: recruitment cost
+                ]

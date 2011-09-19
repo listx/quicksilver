@@ -40,6 +40,9 @@ readmeRTW =
     , "- All units take 0 turns to complete, but they cost 1.33x, 1.66x, and 2x more (initial cost only) based on their original turn count. (FYI: The Scipii Decere unit is the only unit in vanilla that took 3 turns to complete.)."
     , "- For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings an experience bonus."
     , "  -  Roman gladiators (Julii, Scipii, Senate) are now all recruitable starting at the city level (in vanilla, only Brutii had access to gladiators starting from city level)."
+    , "** Units"
+    , "- General's bodyguard (cavalry) soldiers reduced 0.5x; costs reduced accordingly"
+    -- Finance
     , "** Finance"
     , "- Remove corruption trigger based on high treasury (characters do not gain any negative penalties for having a large treasury)"
     ]
