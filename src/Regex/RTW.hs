@@ -1,10 +1,9 @@
 module Regex.RTW where
 
 import Regex
-import Data
 import Data.Recruit.RTW
 
-_RTW_EDB_FUNCS :: TextRegex
+_RTW_EDB_FUNCS :: RegexSets
 _RTW_EDB_FUNCS = addTrueTest $ [r1]
     ++ recruitment
     where

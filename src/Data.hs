@@ -2,9 +2,9 @@
 module Data where
 
 import Data.Data
-import qualified Data.ByteString.Char8 as BC
 
 import Util
+import Regex
 
 {-
  - Game type.
@@ -36,14 +36,12 @@ data DataOrigin
  - Binary: perform a binary diff on the vanilla file.
  -}
 data Operation
-    = ModText   { regexes :: TextRegex
+    = ModText   { regexes :: RegexSets
                 , partition :: (String, String)
                 }
     | ModBinary { bdiff :: FilePath
                 }
     | Copy
-
-type TextRegex = [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
 
 data ModFile = ModFile
     { sha :: Integer

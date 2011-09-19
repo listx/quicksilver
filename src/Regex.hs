@@ -13,6 +13,8 @@ _REGEX_INT = "\\d+"
 _REGEX_DOUBLE = "\\d+\\.\\d+"
 _REGEX_LINE = "[^\\r]+\\r\\n"
 
+type RegexSets = [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
+
 nil :: BC.ByteString -> BC.ByteString
 nil _ = BC.empty
 
@@ -30,7 +32,7 @@ numTest f byteStr = case BC.readInt byteStr of
     Just (n, _) -> (f n)
     _ -> False
 
-addTrueTest :: [[(String, (BC.ByteString -> BC.ByteString))]] -> [[(String, (BC.ByteString -> BC.ByteString), (BC.ByteString -> Bool))]]
+addTrueTest :: [[(String, (BC.ByteString -> BC.ByteString))]] -> RegexSets
 addTrueTest = map (map (\(a, b) -> (a, b, alwaysTrue)))
 
 alwaysTrue :: BC.ByteString -> Bool

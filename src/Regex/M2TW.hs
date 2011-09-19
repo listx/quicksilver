@@ -3,11 +3,10 @@ module Regex.M2TW where
 import qualified Data.ByteString.Char8 as BC
 
 import Regex
-import Data
 import Data.Recruit.M2TW
 import Util
 
-_M2TW_DC_FUNCS :: TextRegex
+_M2TW_DC_FUNCS :: RegexSets
 _M2TW_DC_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest assassin
     where
         -- Ship movement speed 3x
@@ -30,7 +29,7 @@ _M2TW_DC_FUNCS = addTrueTest [r1, r2, r3] ++ addTrueTest assassin
                 ]
             ]
 
-_M2TW_DCD_FUNCS :: TextRegex
+_M2TW_DCD_FUNCS :: RegexSets
 _M2TW_DCD_FUNCS = addTrueTest [agent, rebels] ++ addTrueTest (witchesHereticsInquisitors ++ assassin)
     where
         -- Allow a settlement to recruit 2 agents of the same type in a single
@@ -102,7 +101,7 @@ _M2TW_DCD_FUNCS = addTrueTest [agent, rebels] ++ addTrueTest (witchesHereticsInq
                 , (_REGEX_INT, only "0")
                 ]
 
-_M2TW_DCAD_FUNCS :: TextRegex
+_M2TW_DCAD_FUNCS :: RegexSets
 _M2TW_DCAD_FUNCS = addTrueTest [r1]
     where
         -- Stop Papal States from capturing rebel settlements (helps
@@ -126,7 +125,7 @@ _M2TW_DCAD_FUNCS = addTrueTest [r1]
                 , ("\\r\\n\\s+<decision_entry>", id)
                 ]
 
-_M2TW_DCL_FUNCS :: TextRegex
+_M2TW_DCL_FUNCS :: RegexSets
 _M2TW_DCL_FUNCS = addTrueTest [rN]
     where
         -- Assassin recruitment cost 3x
@@ -134,14 +133,14 @@ _M2TW_DCL_FUNCS = addTrueTest [rN]
                 , (multRoundInt 3)
                 ]
 
-_M2TW_DFS_FUNCS :: TextRegex
+_M2TW_DFS_FUNCS :: RegexSets
 _M2TW_DFS_FUNCS = addTrueTest [rN]
     where
         -- Fixed faction standing bug
         rN =    [ ("^;Trigger 0102_city_razed.+?;-+", nil)
                 ]
 
-_M2TW_DM_FUNCS :: TextRegex
+_M2TW_DM_FUNCS :: RegexSets
 _M2TW_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTrueTest (merchantsGuild ++ thievesGuild)
     where
         -- Disable all mission penalties, and disable the "cease hostilities"
@@ -223,7 +222,7 @@ _M2TW_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTru
                 ]
             ]
 
-_M2TW_DS_FUNCS :: TextRegex
+_M2TW_DS_FUNCS :: RegexSets
 _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (noMerchantPrincessSpy ++ mtePurse) ++ mineFuncs capsSecs ++ mineFuncs capsSecs' ++ addTrueTest (noFarmsTaverns ++ giveRoads ++ rebels)
     where
         -- Rebel spawn rate 20x lower
@@ -403,7 +402,7 @@ _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (no
             \\t{\r\n\
             \\t\ttype hinterland_castle_mines c_mines\r\n\
             \\t}"
-        mineFuncs :: (Bool, [String]) -> [[(String, BC.ByteString -> BC.ByteString, BC.ByteString -> Bool)]]
+        mineFuncs :: (Bool, [String]) -> RegexSets
         mineFuncs (b, strs) = concatMap makeFunc strs
             where
                 makeFunc str = addTrueTest
@@ -511,7 +510,7 @@ _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (no
                 ]
             ]
 
-_M2TW_DSF_FUNCS :: TextRegex
+_M2TW_DSF_FUNCS :: RegexSets
 _M2TW_DSF_FUNCS = addTrueTest [r1]
     where
         -- Prevent all factions from getting princesses
@@ -534,7 +533,7 @@ _M2TW_DSF_FUNCS = addTrueTest [r1]
 -- which can then be added to our version control for sensible tracking and
 -- quick generation of new packed animation files on subsequent (non-animation)
 -- modifications.
-_M2TW_DSK_FUNCS :: TextRegex
+_M2TW_DSK_FUNCS :: RegexSets
 _M2TW_DSK_FUNCS = addTrueTest [r1, r2]
     where
         -- Diplomats: remove annoying "conduct diplomacy" animation
@@ -544,7 +543,7 @@ _M2TW_DSK_FUNCS = addTrueTest [r1, r2]
         r2 =    [ ("^anim\\s+selected_to_stand[^\\r]+?Stratmap_Diplomat.+?\\r\\n", nil)
                 ]
 
-_M2TW_DSM_FUNCS :: TextRegex
+_M2TW_DSM_FUNCS :: RegexSets
 _M2TW_DSM_FUNCS = addTrueTest [r1, r2, r3, r4]
     where
         -- Reduce "distance to capital" penalty by 75%
@@ -598,7 +597,7 @@ _M2TW_DSM_FUNCS = addTrueTest [r1, r2, r3, r4]
                 , (multRoundInt 0.9)
                 ]
 
-_M2TW_DSR_FUNCS :: TextRegex
+_M2TW_DSR_FUNCS :: RegexSets
 _M2TW_DSR_FUNCS = addTrueTest [r1, r2, r3]
     where
         -- Gold resource worth 2
@@ -623,7 +622,7 @@ _M2TW_DSR_FUNCS = addTrueTest [r1, r2, r3]
                 , ("\\r\\nhas_mine", nil)
                 ]
 
-_M2TW_DW_FUNCS :: TextRegex
+_M2TW_DW_FUNCS :: RegexSets
 _M2TW_DW_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
     where
         -- Walls and gate HP 5x
@@ -658,7 +657,7 @@ _M2TW_DW_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
                 , (multRoundInt 8)
                 ]
 
-_M2TW_EDCT_FUNCS :: TextRegex
+_M2TW_EDCT_FUNCS :: RegexSets
 _M2TW_EDCT_FUNCS = addTrueTest [r1, r2, r3]
     where
         -- Remove corruption trigger based on high treasury
@@ -683,7 +682,7 @@ _M2TW_EDCT_FUNCS = addTrueTest [r1, r2, r3]
                 , ("^Trigger spyinit6.+?;-+\\r\\n", nil)
                 ]
 
-_M2TW_EDA_FUNCS :: TextRegex
+_M2TW_EDA_FUNCS :: RegexSets
 _M2TW_EDA_FUNCS = addTrueTest [r1, r2] ++ addTrueTest farmsTavernsWharves
     where
         -- Remove advice for mines+1 and c_mines+1 (since they are removed from EDB)
@@ -743,14 +742,14 @@ _M2TW_EDA_FUNCS = addTrueTest [r1, r2] ++ addTrueTest farmsTavernsWharves
                 ]
             ]
 
-_M2TW_EDAN_FUNCS :: TextRegex
+_M2TW_EDAN_FUNCS :: RegexSets
 _M2TW_EDAN_FUNCS = addTrueTest [r1]
     where
         -- Remove reference to thieves guild.
         r1 =    [ ("^Trigger spymaster_vnv_trigger2.+?;-+\r\n", nil)
                 ]
 
-_M2TW_EDB_FUNCS :: TextRegex
+_M2TW_EDB_FUNCS :: RegexSets
 _M2TW_EDB_FUNCS = addTrueTest $ [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, noThievesGuild]
     ++ noMerchantSpy ++ mergeFarmsTavernsWharves ++ fastPorts ++ recruitment
     where
@@ -1066,7 +1065,7 @@ _M2TW_EDB_FUNCS = addTrueTest $ [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r
                     ]
                 ]
 
-_M2TW_EDBE_FUNCS :: TextRegex
+_M2TW_EDBE_FUNCS :: RegexSets
 _M2TW_EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (thieves ++ farms ++ taverns ++ wharves)
     where
         -- Remove all references to mines+1 and c_mines+1
@@ -1129,7 +1128,7 @@ _M2TW_EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (thieves ++ farms ++ tave
                 ]
             ]
 
-_M2TW_EDG_FUNCS :: TextRegex
+_M2TW_EDG_FUNCS :: RegexSets
 _M2TW_EDG_FUNCS = addTrueTest [r1] ++ addTrueTest (taverns ++ wharves)
     where
         -- Remove thieves guild.
@@ -1166,7 +1165,7 @@ _M2TW_EDG_FUNCS = addTrueTest [r1] ++ addTrueTest (taverns ++ wharves)
                 ]
             ]
 
-_M2TW_EDU_FUNCS :: TextRegex
+_M2TW_EDU_FUNCS :: RegexSets
 _M2TW_EDU_FUNCS = addTrueTest [r1, r2, r3] ++ [rN]
     where
         -- Bodyguard soldiers (cavalry and infantry types) reduced 0.5x; costs reduced accordingly
