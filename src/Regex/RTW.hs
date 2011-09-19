@@ -1,6 +1,7 @@
 module Regex.RTW where
 
 import Regex
+import qualified Data.ByteString.Char8 as BC
 import Data.Recruit.RTW
 
 _RTW_DC_FUNCS :: RegexSets
@@ -36,7 +37,7 @@ _RTW_DCL_FUNCS = addTrueTest [r1, r2, r3]
                 ]
 
 _RTW_DS_FUNCS :: RegexSets
-_RTW_DS_FUNCS = addTrueTest [r1, r2] ++ addTrueTest noSpies
+_RTW_DS_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (noSpies) ++ addTrueTest [giveRoads] ++ giveRoads'
     where
         -- Rebel spawn rate 40x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -65,6 +66,39 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2] ++ addTrueTest noSpies
                 ]
             ,
                 [ ("^ancillaries spymaster\\r\\n", nil)
+                ]
+            ]
+        -- Give all settlements paved roads.
+        govHouse =
+            "\r\n\tbuilding\r\n\
+            \\t{\r\n\
+            \\t\ttype core_building governors_house\r\n\
+            \\t}"
+        roads =
+            "\r\n\tbuilding\r\n\
+            \\t{\r\n\
+            \\t\ttype hinterland_roads paved_roads\r\n\
+            \\t}"
+        giveRoads =
+                -- remove all vanilla road buildings
+                [ ("^\\s+building\\r\\n\\s+\\{\\r\\n\\s+type\\s+hinterland_roads\\s+roads\\r\\n\\s+\\}\\r\\n", nil)
+                ]
+        giveRoads' =
+            -- add paved_roads
+            [
+                -- add paved_roads to non-village settlements
+                [ ("^settlement\\r\\n.+?level ", id, alwaysTrue)
+                , ("\\w+", id, strElemTest $ map BC.pack ["town", "large_town", "city"])
+                , (".+?", id, alwaysTrue)
+                , ("\\r\\n\\}", prepend roads, alwaysTrue)
+                ]
+            ,
+                -- for villages, convert them to towns + governors_house (the
+                -- minimum amount of buildings for a town)
+                [ ("^settlement\\r\\n.+?level ", id, alwaysTrue)
+                , ("village", only "town", alwaysTrue)
+                , (".+?", id, alwaysTrue)
+                , ("\\r\\n\\}", prepend (govHouse ++ roads), alwaysTrue)
                 ]
             ]
 

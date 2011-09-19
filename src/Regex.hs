@@ -27,6 +27,9 @@ prepend str orig = BC.append (BC.pack str) orig
 add :: String -> BC.ByteString -> BC.ByteString
 add str orig = BC.append orig $ BC.pack str
 
+strElemTest :: [BC.ByteString] -> BC.ByteString -> Bool
+strElemTest strs byteStr = elem byteStr strs
+
 numTest :: (Int -> Bool) -> BC.ByteString -> Bool
 numTest f byteStr = case BC.readInt byteStr of
     Just (n, _) -> (f n)
