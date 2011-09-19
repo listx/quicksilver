@@ -22,6 +22,8 @@ readmeRTW =
     , "** Campaign Map"
     , "*** Agents"
     , "- Remove spies (use assassins instead; spies are over-powered anyway with their 'open gate' ability)."
+    , "**** Assassins"
+    , "- Give good assassins a line of sight bonus with increased skill, to emulate spies."
     -- Recruitment
     , "** Recruitment"
     , "- For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings an experience bonus."
@@ -42,9 +44,10 @@ miscFilesRTW =
 
 rtwInstalledModText :: [(Integer, String, Operation)]
 rtwInstalledModText =
-    [ (0xd3d5925a47bd4326a6a4d8b2d8e72acd8665adbc, _RTW_DS  , ModText _RTW_DS_FUNCS  ("", ""))
-    , (0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6, _RTW_EDB , ModText _RTW_EDB_FUNCS ("^\\}\\r\\n", "}\r\n"))
-    , (0x55b56dc9ac99161de270c28f5efed2c791d318ca, _RTW_EDU , ModText _RTW_EDU_FUNCS (" \\r\\n \\r\\n", " \r\n \r\n"))
+    [ (0xd3d5925a47bd4326a6a4d8b2d8e72acd8665adbc, _RTW_DS  , ModText _RTW_DS_FUNCS   ("", ""))
+    , (0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6, _RTW_EDB , ModText _RTW_EDB_FUNCS  ("^\\}\\r\\n", "}\r\n"))
+    , (0x1dd045b7f252d06f8c2c0fa27a18a6ef802b3422, _RTW_EDCT, ModText _RTW_EDCT_FUNCS ("", ""))
+    , (0x55b56dc9ac99161de270c28f5efed2c791d318ca, _RTW_EDU , ModText _RTW_EDU_FUNCS  (" \\r\\n \\r\\n", " \r\n \r\n"))
     ]
 
 rtwInstalledCopy :: [(Integer, String)]
@@ -105,6 +108,7 @@ rtwInstalledCopy =
 
 _RTW_DS  :: String
 _RTW_EDB :: String
+_RTW_EDCT :: String
 _RTW_EDU :: String
 {-
  - NOTE: For descr_strat.txt, the base file is the official file, but modifed so
@@ -117,4 +121,5 @@ _RTW_EDU :: String
  -}
 _RTW_DS      = "world/maps/campaign/imperial_campaign/descr_strat.txt"
 _RTW_EDB     = "export_descr_buildings.txt"
+_RTW_EDCT    = "export_descr_character_traits.txt"
 _RTW_EDU     = "export_descr_unit.txt"

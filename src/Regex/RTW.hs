@@ -170,6 +170,23 @@ _RTW_EDB_FUNCS = addTrueTest $ [r1]
             where
                 agent' = (replicate 16 ' ') ++ "agent " ++ agent ++ " 0 requires factions "
 
+_RTW_EDCT_FUNCS :: RegexSets
+_RTW_EDCT_FUNCS = addTrueTest [r1]
+    where
+        -- Give good assassins a line of sight bonus with increased skill.
+        r1 =    [ ("^Trait GoodAssassin.+?", id)
+                , ("Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 3\r\n")
+                , (".+?Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 5\r\n")
+                , (".+?Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 8\r\n")
+                , (".+?Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 9\r\n")
+                , (".+?Effect Subterfuge.+?", id)
+                , ("\\r\\n", only "\r\n        Effect LineOfSight 10\r\n")
+                ]
+
 _RTW_EDU_FUNCS :: RegexSets
 _RTW_EDU_FUNCS = addTrueTest unitTurns
     where
