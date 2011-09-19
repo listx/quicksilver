@@ -20,6 +20,7 @@ readmeRTW =
     , "** Building tree"
     , "- All building constructions take 1 turn"
     , "** Campaign Map"
+    , "- Campaign movement speed 1.75x (the game engine only shows the green movement boundaries up to a certain point; however, the path arrows will still correctly be green past this point, so it is advised that you hold down the right mouse button to make accurate predictions of movement (and cancel out with a left click))"
     , "*** Agents"
     , "- Remove spies (use assassins instead; spies are over-powered anyway with their 'open gate' ability)."
     , "**** Assassins"
@@ -44,7 +45,8 @@ miscFilesRTW =
 
 rtwInstalledModText :: [(Integer, String, Operation)]
 rtwInstalledModText =
-    [ (0xd3d5925a47bd4326a6a4d8b2d8e72acd8665adbc, _RTW_DS  , ModText _RTW_DS_FUNCS   ("", ""))
+    [ (0xebc3c3b4ee4813921ed2265ddf29366a55327c5a, _RTW_DC  , ModText _RTW_DC_FUNCS   ("", ""))
+    , (0xd3d5925a47bd4326a6a4d8b2d8e72acd8665adbc, _RTW_DS  , ModText _RTW_DS_FUNCS   ("", ""))
     , (0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6, _RTW_EDB , ModText _RTW_EDB_FUNCS  ("^\\}\\r\\n", "}\r\n"))
     , (0x1dd045b7f252d06f8c2c0fa27a18a6ef802b3422, _RTW_EDCT, ModText _RTW_EDCT_FUNCS ("", ""))
     , (0x55b56dc9ac99161de270c28f5efed2c791d318ca, _RTW_EDU , ModText _RTW_EDU_FUNCS  (" \\r\\n \\r\\n", " \r\n \r\n"))
@@ -106,10 +108,13 @@ rtwInstalledCopy =
 	, (0xb56e4ea8d373492591e59f059b144338b88f9a8d, "text/imperial_campaign_regions_and_settlement_names.txt")
 	]
 
+_RTW_DC  :: String
 _RTW_DS  :: String
 _RTW_EDB :: String
 _RTW_EDCT :: String
 _RTW_EDU :: String
+
+_RTW_DC     = "descr_character.txt"
 {-
  - NOTE: For descr_strat.txt, the base file is the official file, but modifed so
  - that all 8 unlockable factions are unlocked; this is so that we can lazily

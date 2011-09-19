@@ -3,6 +3,14 @@ module Regex.RTW where
 import Regex
 import Data.Recruit.RTW
 
+_RTW_DC_FUNCS :: RegexSets
+_RTW_DC_FUNCS = addTrueTest [r1]
+    where
+        -- Campaign movement speed 1.75x
+        r1 =    [ ("^starting_action_points\\s+", id)
+                , (multRoundInt 1.75)
+                ]
+
 _RTW_DS_FUNCS :: RegexSets
 _RTW_DS_FUNCS = addTrueTest noSpies
     where
