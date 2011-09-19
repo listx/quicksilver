@@ -537,7 +537,7 @@ _M2TW_DSF_FUNCS = addTrueTest [r1]
 -- quick generation of new packed animation files on subsequent (non-animation)
 -- modifications.
 _M2TW_DSK_FUNCS :: RegexSets
-_M2TW_DSK_FUNCS = addTrueTest [r1, r2]
+_M2TW_DSK_FUNCS = addTrueTest [r1, r2, r3]
     where
         -- Diplomats: remove annoying "conduct diplomacy" animation
         r1 =    [ ("^anim\\s+conduct_diplomacy.+?\\r\\n", nil)
@@ -545,6 +545,10 @@ _M2TW_DSK_FUNCS = addTrueTest [r1, r2]
         -- Diplomats: remove needless bowing animation (same as deselect animation)
         r2 =    [ ("^anim\\s+selected_to_stand[^\\r]+?Stratmap_Diplomat.+?\\r\\n", nil)
                 ]
+        -- Princesses: remove needless bowing animation
+        r3 =    [ ("^anim\\s+selected_to_stand[^\\r]+?Stratmap_Princess.+?\\r\\n", nil)
+                ]
+
 
 _M2TW_DSM_FUNCS :: RegexSets
 _M2TW_DSM_FUNCS = addTrueTest [r1, r2, r3, r4]
