@@ -21,6 +21,7 @@ data Building
     | Barracks
     | Equestrian
     | Missiles
+    | Market
     | Smith
     | Port
     | Amphitheatres
@@ -44,6 +45,7 @@ instance Show Building where
         Barracks -> "barracks"
         Equestrian -> "equestrian"
         Missiles -> "missiles"
+        Market -> "market"
         Smith -> "smith"
         Port -> "port"
         Amphitheatres -> "amphitheatres"

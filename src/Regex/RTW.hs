@@ -17,15 +17,15 @@ _RTW_EDB_FUNCS = addTrueTest $ [r1]
         recruitment =
                 [
                     [ ("^building\\s+core_building.+?            \\{\\r\\n", id)
-                    , ("\\s+recruit.+?", only $ getRecruits Core 0 ++ diplomats)
+                    , ("\\s+recruit.+?", only $ getRecruits Core 0 ++ agents "diplomat")
                     , ("^\\s+}.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit.+?", only $ getRecruits Core town ++ diplomats)
+                    , ("\\s+recruit.+?", only $ getRecruits Core town ++ agents "diplomat")
                     , ("^\\s+}.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit.+?", only $ getRecruits Core largeTown ++ diplomats)
+                    , ("\\s+recruit.+?", only $ getRecruits Core largeTown ++ agents "diplomat")
                     , ("^\\s+upgrade_bodyguard.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit.+?", only $ getRecruits Core city ++ diplomats)
+                    , ("\\s+recruit.+?", only $ getRecruits Core city ++ agents "diplomat")
                     , ("^\\s+upgrade_bodyguard.+?capability.+?\\{\\r\\n", id)
-                    , ("\\s+recruit.+?", only $ getRecruits Core largeCity ++ diplomats)
+                    , ("\\s+recruit.+?", only $ getRecruits Core largeCity ++ agents "diplomat")
                     , ("^\\s+upgrade_bodyguard", id)
                     ]
                 ,
@@ -62,6 +62,19 @@ _RTW_EDB_FUNCS = addTrueTest $ [r1]
                     , ("^            }.+?capability.+?\\{\\r\\n", id)
                     , ("\\s+recruit.+?", only $ getRecruits Missiles hugeCity)
                     , ("^            }", id)
+                    ]
+                ,
+                    [ ("^building\\s+market.+?            \\{", id)
+                    , ("\\r\\n", only $ "\r\n" ++ agents "assassin")
+                    , ("^\\s+trade_base_income_bonus.+?capability.+?\\{\\r\\n", id)
+                    , ("^\\s+agent.+?", only $ agents "assassin")
+                    , ("^\\s+trade_base_income_bonus.+?capability.+?\\{\\r\\n", id)
+                    , ("^\\s+agent.+?", only $ agents "assassin")
+                    , ("^\\s+trade_base_income_bonus.+?capability.+?\\{\\r\\n", id)
+                    , ("^\\s+agent.+?", only $ agents "assassin")
+                    , ("^\\s+trade_base_income_bonus.+?capability.+?\\{\\r\\n", id)
+                    , ("^\\s+agent.+?", only $ agents "assassin")
+                    , ("^\\s+trade_base_income_bonus", id)
                     ]
                 ,
                     [ ("^building\\s+smith.+?            \\{\\r\\n", id)
@@ -120,17 +133,17 @@ _RTW_EDB_FUNCS = addTrueTest $ [r1]
                     [ ("\\s+recruit.+?", only $ getRecruits building level)
                     , ("^\\s+happiness_bonus", id)
                     ]
-        -- Need to add back in the diplomat recruitment slots, since we deleted
-        -- them for core_building with *recruitment* function.
-        diplomats = concatMap (\(a, b) -> a ++ "{ " ++ b ++ ", }\r\n") $ zip (repeat diplomat)
+        agents agent = concatMap (\(a, b) -> a ++ "{ " ++ b ++ ", }\r\n") $ zip (repeat agent')
             [ "barbarian"
             , "carthaginian"
             , "eastern"
+            -- , "parthia" -- "parthia" is redundant because it's already included under "eastern"
             , "egyptian"
             , "greek"
             , "roman"
             ]
-        diplomat = replicate 16 ' ' ++ "agent diplomat 0 requires factions "
+            where
+                agent' = (replicate 16 ' ') ++ "agent " ++ agent ++ " 0 requires factions "
 
 _RTW_EDU_FUNCS :: RegexSets
 _RTW_EDU_FUNCS = addTrueTest unitTurns
