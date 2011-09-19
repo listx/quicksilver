@@ -19,6 +19,9 @@ readmeRTW =
     , "* Full list of changes from vanilla RTW (with 1.5 patch)"
     , "** Building tree"
     , "- All building constructions take 1 turn"
+    , "** Campaign Map"
+    , "*** Agents"
+    , "- Remove spies (use assassins instead; spies are over-powered anyway with their 'open gate' ability)."
     -- Recruitment
     , "** Recruitment"
     , "- For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings an experience bonus."
@@ -39,8 +42,9 @@ miscFilesRTW =
 
 rtwInstalledModText :: [(Integer, String, Operation)]
 rtwInstalledModText =
-    [ (0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6, _RTW_EDB , ModText _RTW_EDB_FUNCS  ("^\\}\\r\\n", "}\r\n"))
-    , (0x55b56dc9ac99161de270c28f5efed2c791d318ca, _RTW_EDU,  ModText _RTW_EDU_FUNCS  (" \\r\\n \\r\\n", " \r\n \r\n"))
+    [ (0xd3d5925a47bd4326a6a4d8b2d8e72acd8665adbc, _RTW_DS  , ModText _RTW_DS_FUNCS  ("", ""))
+    , (0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6, _RTW_EDB , ModText _RTW_EDB_FUNCS ("^\\}\\r\\n", "}\r\n"))
+    , (0x55b56dc9ac99161de270c28f5efed2c791d318ca, _RTW_EDU , ModText _RTW_EDU_FUNCS (" \\r\\n \\r\\n", " \r\n \r\n"))
     ]
 
 rtwInstalledCopy :: [(Integer, String)]
@@ -69,16 +73,6 @@ rtwInstalledCopy =
 	, (0x82ceefd14e4b8d7346808c7992bbdd5305f9e1df, "world/maps/campaign/imperial_campaign/description.txt")
 	, (0xa7722e54af17e0902f9060042c50202745d673d4, "world/maps/campaign/imperial_campaign/descr_mercenaries.txt")
 	, (0x5085a2ab63043d046614163278d60ce656f01528, "world/maps/campaign/imperial_campaign/descr_regions_and_settlement_name_lookup.txt")
-	{-
-	 - NOTE: For descr_strat.txt, it's the official file, but modifed so that
-	 - all 8 unlockable factions are unlocked; this is so that we can lazily
-	 - use our vanilla (played-through) RTW folder, instead of having to go
-	 - into descr_strat.txt and changing it back to the original (unplayed, all
-	 - factions locked) state just for qs to generate the mod.
-	 - The SHA for the pristine, unplayed RTW's version for descr_strat.txt is:
-	 - 0x5403a058bd49d371ae6cca739b0656043a833181
-	 -}
-	, (0xd3d5925a47bd4326a6a4d8b2d8e72acd8665adbc, "world/maps/campaign/imperial_campaign/descr_strat.txt")
 	, (0xa644f9ed2e56f0de504112cdc28419b4b25f554c, "world/maps/campaign/imperial_campaign/descr_win_conditions.txt")
 	, (0x3f7167403a6a7b4d19125600fe830aa5197dd3dd, "world/maps/campaign/imperial_campaign/disasters.tga")
 	, (0x8560b7003018083f21a9f1c364e083e980a3de83, "world/maps/campaign/imperial_campaign/leader_pic_brutii.tga")
@@ -109,7 +103,18 @@ rtwInstalledCopy =
 	, (0xb56e4ea8d373492591e59f059b144338b88f9a8d, "text/imperial_campaign_regions_and_settlement_names.txt")
 	]
 
+_RTW_DS  :: String
 _RTW_EDB :: String
 _RTW_EDU :: String
+{-
+ - NOTE: For descr_strat.txt, the base file is the official file, but modifed so
+ - that all 8 unlockable factions are unlocked; this is so that we can lazily
+ - use our vanilla (played-through) RTW folder, instead of having to go into
+ - descr_strat.txt and changing it back to the original (unplayed, all factions
+ - locked) state just for qs to generate the mod.  The SHA for the pristine,
+ - unplayed RTW's version for descr_strat.txt is:
+ - 0x5403a058bd49d371ae6cca739b0656043a833181
+ -}
+_RTW_DS      = "world/maps/campaign/imperial_campaign/descr_strat.txt"
 _RTW_EDB     = "export_descr_buildings.txt"
 _RTW_EDU     = "export_descr_unit.txt"

@@ -3,6 +3,31 @@ module Regex.RTW where
 import Regex
 import Data.Recruit.RTW
 
+_RTW_DS_FUNCS :: RegexSets
+_RTW_DS_FUNCS = addTrueTest noSpies
+    where
+        -- Remove all spies from the campaign map.
+        noSpies =
+            [
+                [ ("character[^\\r]+spy.+?\\r\\n.+?\\r\\n", nil)
+                ]
+            ,
+                [ ("^ancillaries catamite\\r\\n", nil)
+                ]
+            ,
+                [ ("^ancillaries courtesan\\r\\n", nil)
+                ]
+            ,
+                [ ("^ancillaries dancer\\r\\n", nil)
+                ]
+            ,
+                [ ("^ancillaries poisoner\\r\\n", nil)
+                ]
+            ,
+                [ ("^ancillaries spymaster\\r\\n", nil)
+                ]
+            ]
+
 _RTW_EDB_FUNCS :: RegexSets
 _RTW_EDB_FUNCS = addTrueTest $ [r1]
     ++ recruitment
