@@ -275,6 +275,9 @@ _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (no
                 [ ("^ancillaries catamite\\r\\n", nil)
                 ]
             ,
+                [ ("^ancillaries spymaster\\r\\n", nil)
+                ]
+            ,
                 -- Remove all references to princess names: Cecilia, Constance,
                 -- Agnes, Urraca, Teresa, Matilda, Anna, Antonina, Ingrid,
                 -- Maria, Agnes, Pioska
