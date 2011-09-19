@@ -28,6 +28,9 @@ readmeRTW =
     , "- Give good assassins a line of sight bonus with increased skill, to emulate spies."
     , "- Recruitment cost 3x."
     , "- Upkeep cost 3x."
+    , "*** Other"
+    , "- Rebel spawn rate 40x lower"
+    , "- Pirate spawn rate 20x lower"
     -- Recruitment
     , "** Recruitment"
     , "- All units take 0 turns to complete, but they cost 1.33x, 1.66x, and 2x more (initial cost only) based on their original turn count. (FYI: The Scipii Decere unit is the only unit in vanilla that took 3 turns to complete.)."

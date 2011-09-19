@@ -36,8 +36,16 @@ _RTW_DCL_FUNCS = addTrueTest [r1, r2, r3]
                 ]
 
 _RTW_DS_FUNCS :: RegexSets
-_RTW_DS_FUNCS = addTrueTest noSpies
+_RTW_DS_FUNCS = addTrueTest [r1, r2] ++ addTrueTest noSpies
     where
+        -- Rebel spawn rate 40x lower
+        r1 =    [ ("^brigand_spawn_value\\s+", id)
+                , (multRoundInt 40)
+                ]
+        -- Pirate spawn rate 20x lower
+        r2 =    [ ("^pirate_spawn_value\\s+", id)
+                , (multRoundInt 20)
+                ]
         -- Remove all spies from the campaign map.
         noSpies =
             [
