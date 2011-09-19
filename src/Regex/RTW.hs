@@ -265,7 +265,7 @@ _RTW_EDCT_FUNCS = addTrueTest [r1, r2]
                 ]
 
 _RTW_EDU_FUNCS :: RegexSets
-_RTW_EDU_FUNCS = addTrueTest unitTurns ++ addTrueTest [r1]
+_RTW_EDU_FUNCS = addTrueTest unitTurns ++ addTrueTest [r1] ++ addTrueTest missileInfantryAmmo
     where
         -- All units take 0 turns to recruit, but they cost cost 1.33x, 1.66x,
         -- and 2x more (initial cost) based on their original turn count.
@@ -311,3 +311,14 @@ _RTW_EDU_FUNCS = addTrueTest unitTurns ++ addTrueTest [r1]
                 , (",\\s+", id)
                 , (multRoundInt 0.5) -- custom battle: recruitment cost
                 ]
+        -- Missile infantry ammo 1.25x; 1.5x for slingers
+        missileInfantryAmmo =
+            [
+                [ ("^category\\s+infantry\\s+class\\s+missile.+?stat_pri\\s+.+?,.+?,.+?,.+?,\\s+", id)
+                , (multRoundInt 1.25)
+                ]
+            ,
+                [ ("^stat_pri[^\\r]+?stone,.+?, ", id)
+                , (_REGEX_INT, only "60")
+                ]
+            ]

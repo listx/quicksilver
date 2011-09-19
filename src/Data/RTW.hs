@@ -42,6 +42,7 @@ readmeRTW =
     , "  -  Roman gladiators (Julii, Scipii, Senate) are now all recruitable starting at the city level (in vanilla, only Brutii had access to gladiators starting from city level)."
     , "** Units"
     , "- General's bodyguard (cavalry) soldiers reduced 0.5x; costs reduced accordingly"
+    , "- Missile infantry ammo 1.25x; 1.5x for slingers"
     -- Finance
     , "** Finance"
     , "- Remove corruption trigger based on high treasury (characters do not gain any negative penalties for having a large treasury)"
