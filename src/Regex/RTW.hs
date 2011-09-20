@@ -352,7 +352,7 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
             , (105, 66) -- Capua (Scipii)
             , (97, 76) -- Rome (Senate)
             , (98, 74) -- Rome (Senate)
-            , (97, 67) -- Rome (Senate)
+            , (97, 68) -- Rome (Senate)
             ]
         -- Silver resource location, one for each faction's second region
         silverCoords =
