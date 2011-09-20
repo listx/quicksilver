@@ -173,7 +173,7 @@ _RTW_DCL_FUNCS = addTrueTest [r1, r2, r3]
 
 _RTW_DMR_FUNCS :: RegexSets
 _RTW_DMR_FUNCS = addTrueTest mercPoolAddElephs
-    ++ addTrueTest [mercInitialCost]
+    ++ addTrueTest [mercRecruit]
     where
         -- Add elephant mercenary units to elephant regions.
         mercPoolAddElephs = map f mercPoolsNeedingElephs
@@ -181,10 +181,18 @@ _RTW_DMR_FUNCS = addTrueTest mercPoolAddElephs
             [ ("^pool " ++ pool ++ ".+?regions.+?\\r\\n", add mercEleph)
             ]
         mercEleph = "\tunit merc elephants,\t\t\t\texp 0 cost 4000 replenish 0.005 - 0.015 max 1 initial 0\r\n"
-        -- Increase costs for mercenary units 1.25x.
-        mercInitialCost =
-                [ ("^\\s+unit.+?\\d+.+?", id)
+        mercRecruit =
+                -- Increase costs for mercenary units 1.25x.
+                [ ("^\\s+unit.+?cost.+?", id)
                 , (multRoundInt 1.25)
+                -- Increase merc replenish rate 3x.
+                , (".+?replenish.+?", id)
+                , (multDouble 3)
+                , (" - ", id)
+                , (multDouble 3)
+                , (".+?max.+?", id)
+                -- Increase merc max amount 5x.
+                , (multRoundInt 5)
                 ]
 
 _RTW_DS_FUNCS :: RegexSets
