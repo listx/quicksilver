@@ -41,7 +41,7 @@ _RTW_DCL_FUNCS = addTrueTest [r1, r2, r3]
 _RTW_DS_FUNCS :: RegexSets
 _RTW_DS_FUNCS = addTrueTest [r1, r2]
     ++ addTrueTest (noSpies)
-    ++ addTrueTest [noMiningNetwork] ++ mineFuncs capsSecs
+    ++ mineFuncs capsSecs
     ++ addTrueTest [giveRoads]
     ++ giveRoads'
     ++ addTrueTest goldMod
@@ -76,10 +76,6 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
                 [ ("^ancillaries spymaster\\r\\n", nil)
                 ]
             ]
-        -- Remove mines+1 reference (there's just 1, at Rome)
-        noMiningNetwork =
-                [ ("^\\s+building\\r\\n[^\\r]+?\\r[^\\r]+?mines\\+1.+?}\\r\\n", nil)
-                ]
         -- Give all settlements paved roads.
         govHouse =
             "\r\n\tbuilding\r\n\
@@ -181,12 +177,12 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
             , (112, 55) -- Croton (Brutii; silver vanilla)
             , (105, 48) -- Messana (Scipii)
             ]
-        -- Give mines to all factions' capitals/secondary cities, because the AI
+        -- Give mines+1 to all factions' capitals/secondary cities, because the AI
         -- is too stupid and doesn't always build mines immediately.
         mine =
             "\r\n\tbuilding\r\n\
             \\t{\r\n\
-            \\t\ttype hinterland_mines mines\r\n\
+            \\t\ttype hinterland_mines mines+1\r\n\
             \\t}"
         mineFuncs :: [String] -> RegexSets
         mineFuncs strs = concatMap makeFunc strs
@@ -217,7 +213,7 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
             , "Arretium"
             , "Tarentum"
             , "Capua"
-            , "Rome"
+            -- , "Rome" Rome already has a mining network in vanilla
             , "Dimmidi"
             , "Thapsus"
             , "Memphis"
@@ -365,50 +361,17 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
 _RTW_DSR_FUNCS :: RegexSets
 _RTW_DSR_FUNCS = addTrueTest [r1, r2]
     where
-        -- Gold resource worth x10 (to increase mining profit)
+        -- Gold resource worth x5 (to increase mining profit)
         r1 =    [ ("^type\\s+gold\\r\\ntrade_value\\s+", id)
-                , (multRoundInt 10)
+                , (multRoundInt 5)
                 ]
-        -- Silver resource worth x10
+        -- Silver resource worth x5
         r2 =    [ ("^type\\s+silver\\r\\ntrade_value\\s+", id)
-                , (multRoundInt 10)
+                , (multRoundInt 5)
                 ]
-
-_RTW_EDA_FUNCS :: RegexSets
-_RTW_EDA_FUNCS = addTrueTest noMiningNetwork
-    where
-        -- Remove all references to mines+1
-        noMiningNetwork  =
-            [
-                [ ("^AdviceThread[^\\r]+mines\\+1.+?;-+\r\n", nil)
-                ]
-            ,
-                [ ("^Trigger 0389.+?;-+\r\n", nil)
-                ]
-            ]
-
-_RTW_EDAE_FUNCS :: RegexSets
-_RTW_EDAE_FUNCS = addTrueTest noMiningNetwork
-    where
-        -- Remove all references to mines+1
-        noMiningNetwork  =
-            [
-                [ ("^City_Construction_Build_mines\\+1.+?\r\n", nil)
-                ]
-            ]
-
-_RTW_EDAT_FUNCS :: RegexSets
-_RTW_EDAT_FUNCS = addTrueTest noMiningNetwork
-    where
-        -- Remove all references to mines+1
-        noMiningNetwork  =
-            [
-                [ ("^City_Construction_Build_mines\\+1.+?\r\n", nil)
-                ]
-            ]
 
 _RTW_EDB_FUNCS :: RegexSets
-_RTW_EDB_FUNCS = addTrueTest [r1, r2, r2', noMiningNetwork]
+_RTW_EDB_FUNCS = addTrueTest [r1, r2, r2']
     ++ addTrueTest recruitment
     where
         -- All building constructions take 1 turn
@@ -575,23 +538,9 @@ _RTW_EDB_FUNCS = addTrueTest [r1, r2, r2', noMiningNetwork]
             ]
             where
                 agent' = (replicate 16 ' ') ++ "agent " ++ agent ++ " 0 requires factions "
-        -- Disable the "Mining network" building.
-        noMiningNetwork =
-                [ ("^building hinterland_mines.+?levels mines ", id)
-                , ("mines\\+1", nil)
-                , (".+?settlement_min town\\r\\n", id)
-                , (".+?upgrades.+?}.+            }\\r\\n", nil)
-                ]
-
-_RTW_EDBE_FUNCS :: RegexSets
-_RTW_EDBE_FUNCS = addTrueTest [r1]
-    where
-        -- Remove all references to mines+1 (mining network)
-        r1 =    [ ("^mines\\+.+?\\r\\n", nil)
-                ]
 
 _RTW_EDCT_FUNCS :: RegexSets
-_RTW_EDCT_FUNCS = addTrueTest [r1, r2, r3]
+_RTW_EDCT_FUNCS = addTrueTest [r1, r2]
     where
         -- Give good assassins a line of sight bonus with increased skill.
         r1 =    [ ("^Trait GoodAssassin.+?", id)
@@ -608,16 +557,6 @@ _RTW_EDCT_FUNCS = addTrueTest [r1, r2, r3]
                 ]
         -- Remove corruption trigger based on high treasury
         r2 =    [ ("^Trigger corruption.+?;-+", nil)
-                ]
-        -- Remove all references to mines+1 (mining network)
-        r3 =    [ ("^Trigger governing9.+?mines\\+1.+?;-+", nil)
-                ]
-
-_RTW_EDSA_FUNCS :: RegexSets
-_RTW_EDSA_FUNCS = addTrueTest [r1]
-    where
-        -- Remove all references to mines+1 (mining network)
-        r1 =    [ ("^\\s+text[^\\r]+?mines\\+1.+?end\\r\\n", nil)
                 ]
 
 _RTW_EDU_FUNCS :: RegexSets
