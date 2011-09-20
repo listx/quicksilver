@@ -34,6 +34,7 @@ readmeM2TW =
     , "- Diplomat movement speed 2x (2x the 1.75x)"
     , "*** Initial provinces and buildings"
     , "- Give paved roads for all settlements."
+    , "  - Durazzo, the only undefined settlement (which default to a village in-game) in descr_strat.txt, gets an entry in descr_strtat.txt to allow this."
     , "- Gold/silver mines for capitals and secondary provinces (if any); see Finances section"
     , "*** Agents"
     , "- Disable diplomacy animations from the campaign map; specifically, the `conduct diplomacy' and bowing animations have been removed"

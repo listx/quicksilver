@@ -223,7 +223,13 @@ _M2TW_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTru
             ]
 
 _M2TW_DS_FUNCS :: RegexSets
-_M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (noMerchantPrincessSpy ++ mtePurse) ++ mineFuncs capsSecs ++ mineFuncs capsSecs' ++ addTrueTest (noFarmsTaverns ++ giveRoads ++ rebels)
+_M2TW_DS_FUNCS = addTrueTest [r1, r2, r3]
+    ++ [r4, r5, r6, r7]
+    ++ addTrueTest (noMerchantPrincessSpy ++ mtePurse)
+    ++ mineFuncs capsSecs
+    ++ mineFuncs capsSecs'
+    ++ addTrueTest durazzo
+    ++ addTrueTest (noFarmsTaverns ++ giveRoads ++ rebels)
     where
         -- Rebel spawn rate 20x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -457,6 +463,20 @@ _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3] ++ [r4, r5, r6, r7] ++ addTrueTest (no
             , "Gaza"
             ]
             )
+        durazzo =
+            [
+                [ ("Smyrna_Province.+?}.+?}\\r\\n", add entry)
+                ]
+            ]
+            where
+                entry = "settlement\r\n{\r\n"
+                    ++ "\tlevel village\r\n"
+                    ++ "\tregion Durazzo_Province\r\n\r\n"
+                    ++ "\tyear_founded 0\r\n"
+                    ++ "\tpopulation 800\r\n"
+                    ++ "\tplan_set default_set\r\n"
+                    ++ "\tfaction_creator byzantium\r\n"
+                    ++ "}\r\n"
         -- Give all settlements paved roads.
         roads =
             "\r\n\tbuilding\r\n\
