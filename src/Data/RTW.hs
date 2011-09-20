@@ -26,6 +26,7 @@ readmeRTW =
     , "*** Initial provinces and buildings"
     , "- Give paved roads for all settlements (including those factions that cannot build them in vanilla)."
     , "  - All villages start out as barebone towns to allow this."
+    , "  - Also, the 6 undefined settlements (which default to villages in-game) in descr_strat.txt have been changed to barebone towns as well to allow this.."
     , "*** Agents"
     , "- Remove spies (use assassins instead; spies are over-powered anyway with their 'open gate' ability)."
     , "- Diplomats and assassins take 0 turns to recruit."

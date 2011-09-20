@@ -42,6 +42,7 @@ _RTW_DS_FUNCS :: RegexSets
 _RTW_DS_FUNCS = addTrueTest [r1, r2]
     ++ addTrueTest (noSpies)
     ++ mineFuncs capsSecs
+    ++ [missingSettlementDescs]
     ++ addTrueTest [giveRoads]
     ++ giveRoads'
     ++ addTrueTest goldMod
@@ -76,6 +77,46 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
                 [ ("^ancillaries spymaster\\r\\n", nil)
                 ]
             ]
+        -- The following 6 settlements are missing from descr_strat.txt, so add
+        -- them in to build roads on them:
+        --
+        --  PROVINCE            REGION
+        --  --------            ------
+        --  Dumatha             Arabia
+        --  Phraaspa            Atropatene
+        --  Lovosice            Boihaemum
+        --  Salona              Dalmatia
+        --  Ancyra              Galatia
+        --  Domus_Dulcis_Domus  Locus_Gepidae
+        --  Vicus_Venedae       Pripet
+        missingSettlementDescs =
+                [ ("Tripolitania.+?}\\r\\n", add $ concatMap makeTown sdescs, alwaysTrue)
+                ]
+            where
+                makeTown (province, culture) =
+                    case lookup province settlementRegionTable of
+                        Just r -> "settlement\r\n{\r\n"
+                            ++ "\tlevel town\r\n"
+                            ++ "\tregion " ++ r ++ "\r\n\r\n"
+                            ++ "\tyear_founded 0\r\n"
+                            ++ "\tpopulation 2700\r\n"
+                            ++ "\tplan_set default_set\r\n"
+                            ++ "\tfaction_creator " ++ culture ++ "\r\n"
+                            ++ "\tbuilding\r\n"
+                            ++ "\t{\r\n"
+                            ++ "\t\ttype core_building governors_house\r\n"
+                            ++ "\t}\r\n"
+                            ++ "}\r\n"
+                        _ -> "" -- don't add anything if we make a human error in defining sdescs
+                sdescs =
+                    [ ("Dumatha", "parthia")
+                    , ("Phraaspa", "parthia")
+                    , ("Lovosice", "gaul")
+                    , ("Salona", "macedon")
+                    , ("Ancyra", "macedon")
+                    , ("Domus_Dulcis_Domus", "gaul")
+                    , ("Vicus_Venedae", "gaul")
+                    ]
         -- Give all settlements paved roads.
         govHouse =
             "\r\n\tbuilding\r\n\
@@ -337,7 +378,6 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
             , ("Vicus_Marcomannii" , "Regnum_Marcomannii")
             , ("Vicus_Venedae"     , "Pripet")
             ]
-
         -- Extra elephants locations (put elephants all over northern Africa)
         elephantsMod =
                 [ ("resources.+?\\r\\n\\r\\n", addResource "elephant" elephantCoords)
