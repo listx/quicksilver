@@ -222,6 +222,26 @@ _M2TW_DM_FUNCS = addTrueTest [r1, r2, r3, r4a, r4b, r5, r6a, r6b, r4'] ++ addTru
                 ]
             ]
 
+_M2TW_DMR_FUNCS :: RegexSets
+_M2TW_DMR_FUNCS = addTrueTest [mercRecruit]
+    where
+        mercRecruit =
+                -- Increase costs for mercenary units 1.25x.
+                [ ("^\\s+unit.+?cost.+?", id)
+                , (multRoundInt 1.25)
+                -- Increase merc replenish rate 3x.
+                , (".+?replenish.+?", id)
+                , (multDouble 3)
+                , (" - ", id)
+                , (multDouble 3)
+                , (".+?max.+?", id)
+                -- Increase merc max amount 5x.
+                , (multRoundInt 5)
+                , (".+?initial.+?", id)
+                -- Increase merc initial amount 5x.
+                , (multRoundInt 5)
+                ]
+
 _M2TW_DS_FUNCS :: RegexSets
 _M2TW_DS_FUNCS = addTrueTest [r1, r2, r3]
     ++ [r4, r5, r6, r7]

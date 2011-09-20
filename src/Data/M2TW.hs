@@ -5,13 +5,12 @@ import Regex.M2TW
 
 qsM2TW :: Mod
 qsM2TW = Mod M2TW "quicksilverM2TW" "0.01" readmeM2TW miscFilesM2TW $
-    -- Text files to mod
+    -- Text files to mod (from unpacked folder)
     map (\f -> makeModFileModText f Unpacked) m2twUnpackedModText
-    ++
-    [ ModFile 0x852dd3c9a4a6647f38af2f84eb07874de152acf8 _M2TW_DS Installed
-		(ModText _M2TW_DS_FUNCS ("^\\r\\n\\r\\n", "\r\n\r\n"))]
-    ++
+    -- Text files to mod (from installed folder)
+    ++ map (\f -> makeModFileModText f Installed) m2twInstalledModText
     -- Binary files to modify (with binary diffs)
+    ++
     [ ModFile 0xdb22c7400f27ce863dd7c92201eea6183ba30335 _M2TW_PDAT Installed (ModBinary _M2TW_PDAT')
     , ModFile 0x044a8a79011589ba340a3bffc87642a02bc87c7a _M2TW_PIDX Installed (ModBinary _M2TW_PIDX')
     , ModFile 0x47deb00beb5bdb2d2bfd4aa7bb8d1452ed6747b5 _M2TW_SDAT Installed (ModBinary _M2TW_SDAT')
@@ -83,6 +82,11 @@ readmeM2TW =
     , "- For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings bonuses to base unit number, recruitment points gained per turn, maximum recruitment points available, and (most importantly) the starting experience."
     , "- Allow a settlement to recruit 2 agents of the same type in a single turn."
     , "- Fix Swordsmiths Guild HQ bonuses bug (vanilla did not give any extra bonsues for getting the HQ level; now it grants 1 more extra bonus point for factionwide heavy_cavalry_bonus (experience of knights))."
+    , "*** Mercenaries"
+    , "- Mercenaries cost 1.25x"
+    , "- Mercenaries replenishment rate 3x"
+    , "- Mercenaries pool initial 5x"
+    , "- Mercenaries pool max 5x"
     -- Units
     , "** Units"
     , "- Bodyguard soldiers (cavalry and infantry types) reduced 0.5x; costs reduced accordingly"
@@ -189,6 +193,12 @@ m2twUnpackedModText =
     , (0x140f93465e48577a5262d6e104630518426a7a13, _M2TW_EDU,  ModText _M2TW_EDU_FUNCS  (" \\r\\n \\r\\n", " \r\n \r\n"))
     ]
 
+m2twInstalledModText :: [(Integer, String, Operation)]
+m2twInstalledModText =
+    [ (0x852dd3c9a4a6647f38af2f84eb07874de152acf8, _M2TW_DS , ModText _M2TW_DS_FUNCS  ("^\\r\\n\\r\\n", "\r\n\r\n"))
+    , (0xa2fe4ed7369472728c6480bea8597cd8bdcab84f, _M2TW_DMR, ModText _M2TW_DMR_FUNCS ("", ""))
+    ]
+
 m2twInstalledCopy :: [(Integer, String)]
 m2twInstalledCopy =
     [ (0x82c4a8ce1d5c474b379ca7eed4273f969ebe6f10, "sounds/events.dat")
@@ -285,6 +295,7 @@ _M2TW_DCAD :: String
 _M2TW_DCL :: String
 _M2TW_DFS :: String
 _M2TW_DM :: String
+_M2TW_DMR :: String
 _M2TW_DS :: String
 _M2TW_DSF :: String
 _M2TW_DSK :: String
@@ -316,6 +327,7 @@ _M2TW_DCAD   = "descr_campaign_ai_db.xml"
 _M2TW_DCL    = "descr_cultures.txt"
 _M2TW_DFS    = "descr_faction_standing.txt"
 _M2TW_DM     = "descr_missions.txt"
+_M2TW_DMR    = "world/maps/campaign/imperial_campaign/descr_mercenaries.txt"
 _M2TW_DSF    = "descr_sm_factions.txt"
 _M2TW_DSK    = "descr_skeleton.txt"
 _M2TW_DSM    = "descr_settlement_mechanics.xml"
