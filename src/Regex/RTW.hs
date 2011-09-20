@@ -111,11 +111,11 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
                 sdescs =
                     [ ("Dumatha", "parthia")
                     , ("Phraaspa", "parthia")
-                    , ("Lovosice", "gaul")
+                    , ("Lovosice", "gauls")
                     , ("Salona", "macedon")
                     , ("Ancyra", "macedon")
-                    , ("Domus_Dulcis_Domus", "gaul")
-                    , ("Vicus_Venedae", "gaul")
+                    , ("Domus_Dulcis_Domus", "gauls")
+                    , ("Vicus_Venedae", "gauls")
                     ]
         -- Give all settlements paved roads.
         govHouse =
