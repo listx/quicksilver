@@ -47,6 +47,15 @@ readmeRTW =
     -- Finance
     , "** Finance"
     , "- Remove corruption trigger based on high treasury (characters do not gain any negative penalties for having a large treasury)"
+    -- Gold/silver mining
+    , "*** Built-in gold/silver mines for every faction"
+    , "- All existing gold and silver resources on the main campaign map have been replaced with purple dyes and incense, respectively. Each faction now has 1 gold resource at its capital and 1 silver resource at its secondary region (but Rome has 3 gold resources)."
+    , "- All factions start out with pre-built mines in their capitals and secondary regions."
+    , "  - Thus, mines cannot be built any more by the player, as all the places that could possibly build mines already start out with a mine."
+    , "- The point of this mod is to make each faction's capital and secondary region very valuable. There is an incentive to take an enemy faction's capital before taking their other settlements, for example. It also levels the playing field for those factions without valuable mineable resources, because gold and silver are evenly distributed among factions."
+    , "- Gold and silver mines make ?? and ?? florins each, respectively."
+    , "- For kicks, Rome has 3 gold resources! This makes capturing Rome very tempting..."
+    , "- The redundant ``Mining Network'' building has been removed, since the regular mines alone make enough money."
     ]
 
 miscFilesRTW :: [(FilePath, String)]
@@ -65,8 +74,14 @@ rtwInstalledModText =
     [ (0xebc3c3b4ee4813921ed2265ddf29366a55327c5a, _RTW_DC  , ModText _RTW_DC_FUNCS   ("", ""))
     , (0x1ce28a66802f22271d493bccc0c8d5f6d1ce53da, _RTW_DCL , ModText _RTW_DCL_FUNCS  ("", ""))
     , (0xd3d5925a47bd4326a6a4d8b2d8e72acd8665adbc, _RTW_DS  , ModText _RTW_DS_FUNCS   ("", ""))
+    , (0x29aba3632af603dc25d5f94d46257cbf0185935e, _RTW_DSR , ModText _RTW_DSR_FUNCS  ("", ""))
+    , (0xd7cc2eaf150b7957e715f4b254a51e4c883456bb, _RTW_EDA , ModText _RTW_EDA_FUNCS  ("", ""))
+    , (0xb66e2119604f4141478ae52b3e5e51464561ca70, _RTW_EDAE, ModText _RTW_EDAE_FUNCS ("", ""))
+    , (0xe458a9c9ecd18d79a27113af3d6117d21382f3cc, _RTW_EDAT, ModText _RTW_EDAT_FUNCS ("", ""))
     , (0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6, _RTW_EDB , ModText _RTW_EDB_FUNCS  ("^\\}\\r\\n", "}\r\n"))
+    , (0x53b5afd97f09b3929a4e4d47bb09c8b5d8d51757, _RTW_EDBE, ModText _RTW_EDBE_FUNCS ("", ""))
     , (0x1dd045b7f252d06f8c2c0fa27a18a6ef802b3422, _RTW_EDCT, ModText _RTW_EDCT_FUNCS ("", ""))
+    , (0x39bd39b4385087e5de2de6be302643abe9806643, _RTW_EDSA, ModText _RTW_EDSA_FUNCS ("", ""))
     , (0x55b56dc9ac99161de270c28f5efed2c791d318ca, _RTW_EDU , ModText _RTW_EDU_FUNCS  (" \\r\\n \\r\\n", " \r\n \r\n"))
     ]
 
@@ -129,8 +144,14 @@ rtwInstalledCopy =
 _RTW_DC  :: String
 _RTW_DCL :: String
 _RTW_DS  :: String
+_RTW_DSR :: String
+_RTW_EDA :: String
+_RTW_EDAE:: String
+_RTW_EDAT:: String
 _RTW_EDB :: String
+_RTW_EDBE:: String
 _RTW_EDCT :: String
+_RTW_EDSA :: String
 _RTW_EDU :: String
 
 _RTW_DC     = "descr_character.txt"
@@ -145,6 +166,12 @@ _RTW_DCL    = "descr_cultures.txt"
  - 0x5403a058bd49d371ae6cca739b0656043a833181
  -}
 _RTW_DS      = "world/maps/campaign/imperial_campaign/descr_strat.txt"
+_RTW_DSR     = "descr_sm_resources.txt"
+_RTW_EDA     = "export_descr_advice.txt"
+_RTW_EDAE    = "export_descr_advice_enums.txt"
+_RTW_EDAT    = "export_descr_advice_timing.txt"
 _RTW_EDB     = "export_descr_buildings.txt"
+_RTW_EDBE    = "export_descr_buildings_enums.txt"
 _RTW_EDCT    = "export_descr_character_traits.txt"
+_RTW_EDSA    = "export_descr_sounds_advice.txt"
 _RTW_EDU     = "export_descr_unit.txt"

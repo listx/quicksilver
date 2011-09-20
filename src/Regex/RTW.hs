@@ -39,7 +39,12 @@ _RTW_DCL_FUNCS = addTrueTest [r1, r2, r3]
                 ]
 
 _RTW_DS_FUNCS :: RegexSets
-_RTW_DS_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (noSpies) ++ addTrueTest [giveRoads] ++ giveRoads'
+_RTW_DS_FUNCS = addTrueTest [r1, r2]
+    ++ addTrueTest (noSpies)
+    ++ addTrueTest [noMiningNetwork] ++ mineFuncs capsSecs
+    ++ addTrueTest [giveRoads]
+    ++ giveRoads'
+    ++ addTrueTest goldMod
     where
         -- Rebel spawn rate 40x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -70,6 +75,10 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (noSpies) ++ addTrueTest [gi
                 [ ("^ancillaries spymaster\\r\\n", nil)
                 ]
             ]
+        -- Remove mines+1 reference (there's just 1, at Rome)
+        noMiningNetwork =
+                [ ("^\\s+building\\r\\n[^\\r]+?\\r[^\\r]+?mines\\+1.+?}\\r\\n", nil)
+                ]
         -- Give all settlements paved roads.
         govHouse =
             "\r\n\tbuilding\r\n\
@@ -103,10 +112,283 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (noSpies) ++ addTrueTest [gi
                 , ("\\r\\n\\}", prepend (govHouse ++ roads), alwaysTrue)
                 ]
             ]
+        goldMod =
+            [
+                -- Replace all gold resources with purple dye in the map
+                [ ("^resource\\s+", id)
+                , ("gold", only "purple_dye")
+                ]
+            ,
+                -- Replace all silver resources with incense in the the map
+                [ ("^resource\\s+", id)
+                , ("silver", only "incense")
+                ]
+            ,
+                -- Add in 1 gold resource for every faction's capital city region
+                [ ("resources.+?\\r\\n\\r\\n", addResource "gold" goldCoords)
+                ]
+            ,
+                -- Add in 1 silver resource for every faction's second city (or
+                -- the capital city if no second city)
+                [ ("resources.+?\\r\\n\\r\\n", addResource "silver" silverCoords)
+                ]
+            ]
+        showResource :: String -> (Int, Int) -> String
+        showResource res (x, y) = "resource\t" ++ res ++ ",\t" ++ show x ++ ",\t" ++ show y ++ "\r\n"
+        addResource :: String -> [(Int, Int)] -> BC.ByteString -> BC.ByteString
+        addResource res coords s = BC.append s $ BC.pack (concatMap (showResource res) coords)
+        -- Gold resource locations, one for each faction's capital
+        goldCoords =
+            [ (58, 41) -- Cirta (Numidia)
+            , (78, 41) -- Carthage (Carthage)
+            , (181, 21) -- Alexandria (Egypt)
+            , (204, 53) -- Antioch (Seleucid)
+            , (249, 76) -- Arsakia (Parthia)
+            , (225, 90) -- Artaxarta (Armenia)
+            , (162, 103) -- Campus Scythii (Scythia)
+            , (148, 79) -- Tylis (Thrace; same gold as orig)
+            , (140, 46) -- Sparta (Greece)
+            , (136, 98) -- Porrolissum (Dacia; same gold as orig)
+            , (93, 132) -- Damme (Germania)
+            , (59, 130) -- Londinium (Britannia)
+            , (68, 103) -- Alesia (Gaul)
+            , (20, 84) -- Asturica (Spain; same gold vanilla)
+            , (87, 80) -- Arretium (Julii)
+            , (109, 66) -- Tarentum (Brutii)
+            , (105, 66) -- Capua (Scipii)
+            , (97, 76) -- Rome (Senate)
+            , (98, 74) -- Rome (Senate)
+            , (97, 67) -- Rome (Senate)
+            ]
+        -- Silver resource location, one for each faction's second region
+        silverCoords =
+            [ (36, 24) -- Dimmidi (Numidia)
+            , (81, 35) -- Thapsus (Carthage)
+            , (188, 15) -- Memphis (Egypt)
+            , (195, 60) -- Tarsus (Seleucid; same silver as orig)
+            , (254, 45) -- Susa (Parthia)
+            , (210, 94) -- Kotais (Armenia)
+            , (185, 110) -- Tanais (Scythia)
+            , (152, 99) -- Campus Getae (Thrace)
+            , (160, 63) -- Pergamum (Greece; same silver as orig)
+            , (132, 108) -- Campus lazyges (Dacia)
+            , (95, 111) -- Mogontiacum (Germania)
+            , (45, 135) -- Deva (Britannia; gold vanilla)
+            , (55, 97) -- Lemonum (Gaul)
+            , (6, 68) -- Scallabis (Spain)
+            , (99, 77) -- Ariminum (Julii)
+            , (112, 55) -- Croton (Brutii; silver vanilla)
+            , (105, 48) -- Messana (Scipii)
+            ]
+        -- Give mines to all factions' capitals/secondary cities, because the AI
+        -- is too stupid and doesn't always build mines immediately.
+        mine =
+            "\r\n\tbuilding\r\n\
+            \\t{\r\n\
+            \\t\ttype hinterland_mines mines\r\n\
+            \\t}"
+        mineFuncs :: [String] -> RegexSets
+        mineFuncs strs = concatMap makeFunc strs
+            where
+                makeFunc str = case lookup str settlementRegionTable of
+                    Just region -> addTrueTest
+                        [
+                            [ ("region " ++ region ++ ".+?", id)
+                            , ("\\r\\n\\}", prepend mine)
+                            ]
+                        ]
+                    _ -> [] -- don't add any regexes if we put in an incorrect settlement name; should never happen except for human error
+        capsSecs =
+            [ "Cirta"
+            , "Carthage"
+            , "Alexandria"
+            , "Antioch"
+            , "Arsakia"
+            , "Artaxarta"
+            , "Campus"
+            , "Tylis"
+            , "Sparta"
+            , "Porrolissum"
+            , "Damme"
+            , "Londinium"
+            , "Alesia"
+            , "Asturica"
+            , "Arretium"
+            , "Tarentum"
+            , "Capua"
+            , "Rome"
+            , "Dimmidi"
+            , "Thapsus"
+            , "Memphis"
+            , "Tarsus"
+            , "Susa"
+            , "Kotais"
+            , "Tanais"
+            , "Campus"
+            , "Pergamum"
+            , "Campus"
+            , "Mogontiacum"
+            , "Deva"
+            , "Lemonum"
+            , "Scallabis"
+            , "Ariminum"
+            , "Croton"
+            , "Messana"
+            ]
+        settlementRegionTable =
+            [ ("Alesia"            , "Central_Gaul")
+            , ("Alexandria"        , "Nile_Delta")
+            , ("Ancyra"            , "Galatia")
+            , ("Antioch"           , "Syria")
+            , ("Apollonia"         , "Epirus")
+            , ("Aquincum"          , "Pannonia")
+            , ("Ariminum"          , "Umbria")
+            , ("Arretium"          , "Etruria")
+            , ("Arsakia"           , "Media")
+            , ("Artaxarta"         , "Armenia")
+            , ("Asturica"          , "Gallaecia")
+            , ("Athens"            , "Attica")
+            , ("Batavodurum"       , "Germania_Inferior")
+            , ("Bordesholm"        , "Tribus_Saxones")
+            , ("Bostra"            , "Nabataea")
+            , ("Bylazora"          , "Paionia")
+            , ("Byzantium"         , "Propontis")
+            , ("Campus_Alanni"     , "Tribus_Alanni")
+            , ("Campus_Getae"      , "Tribus_Getae")
+            , ("Campus_Iazyges"    , "Tribus_Iazyges")
+            , ("Campus_Sakae"      , "Tribus_Sakae")
+            , ("Campus_Sarmatae"   , "Tribus_Sarmatae")
+            , ("Campus_Scythii"    , "Scythia")
+            , ("Capua"             , "Campania")
+            , ("Caralis"           , "Sardinia")
+            , ("Carthage"          , "Africa")
+            , ("Carthago_Nova"     , "Hispania")
+            , ("Chersonesos"       , "Bosphorus")
+            , ("Cirta"             , "Numidia")
+            , ("Condate_Redonum"   , "Armorica")
+            , ("Corduba"           , "Baetica")
+            , ("Corinth"           , "Peloponnesus")
+            , ("Croton"            , "Bruttium")
+            , ("Cyrene"            , "Cyrenaica")
+            , ("Damascus"          , "Coele_Syria")
+            , ("Damme"             , "Tribus_Chattii")
+            , ("Deva"              , "Tribus_Silurii")
+            , ("Dimmidi"           , "Gaetulia")
+            , ("Domus_Dulcis_Domus", "Locus_Gepidae")
+            , ("Dumatha"           , "Arabia")
+            , ("Eburacum"          , "Britannia_Inferior")
+            , ("Halicarnasus"      , "Lycia")
+            , ("Hatra"             , "Assyria")
+            , ("Iuvavum"           , "Noricum")
+            , ("Jerusalem"         , "Judaea")
+            , ("Kotais"            , "Colchis")
+            , ("Kydonia"           , "Crete")
+            , ("Larissa"           , "Thessalia")
+            , ("Lemonum"           , "Aquitania")
+            , ("Lepcis_Magna"      , "Tripolitania")
+            , ("Lilybaeum"         , "Sicilia_Poeni")
+            , ("Londinium"         , "Britannia_Superior")
+            , ("Lovosice"          , "Boihaemum")
+            , ("Lugdunum"          , "Lugdinensis")
+            , ("Massilia"          , "Transalpine_Gaul")
+            , ("Mazaka"            , "Cappadocia")
+            , ("Mediolanium"       , "Cisalpine_Gaul")
+            , ("Memphis"           , "Middle_Egypt")
+            , ("Messana"           , "Sicilia_Romanus")
+            , ("Mogontiacum"       , "Agri_Decumates")
+            , ("Narbo_Martius"     , "Narbonensis")
+            , ("Nepte"             , "Sahara")
+            , ("Nicomedia"         , "Bithynia")
+            , ("Numantia"          , "Celtiberia")
+            , ("Osca"              , "Taraconenis")
+            , ("Palma"             , "Baliares")
+            , ("Palmyra"           , "Regnum_Palmyrae")
+            , ("Patavium"          , "Venetia")
+            , ("Pergamum"          , "Phrygia")
+            , ("Petra"             , "Sinai")
+            , ("Phraaspa"          , "Atropatene")
+            , ("Porrolissum"       , "Dacia")
+            , ("Rhodes"            , "Rhodos")
+            , ("Rome"              , "Latium")
+            , ("Salamis"           , "Cyprus")
+            , ("Salona"            , "Dalmatia")
+            , ("Samarobriva"       , "Belgica")
+            , ("Sardis"            , "Ionia")
+            , ("Scallabis"         , "Lusitania")
+            , ("Segesta"           , "Liguria")
+            , ("Segestica"         , "Illyria")
+            , ("Seleucia"          , "Babylonia")
+            , ("Sidon"             , "Phoenicia")
+            , ("Sinope"            , "Pontus")
+            , ("Siwa"              , "Libya")
+            , ("Sparta"            , "Laconia")
+            , ("Susa"              , "Elymais")
+            , ("Syracuse"          , "Sicilia_Graecus")
+            , ("Tanais"            , "Maeotis")
+            , ("Tara"              , "Hibernia")
+            , ("Tarentum"          , "Apulia")
+            , ("Tarsus"            , "Cilicia")
+            , ("Thapsus"           , "Byzacium")
+            , ("Thebes"            , "Thebais")
+            , ("Themiskyra"        , "Hyperboria")
+            , ("Thermon"           , "Aetolia")
+            , ("Thessalonica"      , "Macedonia")
+            , ("Tingi"             , "Mauretania")
+            , ("Trier"             , "Germania_Superior")
+            , ("Tylis"             , "Thrace")
+            , ("Vicus_Gothi"       , "Locus_Gothi")
+            , ("Vicus_Marcomannii" , "Regnum_Marcomannii")
+            , ("Vicus_Venedae"     , "Pripet")
+            ]
+
+_RTW_DSR_FUNCS :: RegexSets
+_RTW_DSR_FUNCS = addTrueTest [r1, r2]
+    where
+        -- Gold resource worth x10 (to increase mining profit)
+        r1 =    [ ("^type\\s+gold\\r\\ntrade_value\\s+", id)
+                , (multRoundInt 10)
+                ]
+        -- Silver resource worth x10
+        r2 =    [ ("^type\\s+silver\\r\\ntrade_value\\s+", id)
+                , (multRoundInt 10)
+                ]
+
+_RTW_EDA_FUNCS :: RegexSets
+_RTW_EDA_FUNCS = addTrueTest noMiningNetwork
+    where
+        -- Remove all references to mines+1
+        noMiningNetwork  =
+            [
+                [ ("^AdviceThread[^\\r]+mines\\+1.+?;-+\r\n", nil)
+                ]
+            ,
+                [ ("^Trigger 0389.+?;-+\r\n", nil)
+                ]
+            ]
+
+_RTW_EDAE_FUNCS :: RegexSets
+_RTW_EDAE_FUNCS = addTrueTest noMiningNetwork
+    where
+        -- Remove all references to mines+1
+        noMiningNetwork  =
+            [
+                [ ("^City_Construction_Build_mines\\+1.+?\r\n", nil)
+                ]
+            ]
+
+_RTW_EDAT_FUNCS :: RegexSets
+_RTW_EDAT_FUNCS = addTrueTest noMiningNetwork
+    where
+        -- Remove all references to mines+1
+        noMiningNetwork  =
+            [
+                [ ("^City_Construction_Build_mines\\+1.+?\r\n", nil)
+                ]
+            ]
 
 _RTW_EDB_FUNCS :: RegexSets
-_RTW_EDB_FUNCS = addTrueTest $ [r1, r2, r2']
-    ++ recruitment
+_RTW_EDB_FUNCS = addTrueTest [r1, r2, r2', noMiningNetwork]
+    ++ addTrueTest recruitment
     where
         -- All building constructions take 1 turn
         r1 =    [ ("^\\s+construction\\s+", id)
@@ -272,9 +554,23 @@ _RTW_EDB_FUNCS = addTrueTest $ [r1, r2, r2']
             ]
             where
                 agent' = (replicate 16 ' ') ++ "agent " ++ agent ++ " 0 requires factions "
+        -- Disable the "Mining network" building.
+        noMiningNetwork =
+                [ ("^building hinterland_mines.+?levels mines ", id)
+                , ("mines\\+1", nil)
+                , (".+?settlement_min town\\r\\n", id)
+                , (".+?upgrades.+?}.+            }\\r\\n", nil)
+                ]
+
+_RTW_EDBE_FUNCS :: RegexSets
+_RTW_EDBE_FUNCS = addTrueTest [r1]
+    where
+        -- Remove all references to mines+1 (mining network)
+        r1 =    [ ("^mines\\+.+?\\r\\n", nil)
+                ]
 
 _RTW_EDCT_FUNCS :: RegexSets
-_RTW_EDCT_FUNCS = addTrueTest [r1, r2]
+_RTW_EDCT_FUNCS = addTrueTest [r1, r2, r3]
     where
         -- Give good assassins a line of sight bonus with increased skill.
         r1 =    [ ("^Trait GoodAssassin.+?", id)
@@ -291,6 +587,16 @@ _RTW_EDCT_FUNCS = addTrueTest [r1, r2]
                 ]
         -- Remove corruption trigger based on high treasury
         r2 =    [ ("^Trigger corruption.+?;-+", nil)
+                ]
+        -- Remove all references to mines+1 (mining network)
+        r3 =    [ ("^Trigger governing9.+?mines\\+1.+?;-+", nil)
+                ]
+
+_RTW_EDSA_FUNCS :: RegexSets
+_RTW_EDSA_FUNCS = addTrueTest [r1]
+    where
+        -- Remove all references to mines+1 (mining network)
+        r1 =    [ ("^\\s+text[^\\r]+?mines\\+1.+?end\\r\\n", nil)
                 ]
 
 _RTW_EDU_FUNCS :: RegexSets
