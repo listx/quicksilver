@@ -6,6 +6,139 @@ import Data.Recruit.RTW
 
 import Util
 
+showResource :: String -> (Int, Int) -> String
+showResource res (x, y) = "resource\t" ++ res ++ ",\t" ++ show x ++ ",\t" ++ show y ++ "\r\n"
+
+addResource :: String -> [(Int, Int)] -> BC.ByteString -> BC.ByteString
+addResource res coords s = BC.append s $ BC.pack (concatMap (showResource res) coords)
+
+settlementRegionTable :: [(String, String)]
+settlementRegionTable =
+    [ ("Alesia"            , "Central_Gaul")
+    , ("Alexandria"        , "Nile_Delta")
+    , ("Ancyra"            , "Galatia")
+    , ("Antioch"           , "Syria")
+    , ("Apollonia"         , "Epirus")
+    , ("Aquincum"          , "Pannonia")
+    , ("Ariminum"          , "Umbria")
+    , ("Arretium"          , "Etruria")
+    , ("Arsakia"           , "Media")
+    , ("Artaxarta"         , "Armenia")
+    , ("Asturica"          , "Gallaecia")
+    , ("Athens"            , "Attica")
+    , ("Batavodurum"       , "Germania_Inferior")
+    , ("Bordesholm"        , "Tribus_Saxones")
+    , ("Bostra"            , "Nabataea")
+    , ("Bylazora"          , "Paionia")
+    , ("Byzantium"         , "Propontis")
+    , ("Campus_Alanni"     , "Tribus_Alanni")
+    , ("Campus_Getae"      , "Tribus_Getae")
+    , ("Campus_Iazyges"    , "Tribus_Iazyges")
+    , ("Campus_Sakae"      , "Tribus_Sakae")
+    , ("Campus_Sarmatae"   , "Tribus_Sarmatae")
+    , ("Campus_Scythii"    , "Scythia")
+    , ("Capua"             , "Campania")
+    , ("Caralis"           , "Sardinia")
+    , ("Carthage"          , "Africa")
+    , ("Carthago_Nova"     , "Hispania")
+    , ("Chersonesos"       , "Bosphorus")
+    , ("Cirta"             , "Numidia")
+    , ("Condate_Redonum"   , "Armorica")
+    , ("Corduba"           , "Baetica")
+    , ("Corinth"           , "Peloponnesus")
+    , ("Croton"            , "Bruttium")
+    , ("Cyrene"            , "Cyrenaica")
+    , ("Damascus"          , "Coele_Syria")
+    , ("Damme"             , "Tribus_Chattii")
+    , ("Deva"              , "Tribus_Silurii")
+    , ("Dimmidi"           , "Gaetulia")
+    , ("Domus_Dulcis_Domus", "Locus_Gepidae")
+    , ("Dumatha"           , "Arabia")
+    , ("Eburacum"          , "Britannia_Inferior")
+    , ("Halicarnasus"      , "Lycia")
+    , ("Hatra"             , "Assyria")
+    , ("Iuvavum"           , "Noricum")
+    , ("Jerusalem"         , "Judaea")
+    , ("Kotais"            , "Colchis")
+    , ("Kydonia"           , "Crete")
+    , ("Larissa"           , "Thessalia")
+    , ("Lemonum"           , "Aquitania")
+    , ("Lepcis_Magna"      , "Tripolitania")
+    , ("Lilybaeum"         , "Sicilia_Poeni")
+    , ("Londinium"         , "Britannia_Superior")
+    , ("Lovosice"          , "Boihaemum")
+    , ("Lugdunum"          , "Lugdinensis")
+    , ("Massilia"          , "Transalpine_Gaul")
+    , ("Mazaka"            , "Cappadocia")
+    , ("Mediolanium"       , "Cisalpine_Gaul")
+    , ("Memphis"           , "Middle_Egypt")
+    , ("Messana"           , "Sicilia_Romanus")
+    , ("Mogontiacum"       , "Agri_Decumates")
+    , ("Narbo_Martius"     , "Narbonensis")
+    , ("Nepte"             , "Sahara")
+    , ("Nicomedia"         , "Bithynia")
+    , ("Numantia"          , "Celtiberia")
+    , ("Osca"              , "Taraconenis")
+    , ("Palma"             , "Baliares")
+    , ("Palmyra"           , "Regnum_Palmyrae")
+    , ("Patavium"          , "Venetia")
+    , ("Pergamum"          , "Phrygia")
+    , ("Petra"             , "Sinai")
+    , ("Phraaspa"          , "Atropatene")
+    , ("Porrolissum"       , "Dacia")
+    , ("Rhodes"            , "Rhodos")
+    , ("Rome"              , "Latium")
+    , ("Salamis"           , "Cyprus")
+    , ("Salona"            , "Dalmatia")
+    , ("Samarobriva"       , "Belgica")
+    , ("Sardis"            , "Ionia")
+    , ("Scallabis"         , "Lusitania")
+    , ("Segesta"           , "Liguria")
+    , ("Segestica"         , "Illyria")
+    , ("Seleucia"          , "Babylonia")
+    , ("Sidon"             , "Phoenicia")
+    , ("Sinope"            , "Pontus")
+    , ("Siwa"              , "Libya")
+    , ("Sparta"            , "Laconia")
+    , ("Susa"              , "Elymais")
+    , ("Syracuse"          , "Sicilia_Graecus")
+    , ("Tanais"            , "Maeotis")
+    , ("Tara"              , "Hibernia")
+    , ("Tarentum"          , "Apulia")
+    , ("Tarsus"            , "Cilicia")
+    , ("Thapsus"           , "Byzacium")
+    , ("Thebes"            , "Thebais")
+    , ("Themiskyra"        , "Hyperboria")
+    , ("Thermon"           , "Aetolia")
+    , ("Thessalonica"      , "Macedonia")
+    , ("Tingi"             , "Mauretania")
+    , ("Trier"             , "Germania_Superior")
+    , ("Tylis"             , "Thrace")
+    , ("Vicus_Gothi"       , "Locus_Gothi")
+    , ("Vicus_Marcomannii" , "Regnum_Marcomannii")
+    , ("Vicus_Venedae"     , "Pripet")
+    ]
+
+-- Coordinates for extra elephant resources.
+elephantCoords :: [(Int, Int)]
+elephantCoords =
+    [ (52, 92)   -- Nepte         -- merc pool "North Africa"; already has elephant merc
+    , (101, 15)  -- Lepcis Magna  -- merc pool "Libya"
+    , (135, 16)  -- Cyrene        -- merc pool "Libya"
+    , (178, 1)   -- Siwa          -- merc pool "Libya"
+    , (183, 16)  -- Alexandria    -- merc pool "Egypt"
+    , (182, 7)   -- Memphis       -- merc pool "Egypt"
+    , (187, 4)   -- Thebes        -- merc pool "Egypt"
+    , (203, 18)  -- Petra         -- merc pool "Syria"; already has elephant merc
+    , (198, 23)  -- Jerusalem     -- merc pool "Arabia"
+    , (213, 2)   -- Bostra        -- merc pool "Arabia"
+    , (237, 23)  -- Dumatha       -- merc pool "Arabia"
+    , (214, 48)  -- Palmyra       -- merc pool "Arabia"
+    ]
+
+mercPoolsNeedingElephs :: [String]
+mercPoolsNeedingElephs = ["Libya", "Egypt", "Arabia"]
+
 _RTW_DC_FUNCS :: RegexSets
 _RTW_DC_FUNCS = addTrueTest [r1, r2]
     where
@@ -36,6 +169,22 @@ _RTW_DCL_FUNCS = addTrueTest [r1, r2, r3]
         -- Assassin recruitment cost 3x
         r3 =    [ ("^assassin.+?", id)
                 , (multRoundInt 3)
+                ]
+
+_RTW_DMR_FUNCS :: RegexSets
+_RTW_DMR_FUNCS = addTrueTest mercPoolAddElephs
+    ++ addTrueTest [mercInitialCost]
+    where
+        -- Add elephant mercenary units to elephant regions.
+        mercPoolAddElephs = map f mercPoolsNeedingElephs
+        f pool =
+            [ ("^pool " ++ pool ++ ".+?regions.+?\\r\\n", add mercEleph)
+            ]
+        mercEleph = "\tunit merc elephants,\t\t\t\texp 0 cost 4000 replenish 0.005 - 0.015 max 1 initial 0\r\n"
+        -- Increase costs for mercenary units 1.25x.
+        mercInitialCost =
+                [ ("^\\s+unit.+?\\d+.+?", id)
+                , (multRoundInt 1.25)
                 ]
 
 _RTW_DS_FUNCS :: RegexSets
@@ -171,10 +320,6 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
                 [ ("resources.+?\\r\\n\\r\\n", addResource "silver" silverCoords)
                 ]
             ]
-        showResource :: String -> (Int, Int) -> String
-        showResource res (x, y) = "resource\t" ++ res ++ ",\t" ++ show x ++ ",\t" ++ show y ++ "\r\n"
-        addResource :: String -> [(Int, Int)] -> BC.ByteString -> BC.ByteString
-        addResource res coords s = BC.append s $ BC.pack (concatMap (showResource res) coords)
         -- Gold resource locations, one for each faction's capital
         goldCoords =
             [ (58, 41) -- Cirta (Numidia)
@@ -273,130 +418,10 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
             , "Croton"
             , "Messana"
             ]
-        settlementRegionTable =
-            [ ("Alesia"            , "Central_Gaul")
-            , ("Alexandria"        , "Nile_Delta")
-            , ("Ancyra"            , "Galatia")
-            , ("Antioch"           , "Syria")
-            , ("Apollonia"         , "Epirus")
-            , ("Aquincum"          , "Pannonia")
-            , ("Ariminum"          , "Umbria")
-            , ("Arretium"          , "Etruria")
-            , ("Arsakia"           , "Media")
-            , ("Artaxarta"         , "Armenia")
-            , ("Asturica"          , "Gallaecia")
-            , ("Athens"            , "Attica")
-            , ("Batavodurum"       , "Germania_Inferior")
-            , ("Bordesholm"        , "Tribus_Saxones")
-            , ("Bostra"            , "Nabataea")
-            , ("Bylazora"          , "Paionia")
-            , ("Byzantium"         , "Propontis")
-            , ("Campus_Alanni"     , "Tribus_Alanni")
-            , ("Campus_Getae"      , "Tribus_Getae")
-            , ("Campus_Iazyges"    , "Tribus_Iazyges")
-            , ("Campus_Sakae"      , "Tribus_Sakae")
-            , ("Campus_Sarmatae"   , "Tribus_Sarmatae")
-            , ("Campus_Scythii"    , "Scythia")
-            , ("Capua"             , "Campania")
-            , ("Caralis"           , "Sardinia")
-            , ("Carthage"          , "Africa")
-            , ("Carthago_Nova"     , "Hispania")
-            , ("Chersonesos"       , "Bosphorus")
-            , ("Cirta"             , "Numidia")
-            , ("Condate_Redonum"   , "Armorica")
-            , ("Corduba"           , "Baetica")
-            , ("Corinth"           , "Peloponnesus")
-            , ("Croton"            , "Bruttium")
-            , ("Cyrene"            , "Cyrenaica")
-            , ("Damascus"          , "Coele_Syria")
-            , ("Damme"             , "Tribus_Chattii")
-            , ("Deva"              , "Tribus_Silurii")
-            , ("Dimmidi"           , "Gaetulia")
-            , ("Domus_Dulcis_Domus", "Locus_Gepidae")
-            , ("Dumatha"           , "Arabia")
-            , ("Eburacum"          , "Britannia_Inferior")
-            , ("Halicarnasus"      , "Lycia")
-            , ("Hatra"             , "Assyria")
-            , ("Iuvavum"           , "Noricum")
-            , ("Jerusalem"         , "Judaea")
-            , ("Kotais"            , "Colchis")
-            , ("Kydonia"           , "Crete")
-            , ("Larissa"           , "Thessalia")
-            , ("Lemonum"           , "Aquitania")
-            , ("Lepcis_Magna"      , "Tripolitania")
-            , ("Lilybaeum"         , "Sicilia_Poeni")
-            , ("Londinium"         , "Britannia_Superior")
-            , ("Lovosice"          , "Boihaemum")
-            , ("Lugdunum"          , "Lugdinensis")
-            , ("Massilia"          , "Transalpine_Gaul")
-            , ("Mazaka"            , "Cappadocia")
-            , ("Mediolanium"       , "Cisalpine_Gaul")
-            , ("Memphis"           , "Middle_Egypt")
-            , ("Messana"           , "Sicilia_Romanus")
-            , ("Mogontiacum"       , "Agri_Decumates")
-            , ("Narbo_Martius"     , "Narbonensis")
-            , ("Nepte"             , "Sahara")
-            , ("Nicomedia"         , "Bithynia")
-            , ("Numantia"          , "Celtiberia")
-            , ("Osca"              , "Taraconenis")
-            , ("Palma"             , "Baliares")
-            , ("Palmyra"           , "Regnum_Palmyrae")
-            , ("Patavium"          , "Venetia")
-            , ("Pergamum"          , "Phrygia")
-            , ("Petra"             , "Sinai")
-            , ("Phraaspa"          , "Atropatene")
-            , ("Porrolissum"       , "Dacia")
-            , ("Rhodes"            , "Rhodos")
-            , ("Rome"              , "Latium")
-            , ("Salamis"           , "Cyprus")
-            , ("Salona"            , "Dalmatia")
-            , ("Samarobriva"       , "Belgica")
-            , ("Sardis"            , "Ionia")
-            , ("Scallabis"         , "Lusitania")
-            , ("Segesta"           , "Liguria")
-            , ("Segestica"         , "Illyria")
-            , ("Seleucia"          , "Babylonia")
-            , ("Sidon"             , "Phoenicia")
-            , ("Sinope"            , "Pontus")
-            , ("Siwa"              , "Libya")
-            , ("Sparta"            , "Laconia")
-            , ("Susa"              , "Elymais")
-            , ("Syracuse"          , "Sicilia_Graecus")
-            , ("Tanais"            , "Maeotis")
-            , ("Tara"              , "Hibernia")
-            , ("Tarentum"          , "Apulia")
-            , ("Tarsus"            , "Cilicia")
-            , ("Thapsus"           , "Byzacium")
-            , ("Thebes"            , "Thebais")
-            , ("Themiskyra"        , "Hyperboria")
-            , ("Thermon"           , "Aetolia")
-            , ("Thessalonica"      , "Macedonia")
-            , ("Tingi"             , "Mauretania")
-            , ("Trier"             , "Germania_Superior")
-            , ("Tylis"             , "Thrace")
-            , ("Vicus_Gothi"       , "Locus_Gothi")
-            , ("Vicus_Marcomannii" , "Regnum_Marcomannii")
-            , ("Vicus_Venedae"     , "Pripet")
-            ]
         -- Extra elephants locations (put elephants all over northern Africa)
         elephantsMod =
                 [ ("resources.+?\\r\\n\\r\\n", addResource "elephant" elephantCoords)
                 ]
-        elephantCoords =
-            [ (52, 92) -- Nepte
-            , (101, 15) -- Lepcis Magna
-            , (135, 16) -- Cyrene
-            , (178, 1) -- Siwa
-            , (183, 16) -- Alexandria
-            , (182, 7) -- Memphis
-            , (187, 4) -- Thebes
-            , (203, 18) -- Petra
-            , (198, 23) -- Jerusalem
-            , (213, 2) -- Bostra
-            , (237, 23) -- Dumatha
-            , (214, 48) -- Palmyra
-            , (242, 138) -- Campus Sakae (to help out parthia's NE edge-of-world city)
-            ]
 
 _RTW_DSN_FUNCS :: RegexSets
 _RTW_DSN_FUNCS = addTrueTest missionMoney

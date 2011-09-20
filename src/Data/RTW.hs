@@ -17,9 +17,11 @@ readmeRTW =
     , "- There are many changes to speed up gameplay and to make things feel much more dynamic and fluid. "
       ++ "The primary aim has been to remove repetitive actions as much as possible."
     , "* Full list of changes from vanilla RTW (with 1.5 patch)"
+    , "- NOTE: \"<NUMBER>x\" simply means that the old value has been multiplied by <NUMBER> to get the new value."
+    , "  - E.g., \"2x\" means that the new value is double what it used to be, or 100% more than before."
     , "** Buildings"
     , "- All building constructions take 1 turn."
-    , "- The more expensive the building, the more it costs. See the comment in the export_descr_buildings.txt file for details. The cheapest building (which costs 400) is the same, but the most expensive ones cost almost 2x more."
+    , "- The more expensive the building, the more it costs. See the comment in the export_descr_buildings.txt file for details. The cheapest building (which costs 400) is the same, but the most expensive ones cost almost 2x."
     , "** Campaign Map"
     , "*** Unit speed"
     , "- Campaign movement speed 1.75x (the game engine might only show the green movement boundaries up to a certain point; however, the path arrows will still correctly be green past this point, so it is advised that you hold down the right mouse button to make accurate predictions of movement (and cancel out with a left click))."
@@ -39,9 +41,11 @@ readmeRTW =
     , "- Pirate spawn rate 20x lower"
     -- Recruitment
     , "** Recruitment"
-    , "- All units take 0 turns to complete, but they cost 1.33x, 1.66x, and 2x more (initial cost only) based on their original turn count. (FYI: The Scipii Decere unit is the only unit in vanilla that took 3 turns to complete.)."
+    , "- All units take 0 turns to complete, but they cost 1.33x, 1.66x, and 2x (initial cost only) based on their original turn count. (FYI: The Scipii Decere unit is the only unit in vanilla that took 3 turns to complete.)."
+    , "  - Mercenaries cost 1.25x"
     , "- For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings an experience bonus."
     , "  -  Roman gladiators (Julii, Scipii, Senate) are now all recruitable starting at the city level (in vanilla, only Brutii had access to gladiators starting from city level)."
+    , "- Elephants now recruitable in all of Northern Africa, Egypt, and Arabia (including mercenaries)."
     , "** Units"
     , "- General's bodyguard (cavalry) soldiers reduced 0.5x; costs reduced accordingly"
     , "- Missile infantry ammo 1.25x; 1.5x for slingers"
@@ -78,6 +82,7 @@ rtwInstalledModText :: [(Integer, String, Operation)]
 rtwInstalledModText =
     [ (0xebc3c3b4ee4813921ed2265ddf29366a55327c5a, _RTW_DC  , ModText _RTW_DC_FUNCS   ("", ""))
     , (0x1ce28a66802f22271d493bccc0c8d5f6d1ce53da, _RTW_DCL , ModText _RTW_DCL_FUNCS  ("", ""))
+    , (0xa7722e54af17e0902f9060042c50202745d673d4, _RTW_DMR , ModText _RTW_DMR_FUNCS  ("", ""))
     , (0xd3d5925a47bd4326a6a4d8b2d8e72acd8665adbc, _RTW_DS  , ModText _RTW_DS_FUNCS   ("", ""))
     , (0x360fdc7e95c0f4e457fb7a150c788b30a22dda67, _RTW_DSN , ModText _RTW_DSN_FUNCS  ("", ""))
     , (0x29aba3632af603dc25d5f94d46257cbf0185935e, _RTW_DSR , ModText _RTW_DSR_FUNCS  ("", ""))
@@ -144,6 +149,7 @@ rtwInstalledCopy =
 
 _RTW_DC  :: String
 _RTW_DCL :: String
+_RTW_DMR :: String
 _RTW_DS  :: String
 _RTW_DSN :: String
 _RTW_DSR :: String
@@ -154,6 +160,7 @@ _RTW_EDU :: String
 
 _RTW_DC     = "descr_character.txt"
 _RTW_DCL    = "descr_cultures.txt"
+_RTW_DMR    = "world/maps/campaign/imperial_campaign/descr_mercenaries.txt"
 {-
  - NOTE: For descr_strat.txt, the base file is the official file, but modifed so
  - that all 8 unlockable factions are unlocked; this is so that we can lazily
