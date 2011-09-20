@@ -225,7 +225,6 @@ m2twInstalledCopy =
     , (0xf4de215f076dfe5d0704212fe5696469536a2fdf, "world/maps/campaign/imperial_campaign/description_sicily.txt")
     , (0x82ceefd14e4b8d7346808c7992bbdd5305f9e1df, "world/maps/campaign/imperial_campaign/description.txt")
     , (0xf6fa1461772edde8da9ba98e7dd7423bd1c96962, "world/maps/campaign/imperial_campaign/description_venice.txt")
-    , (0xa2fe4ed7369472728c6480bea8597cd8bdcab84f, "world/maps/campaign/imperial_campaign/descr_mercenaries.txt")
     , (0x451c4fe24a4cd3739aecb3c4e8e7a8dbbed40788, "world/maps/campaign/imperial_campaign/descr_regions_and_settlement_name_lookup.txt")
     , (0x7b760c91ac51d9832de2d06e9d270964ce4fe352, "world/maps/campaign/imperial_campaign/descr_win_conditions.txt")
     , (0x3f7167403a6a7b4d19125600fe830aa5197dd3dd, "world/maps/campaign/imperial_campaign/disasters.tga")
