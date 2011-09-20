@@ -58,6 +58,9 @@ readmeRTW =
     , "- For kicks, Rome has 3 gold resources! This makes capturing Rome very tempting... If you are a Roman faction, then taking Rome will be even more challenging than before. If you are a non-Roman faction, then taking Rome will be even more rewarding."
     , "** Senate Missions"
     , "- Senate mission monetary rewards 3x."
+    -- Other changes
+    , "** Other"
+    , "- Unlock all playable factions"
     ]
 
 miscFilesRTW :: [(FilePath, String)]
