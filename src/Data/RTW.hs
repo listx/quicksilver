@@ -121,7 +121,6 @@ rtwInstalledCopy =
 	, (0x122754e8a2036046e9a8d0bd976a01833157b3ef, "world/maps/campaign/imperial_campaign/description_romans_scipii.txt")
 	, (0x122754e8a2036046e9a8d0bd976a01833157b3ef, "world/maps/campaign/imperial_campaign/description_scipii.txt")
 	, (0x82ceefd14e4b8d7346808c7992bbdd5305f9e1df, "world/maps/campaign/imperial_campaign/description.txt")
-	, (0xa7722e54af17e0902f9060042c50202745d673d4, "world/maps/campaign/imperial_campaign/descr_mercenaries.txt")
 	, (0x5085a2ab63043d046614163278d60ce656f01528, "world/maps/campaign/imperial_campaign/descr_regions_and_settlement_name_lookup.txt")
 	, (0xa644f9ed2e56f0de504112cdc28419b4b25f554c, "world/maps/campaign/imperial_campaign/descr_win_conditions.txt")
 	, (0x3f7167403a6a7b4d19125600fe830aa5197dd3dd, "world/maps/campaign/imperial_campaign/disasters.tga")
