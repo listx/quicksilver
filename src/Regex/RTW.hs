@@ -45,6 +45,7 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
     ++ addTrueTest [giveRoads]
     ++ giveRoads'
     ++ addTrueTest goldMod
+    ++ addTrueTest [elephantsMod]
     where
         -- Rebel spawn rate 40x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
@@ -339,6 +340,26 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
             , ("Vicus_Gothi"       , "Locus_Gothi")
             , ("Vicus_Marcomannii" , "Regnum_Marcomannii")
             , ("Vicus_Venedae"     , "Pripet")
+            ]
+
+        -- Extra elephants locations (put elephants all over northern Africa)
+        elephantsMod =
+                [ ("resources.+?\\r\\n\\r\\n", addResource "elephant" elephantCoords)
+                ]
+        elephantCoords =
+            [ (52, 92) -- Nepte
+            , (101, 15) -- Lepcis Magna
+            , (135, 16) -- Cyrene
+            , (178, 1) -- Siwa
+            , (183, 16) -- Alexandria
+            , (182, 7) -- Memphis
+            , (187, 4) -- Thebes
+            , (203, 18) -- Petra
+            , (198, 23) -- Jerusalem
+            , (213, 2) -- Bostra
+            , (237, 23) -- Dumatha
+            , (214, 48) -- Palmyra
+            , (242, 138) -- Campus Sakae (to help out parthia's NE edge-of-world city)
             ]
 
 _RTW_DSR_FUNCS :: RegexSets
