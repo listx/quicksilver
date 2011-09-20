@@ -193,6 +193,9 @@ _RTW_DMR_FUNCS = addTrueTest mercPoolAddElephs
                 , (".+?max.+?", id)
                 -- Increase merc max amount 5x.
                 , (multRoundInt 5)
+                , (".+?initial.+?", id)
+                -- Increase merc initial amount 5x.
+                , (multRoundInt 5)
                 ]
 
 _RTW_DS_FUNCS :: RegexSets
