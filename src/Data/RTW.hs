@@ -56,6 +56,8 @@ readmeRTW =
     , "- The point of this mod is to make each faction's capital and secondary region very valuable. There is an incentive to take an enemy faction's capital before taking their other settlements, for example. It also levels the playing field for those factions without valuable mineable resources, because gold and silver are evenly distributed among factions."
     , "- Gold and silver mines make ?? and ?? florins each, respectively."
     , "- For kicks, Rome has 3 gold resources! This makes capturing Rome very tempting... If you are a Roman faction, then taking Rome will be even more challenging than before. If you are a non-Roman faction, then taking Rome will be even more rewarding."
+    , "** Senate Missions"
+    , "- Senate mission monetary rewards 3x."
     ]
 
 miscFilesRTW :: [(FilePath, String)]
@@ -74,6 +76,7 @@ rtwInstalledModText =
     [ (0xebc3c3b4ee4813921ed2265ddf29366a55327c5a, _RTW_DC  , ModText _RTW_DC_FUNCS   ("", ""))
     , (0x1ce28a66802f22271d493bccc0c8d5f6d1ce53da, _RTW_DCL , ModText _RTW_DCL_FUNCS  ("", ""))
     , (0xd3d5925a47bd4326a6a4d8b2d8e72acd8665adbc, _RTW_DS  , ModText _RTW_DS_FUNCS   ("", ""))
+    , (0x360fdc7e95c0f4e457fb7a150c788b30a22dda67, _RTW_DSN , ModText _RTW_DSN_FUNCS  ("", ""))
     , (0x29aba3632af603dc25d5f94d46257cbf0185935e, _RTW_DSR , ModText _RTW_DSR_FUNCS  ("", ""))
     , (0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6, _RTW_EDB , ModText _RTW_EDB_FUNCS  ("^\\}\\r\\n", "}\r\n"))
     , (0x1dd045b7f252d06f8c2c0fa27a18a6ef802b3422, _RTW_EDCT, ModText _RTW_EDCT_FUNCS ("", ""))
@@ -139,6 +142,7 @@ rtwInstalledCopy =
 _RTW_DC  :: String
 _RTW_DCL :: String
 _RTW_DS  :: String
+_RTW_DSN :: String
 _RTW_DSR :: String
 _RTW_EDB :: String
 _RTW_EDCT :: String
@@ -157,6 +161,7 @@ _RTW_DCL    = "descr_cultures.txt"
  - 0x5403a058bd49d371ae6cca739b0656043a833181
  -}
 _RTW_DS      = "world/maps/campaign/imperial_campaign/descr_strat.txt"
+_RTW_DSN     = "descr_senate.txt"
 _RTW_DSR     = "descr_sm_resources.txt"
 _RTW_EDB     = "export_descr_buildings.txt"
 _RTW_EDCT    = "export_descr_character_traits.txt"

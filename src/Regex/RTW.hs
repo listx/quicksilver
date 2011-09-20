@@ -398,6 +398,17 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
             , (242, 138) -- Campus Sakae (to help out parthia's NE edge-of-world city)
             ]
 
+_RTW_DSN_FUNCS :: RegexSets
+_RTW_DSN_FUNCS = addTrueTest missionMoney
+    where
+        -- Senate mission monetary rewards 3x.
+        missionMoney =
+            [
+                [ ("_reward\\s+", id)
+                , (multRoundInt 3)
+                ]
+            ]
+
 _RTW_DSR_FUNCS :: RegexSets
 _RTW_DSR_FUNCS = addTrueTest [r1, r2]
     where
