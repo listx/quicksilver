@@ -205,6 +205,7 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
     ++ [missingSettlementDescs]
     ++ addTrueTest [giveRoads]
     ++ giveRoads'
+    ++ addTrueTest removeExistingOverlappedRes
     ++ addTrueTest goldMod
     ++ addTrueTest [elephantsMod]
     where
@@ -310,6 +311,11 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
                 , ("\\r\\n\\}", prepend (govHouse ++ roads), alwaysTrue)
                 ]
             ]
+        removeExistingOverlappedRes = map f $ goldCoords ++ silverCoords
+            where
+                f (x, y) =
+                    [ ("^resource[^\\d]+?" ++ show x ++ "[^\\d]+?" ++ show y ++ "\\r\\n", nil)
+                    ]
         goldMod =
             [
                 -- Replace all gold resources with purple dye in the map
