@@ -431,7 +431,7 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
             ]
         -- Extra elephants locations (put elephants all over northern Africa)
         elephantsMod =
-                [ ("resources.+?\\r\\n\\r\\n", addResource "elephant" elephantCoords)
+                [ ("resources.+?\\r\\n\\r\\n", addResource "elephants" elephantCoords)
                 ]
 
 _RTW_DSN_FUNCS :: RegexSets
