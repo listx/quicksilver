@@ -41,9 +41,10 @@ readmeRTW =
     , "- Pirate spawn rate 20x lower"
     -- Recruitment
     , "** Recruitment"
-    , "- All units take 0 turns to complete, but they cost 1.33x, 1.66x, and 2x (initial cost only) based on their original turn count. (FYI: The Scipii Decere unit is the only unit in vanilla that took 3 turns to complete.)."
+    , "- All units take 0 turns to complete."
+    , "  - However, units that originally took 2 turns to complete cost 1.33x (initial cost only), and the Scipii Decere unit which took 3 turns to complete now costs 1.66x."
     , "- For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings an experience bonus."
-    , "  -  Roman gladiators (Julii, Scipii, Senate) are now all recruitable starting at the city level (in vanilla, only Brutii had access to gladiators starting from city level)."
+    , "  - Roman gladiators (Julii, Scipii, Senate) are now all recruitable starting at the city level (in vanilla, only Brutii had access to gladiators starting from city level)."
     , "- Elephants now recruitable in all of Northern Africa, Egypt, and Arabia (including mercenaries)."
     , "*** Mercenaries"
     , "- Mercenaries cost 1.25x"

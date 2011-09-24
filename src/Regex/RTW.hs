@@ -657,25 +657,20 @@ _RTW_EDCT_FUNCS = addTrueTest [r1, r2]
 _RTW_EDU_FUNCS :: RegexSets
 _RTW_EDU_FUNCS = addTrueTest unitTurns ++ addTrueTest [r1] ++ addTrueTest missileInfantryAmmo
     where
-        -- All units take 0 turns to recruit, but they cost cost 1.33x, 1.66x,
-        -- and 2x more (initial cost) based on their original turn count.
+        -- All units take 0 turns to recruit, but they cost cost 1.33x or 1.66x
+        -- (initial cost) based on their original turn count.
         unitTurns =
             [
             -- First multiply the initial costs appropriately, depending on
             -- original turn count.
                 [ ("^stat_cost\\s+", id)
-                , ("1,\\s+", id )
+                , ("2,\\s+", id )
                 , (multRoundInt 1.33)
                 ]
             ,
                 [ ("^stat_cost\\s+", id)
-                , ("2,\\s+", id )
-                , (multRoundInt 1.66)
-                ]
-            ,
-                [ ("^stat_cost\\s+", id)
                 , ("3,\\s+", id )
-                , (multRoundInt 2)
+                , (multRoundInt 1.66)
                 ]
             ,
             -- Now set the turn count for all units to 0.
