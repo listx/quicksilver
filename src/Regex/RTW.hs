@@ -122,7 +122,7 @@ settlementRegionTable =
 -- Coordinates for extra elephant resources.
 elephantCoords :: [(Int, Int)]
 elephantCoords =
-    [ (52, 92)   -- Nepte         -- merc pool "North Africa"; already has elephant merc
+    [ (57, 2)    -- Nepte         -- merc pool "North Africa"; already has elephant merc
     , (101, 15)  -- Lepcis Magna  -- merc pool "Libya"
     , (135, 16)  -- Cyrene        -- merc pool "Libya"
     , (178, 1)   -- Siwa          -- merc pool "Libya"
