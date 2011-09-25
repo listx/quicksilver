@@ -4,7 +4,7 @@ import Data
 import Regex.M2TW
 
 qsM2TW :: Mod
-qsM2TW = Mod M2TW "quicksilverM2TW" "0.01" readmeM2TW miscFilesM2TW $
+qsM2TW = Mod M2TW "quicksilverM2TW" "0.02" readmeM2TW miscFilesM2TW $
     -- Text files to mod (from unpacked folder)
     map (\f -> makeModFileModText f Unpacked) m2twUnpackedModText
     -- Text files to mod (from installed folder)
