@@ -4,7 +4,7 @@ import Data
 import Regex.RTW
 
 qsRTW :: Mod
-qsRTW = Mod RTW "quicksilverRTW" "0.01" readmeRTW miscFilesRTW $
+qsRTW = Mod RTW "quicksilverRTW" "0.02" readmeRTW miscFilesRTW $
     -- Text files to mod
     map (\f -> makeModFileModText f Installed) rtwInstalledModText
     ++
