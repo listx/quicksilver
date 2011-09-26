@@ -168,7 +168,7 @@ editFile Opts{..} parentDir mf@ModFile{..} = do
     -- apply one (or more) transformations on the source file
     putStr $ "Writing new " ++ enquote dest ++ "... "
     when (elem '/' name) $ createDirectoryIfMissing True (takeDirectory dest)
-    BC.writeFile dest . BC.append (BC.pack $ cmtBox lang modinfo) $ transform mf src
+    BC.writeFile dest . BC.append (BC.pack . (++"\r\n") $ cmtBox lang modinfo) $ transform mf src
     putStrLn "done"
     where
         pickMod = if game == RTW then qsRTW else qsM2TW
