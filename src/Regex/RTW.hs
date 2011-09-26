@@ -345,6 +345,7 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
             , (204, 53) -- Antioch (Seleucid)
             , (249, 76) -- Arsakia (Parthia)
             , (225, 90) -- Artaxarta (Armenia)
+            , (184, 81) -- Sinope (Pontus)
             , (162, 103) -- Campus Scythii (Scythia)
             , (148, 79) -- Tylis (Thrace; same gold as orig)
             , (140, 46) -- Sparta (Greece)
@@ -369,11 +370,12 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
             , (195, 60) -- Tarsus (Seleucid; same silver as orig)
             , (254, 45) -- Susa (Parthia)
             , (210, 94) -- Kotais (Armenia)
+            , (190, 70) -- Mazaka (Pontus)
             , (185, 110) -- Tanais (Scythia)
             , (152, 99) -- Campus Getae (Thrace)
             , (133, 69) -- Thessalonica (Macedon)
             , (160, 63) -- Pergamum (Greece; same silver as orig)
-            , (132, 108) -- Campus lazyges (Dacia)
+            , (132, 108) -- Campus Iazyges (Dacia)
             , (95, 111) -- Mogontiacum (Germania)
             , (45, 135) -- Deva (Britannia; gold vanilla)
             , (55, 97) -- Lemonum (Gaul)
@@ -401,41 +403,45 @@ _RTW_DS_FUNCS = addTrueTest [r1, r2]
                         ]
                     _ -> [] -- don't add any regexes if we put in an incorrect settlement name; should never happen except for human error
         capsSecs =
-            [ "Cirta"
-            , "Carthage"
-            , "Alexandria"
-            , "Antioch"
-            , "Arsakia"
-            , "Artaxarta"
-            , "Campus"
-            , "Tylis"
-            , "Sparta"
-            , "Porrolissum"
-            , "Damme"
-            , "Londinium"
-            , "Alesia"
-            , "Asturica"
-            , "Arretium"
-            , "Tarentum"
-            , "Capua"
-            -- , "Rome" Rome already has a mining network in vanilla
+            [ "Cirta" -- Numidia
             , "Dimmidi"
+            , "Carthage" -- Carthage
             , "Thapsus"
+            , "Alexandria" -- Egypt
             , "Memphis"
+            , "Antioch" -- Seleucid
             , "Tarsus"
+            , "Arsakia" -- Parthia
             , "Susa"
+            , "Artaxarta" -- Armenia
             , "Kotais"
+            , "Sinope" -- Pontus
+            , "Mazaka"
+            , "Campus_Getae" -- Thrace
+            , "Tylis"
+            , "Campus_Iazyges" -- Dacia
+            , "Porrolissum"
+            , "Campus_Scythii" -- Scythia
             , "Tanais"
-            , "Campus"
+            , "Bylazora" -- Macedon
+            , "Thessalonica"
+            , "Sparta" -- Greece
             , "Pergamum"
-            , "Campus"
-            , "Mogontiacum"
+            , "Mogontiacum" -- Germania
+            , "Damme"
+            , "Londinium" -- Britannia
             , "Deva"
+            , "Alesia" -- Gaul
             , "Lemonum"
+            , "Asturica" -- Spain
             , "Scallabis"
+            , "Arretium" -- Julii
             , "Ariminum"
+            , "Tarentum" -- Brutii
             , "Croton"
+            , "Capua" -- Scipii
             , "Messana"
+            -- , "Rome" Rome already has a mining network in vanilla
             ]
         -- Extra elephants locations (put elephants all over northern Africa)
         elephantsMod =
