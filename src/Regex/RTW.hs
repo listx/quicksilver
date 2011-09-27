@@ -712,4 +712,8 @@ _RTW_EDU_FUNCS = addTrueTest unitTurns ++ addTrueTest [r1] ++ addTrueTest missil
                 [ ("^stat_pri[^\\r]+?stone,.+?, ", id)
                 , (_REGEX_INT, only "60")
                 ]
+            ,
+                [ ("^stat_pri[^\\r]+?bullet,.+?, ", id)
+                , (_REGEX_INT, only "75")
+                ]
             ]
