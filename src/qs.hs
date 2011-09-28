@@ -179,6 +179,7 @@ editFile Opts{..} parentDir mf@ModFile{..} = do
         lang = case (reverse . take 3 . reverse $ name) of
             "xml" -> XML
             _ -> Script
+
 transform :: ModFile -> BC.ByteString -> BC.ByteString
 transform ModFile{..} src
     | null . fst . partition $ operation = compose (map grpGsub (regexes operation)) $ src
