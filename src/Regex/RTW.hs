@@ -198,6 +198,14 @@ _RTW_DMR_FUNCS = addTrueTest mercPoolAddElephs
                 , (multRoundInt 5)
                 ]
 
+_RTW_DR_FUNCS :: RegexSets
+_RTW_DR_FUNCS = addTrueTest [mausoleum]
+    where
+        -- Add "mausoleum" hidden resource.
+        mausoleum =
+            [ ("Lycia.+?textiles", add ", mausoleum")
+            ]
+
 _RTW_DS_FUNCS :: RegexSets
 _RTW_DS_FUNCS = addTrueTest [r1, r2]
     ++ addTrueTest (noSpies)
@@ -474,6 +482,7 @@ _RTW_DSR_FUNCS = addTrueTest [r1, r2]
 _RTW_EDB_FUNCS :: RegexSets
 _RTW_EDB_FUNCS = addTrueTest [r1, r2, r2']
     ++ addTrueTest recruitment
+    ++ addTrueTest mausoleum
     where
         -- All building constructions take 1 turn
         r1 =    [ ("^\\s+construction\\s+", id)
@@ -639,6 +648,30 @@ _RTW_EDB_FUNCS = addTrueTest [r1, r2, r2']
             ]
             where
                 agent' = (replicate 16 ' ') ++ "agent " ++ agent ++ " 0 requires factions "
+        mausoleum =
+            [
+                -- Add mausoleum hidden resource.
+                [ ("hidden_resources.+?italy", add " mausoleum")
+                ]
+                ,
+                -- Cancel hard-coded effects of Mausoleum and enter mausoleum bonus
+                -- for core_building.
+                [ ("core_building.+?", id)
+                , ("capability.+?\\r\\n +}\\r\\n", add mausoleumEffects)
+                , (".+?capability.+?\\r\\n +}\\r\\n", add mausoleumEffects)
+                , (".+?capability.+?\\r\\n +}\\r\\n", add mausoleumEffects)
+                , (".+?capability.+?\\r\\n +}\\r\\n", add mausoleumEffects)
+                , (".+?capability.+?\\r\\n +}\\r\\n", add mausoleumEffects)
+                ]
+            ]
+        mausoleumEffects = "            faction_capability\r\n\
+                           \            {\r\n\
+                           \                construction_time_bonus_military bonus -20 requires hidden_resource mausoleum\r\n\
+                           \                construction_time_bonus_defensive bonus -20 requires hidden_resource mausoleum\r\n\
+                           \                construction_time_bonus_religious bonus -20 requires hidden_resource mausoleum\r\n\
+                           \                construction_time_bonus_other bonus -20 requires hidden_resource mausoleum\r\n\
+                           \                population_health_bonus bonus 4 requires hidden_resource mausoleum\r\n\
+                           \            }\r\n"
 
 _RTW_EDCT_FUNCS :: RegexSets
 _RTW_EDCT_FUNCS = addTrueTest [r1, r2]
@@ -749,4 +782,13 @@ _RTW_EDU_FUNCS = addTrueTest unitTurns
                 [ ("^type.+?carthaginian elephant african cataphract.+?stat_sec_armour.+?", id)
                 , (multRoundInt 1.25)
                 ]
+            ]
+
+_RTW_L_FUNCS :: RegexSets
+_RTW_L_FUNCS = addTrueTest [mausoleum]
+    where
+        -- Edit Mausoleum Wonder description.
+        mausoleum =
+            [ ("mausoleum_effects}.+?", id)
+            , ("The.+?\\r\\n", only "The Mausoleum gives a 20% health bonus in all settlements.\r\n")
             ]

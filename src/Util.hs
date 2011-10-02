@@ -5,6 +5,7 @@ import qualified Text.Printf as TP
 data Lang
     = XML
     | Script
+    | UTF16LE -- 16-bits-per-character files that start with 0xfffe as the first 16 bits, courtesy of Creative Assembly
     deriving (Eq)
 
 dquote :: String -> String
@@ -22,10 +23,12 @@ cmtRuler s = replicate (length s) ';' ++ "\r\n"
 cmtBox :: Lang -> String -> String
 cmtBox lang s = case lang of
     XML -> horizXML ++ "<!-- " ++ s ++ " -->\r\n" ++ horizXML
-    _ -> horizS ++ ";; " ++ s ++ " ;;\r\n" ++ horizS
+    Script -> horizS ++ ";; " ++ s ++ " ;;\r\n" ++ horizS
+    _ -> horizUTF16LE ++ "¬¬ " ++ s ++ " ¬¬\r\n" ++ horizUTF16LE -- ¬'s value is 0xac (172), known as the Not sign (&not; in HTML!)
     where
         horizXML = "<!--" ++ replicate (length s + 2) ' ' ++ "-->" ++ "\r\n"
         horizS = replicate (length s + 6) ';' ++ "\r\n"
+        horizUTF16LE = replicate (length s + 6) '¬' ++ "\r\n"
 
 costsDiffNote :: String -> [Int] -> [Int] -> [Double] -> String
 costsDiffNote s old new chg =

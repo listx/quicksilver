@@ -21,6 +21,7 @@ readmeRTW =
     , "  - E.g., \"2x\" means that the new value is double what it used to be, or 100% more than before."
     , "** Buildings"
     , "- All building constructions take 1 turn."
+    , "  - Since this makes the Mausoleum's construction bonus useless, it has been changed to give a factionwide 20% health bonus."
     , "- The more expensive the building, the more it costs. See the comment in the export_descr_buildings.txt file for details. The cheapest building (which costs 400) is the same, but the most expensive ones cost almost 2x."
     , "** Campaign Map"
     , "*** Unit speed"
@@ -97,12 +98,14 @@ rtwInstalledModText =
     [ (0xebc3c3b4ee4813921ed2265ddf29366a55327c5a, _RTW_DC  , ModText _RTW_DC_FUNCS   ("", ""))
     , (0x1ce28a66802f22271d493bccc0c8d5f6d1ce53da, _RTW_DCL , ModText _RTW_DCL_FUNCS  ("", ""))
     , (0xa7722e54af17e0902f9060042c50202745d673d4, _RTW_DMR , ModText _RTW_DMR_FUNCS  ("", ""))
+    , (0x38629eb7c9dc5ea12782da9a945819057f3e34b6, _RTW_DR,   ModText _RTW_DR_FUNCS   ("", ""))
     , (0xd3d5925a47bd4326a6a4d8b2d8e72acd8665adbc, _RTW_DS  , ModText _RTW_DS_FUNCS   ("", ""))
     , (0x360fdc7e95c0f4e457fb7a150c788b30a22dda67, _RTW_DSN , ModText _RTW_DSN_FUNCS  ("", ""))
     , (0x29aba3632af603dc25d5f94d46257cbf0185935e, _RTW_DSR , ModText _RTW_DSR_FUNCS  ("", ""))
     , (0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6, _RTW_EDB , ModText _RTW_EDB_FUNCS  ("^\\}\\r\\n", "}\r\n"))
     , (0x1dd045b7f252d06f8c2c0fa27a18a6ef802b3422, _RTW_EDCT, ModText _RTW_EDCT_FUNCS ("", ""))
     , (0x55b56dc9ac99161de270c28f5efed2c791d318ca, _RTW_EDU , ModText _RTW_EDU_FUNCS  (" \\r\\n \\r\\n", " \r\n \r\n"))
+    , (0xb52ae2c0bce88e1fedb01a0fee600e335238572f, _RTW_L,    ModText _RTW_L_FUNCS    ("", ""))
     ]
 
 rtwInstalledCopy :: [(Integer, String)]
@@ -118,7 +121,6 @@ rtwInstalledCopy =
     , (0x60d5fb09524f59ccb08cf9c5d473038e1ccf7c67, "world/maps/base/map_heights.tga")
     , (0xcc90a59261ddcfc76299762b76f8a4302d86cd1e, "world/maps/base/map_regions.tga")
     , (0x9437c120bcd4c603f3c86dcd31bd583464c45fa7, "world/maps/base/map_roughness.tga")
-    , (0x16e03783a3facff16269c8fc382e7a262f67c739, "world/maps/base/map.rwm")
     , (0x9dadfc81c38a850ae5e8ee0fee825860c2fdc795, "world/maps/base/map_trade_routes.tga")
     , (0x8243bb8dcee8a69fde163ee1804b369a59d97394, "world/maps/base/water_surface.tga")
 	, (0x195876362cb7f806e243d70a75f198df96001ba3, "world/maps/campaign/imperial_campaign/descr_events.txt")
@@ -163,6 +165,7 @@ rtwInstalledCopy =
 _RTW_DC  :: String
 _RTW_DCL :: String
 _RTW_DMR :: String
+_RTW_DR  :: String
 _RTW_DS  :: String
 _RTW_DSN :: String
 _RTW_DSR :: String
@@ -170,10 +173,12 @@ _RTW_EDB :: String
 _RTW_EDCT :: String
 _RTW_EDSA :: String
 _RTW_EDU :: String
+_RTW_L :: String
 
 _RTW_DC     = "descr_character.txt"
 _RTW_DCL    = "descr_cultures.txt"
 _RTW_DMR    = "world/maps/campaign/imperial_campaign/descr_mercenaries.txt"
+_RTW_DR      = "world/maps/base/descr_regions.txt"
 {-
  - NOTE: For descr_strat.txt, the base file is the official file, but modifed so
  - that all 8 unlockable factions are unlocked; this is so that we can lazily
@@ -190,3 +195,4 @@ _RTW_EDB     = "export_descr_buildings.txt"
 _RTW_EDCT    = "export_descr_character_traits.txt"
 _RTW_EDSA    = "export_descr_sounds_advice.txt"
 _RTW_EDU     = "export_descr_unit.txt"
+_RTW_L       = "text/landmarks.txt"
