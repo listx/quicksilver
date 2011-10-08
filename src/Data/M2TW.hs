@@ -187,8 +187,7 @@ m2twUnpackedModText =
     , (0xb604c776df95aaa51e9fae9bf3b1ccbf34df8138, _M2TW_EDA , ModText _M2TW_EDA_FUNCS  ("", ""))
     , (0xc106543e9a05abe82bd56b245674e9e7c14a3d81, _M2TW_EDAN, ModText _M2TW_EDAN_FUNCS ("", ""))
     , (0xca2018a694fbabcaf5a058f4e87889acc3d35f89, _M2TW_EDB , ModText _M2TW_EDB_FUNCS  ("^\\}\\r\\n", "}\r\n"))
-    , (0x2c1095e9bb17d078d4719e57cc7bf52a959ef6a9, _M2TW_EDBE, ModText _M2TW_EDBE_FUNCS ("", ""))
-    , (0x2a95300126b5f78294caffa0af8658f4576a2d40, _M2TW_EDCT, ModText _M2TW_EDCT_FUNCS ("", ""))
+    , (0x2a95300126b5f78294caffa0af8658f4576a2d40, _M2TW_EDCT, ModText _M2TW_EDCT_FUNCS ("\\r\\n;-+\\r\\n", "\r\n;" ++ replicate 42 '-' ++ "\r\n"))
     , (0x2c533185c43f1c025cf5817111437c19fc993117, _M2TW_EDG,  ModText _M2TW_EDG_FUNCS  ("", ""))
     , (0x140f93465e48577a5262d6e104630518426a7a13, _M2TW_EDU,  ModText _M2TW_EDU_FUNCS  (" \\r\\n \\r\\n", " \r\n \r\n"))
     ]
@@ -304,7 +303,6 @@ _M2TW_DW :: String
 _M2TW_EDA :: String
 _M2TW_EDAN :: String
 _M2TW_EDB :: String
-_M2TW_EDBE :: String
 _M2TW_EDCT :: String
 _M2TW_EDG :: String
 _M2TW_EDU :: String
@@ -335,7 +333,6 @@ _M2TW_DW     = "descr_walls.txt"
 _M2TW_EDA    = "export_descr_advice.txt"
 _M2TW_EDAN   = "export_descr_ancillaries.txt"
 _M2TW_EDB    = "export_descr_buildings.txt"
-_M2TW_EDBE   = "export_descr_buildings_enums.txt"
 _M2TW_EDCT   = "export_descr_character_traits.txt"
 _M2TW_EDG    = "export_descr_guilds.txt"
 _M2TW_EDU    = "export_descr_unit.txt"

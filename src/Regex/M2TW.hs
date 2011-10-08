@@ -705,10 +705,10 @@ _M2TW_DW_FUNCS = addTrueTest [r1, r2, r3, r4, r5, r6, r7, r8, rN]
                 ]
 
 _M2TW_EDCT_FUNCS :: RegexSets
-_M2TW_EDCT_FUNCS = addTrueTest [r1, r2, r3]
+_M2TW_EDCT_FUNCS = addTrueTest [r1, r2]
     where
         -- Remove corruption trigger based on high treasury
-        r1 =    [ ("^Trigger corruption.+?;-+", nil)
+        r1 =    [ ("^Trigger corruption.+", nil)
                 ]
         -- Give good assassins a line of sight bonus with increased skill.
         r2 =    [ ("^Trait GoodAssassin.+?", id)
@@ -722,11 +722,6 @@ _M2TW_EDCT_FUNCS = addTrueTest [r1, r2, r3]
                 , ("\\r\\n", only "\r\n        Effect LineOfSight 9\r\n")
                 , (".+?Effect Subterfuge.+?", id)
                 , ("\\r\\n", only "\r\n        Effect LineOfSight 10\r\n")
-                ]
-        -- Remove all references to thieves guild.
-        r3 =    [ ("^Trigger spyinit4.+?;-+\\r\\n", nil)
-                , ("^Trigger spyinit5.+?;-+\\r\\n", nil)
-                , ("^Trigger spyinit6.+?;-+\\r\\n", nil)
                 ]
 
 _M2TW_EDA_FUNCS :: RegexSets
@@ -1111,69 +1106,6 @@ _M2TW_EDB_FUNCS = addTrueTest $ [r1, r2, r3, r3', r4, r5, r6, r7, r8, r9, r10, r
                     , ("^                archer_bonus", id)
                     ]
                 ]
-
-_M2TW_EDBE_FUNCS :: RegexSets
-_M2TW_EDBE_FUNCS = addTrueTest [r1, r2] ++ addTrueTest (thieves ++ farms ++ taverns ++ wharves)
-    where
-        -- Remove all references to mines+1 and c_mines+1
-        r1 =    [ ("^mines\\+.+?\\r\\n", nil)
-                ]
-        r2 =    [ ("^c_mines\\+.+?\\r\\n", nil)
-                ]
-        -- Remove all references to thieves guild buildings
-        thieves =
-            [
-                [ ("^[^\\r]*?thieves.+?\\r\\n", nil)
-                ]
-            ,
-                [ ("^guild_thiefs.+?\\r\\n", nil)
-                ]
-            ]
-        -- Remove all references to farms.
-        farms =
-            [
-                [ ("^farms.+?\\r\\n", nil)
-                ]
-            ,
-                [ ("^hinterland_farms.+?\\r\\n", nil)
-                ]
-            ]
-        -- Remove all references to taverns.
-        taverns =
-            [
-                [ ("^brothel.+?\\r\\n", nil)
-                ]
-            ,
-                [ ("^inn.+?\\r\\n", nil)
-                ]
-            ,
-                [ ("^tavern.+?\\r\\n", nil)
-                ]
-            ,
-                [ ("^coaching.+?\\r\\n", nil)
-                ]
-            ,
-                [ ("^pleasure.+?\\r\\n", nil)
-                ]
-            ,
-                [ ("^taverns_name.+?\\r\\n", nil)
-                ]
-            ]
-        -- Remove all references to wharves
-        wharves =
-            [
-                [ ("^merchants_wharf.+?\\r\\n", nil)
-                ]
-            ,
-                [ ("^warehouse.+?\\r\\n", nil)
-                ]
-            ,
-                [ ("^docklands.+?\\r\\n", nil)
-                ]
-            ,
-                [ ("^sea_trade.+?\\r\\n", nil)
-                ]
-            ]
 
 _M2TW_EDG_FUNCS :: RegexSets
 _M2TW_EDG_FUNCS = addTrueTest [r1] ++ addTrueTest (taverns ++ wharves)
