@@ -20,9 +20,10 @@ data Game
 {-
  - Where does the vanilla data come from?
  -
- - Installed: file comes from the installation directory Unpacked: file can only
- - be accessed from the unpacked data directory (using the official unpacker
- - utility)
+ - Installed: file comes from the installation directory.
+ -
+ - Unpacked: file can only be accessed from the unpacked data directory (using
+ - the official unpacker utility).
  -}
 data DataOrigin
     = Installed
