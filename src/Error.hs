@@ -1,7 +1,7 @@
 module Error where
 
-import IO
 import System.Exit
+import System.IO
 
 abort :: (String, Int) -> IO ()
 abort (msg, eid) = do

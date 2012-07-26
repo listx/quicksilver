@@ -3,10 +3,10 @@
 import Control.Monad (when)
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as BC
-import IO
 import System.Directory
 import System.Environment
 import System.FilePath
+import System.IO
 import System.Process
 import Data.Word
 
@@ -122,6 +122,7 @@ applyBinaryDiff Opts{..} parentDir ModFile{..} = do
             , std_out = CreatePipe
             , std_err = Inherit
             , close_fds = False
+            , create_group = False
             }
 
 -- After modifying the text, generate a diff of it.
@@ -149,6 +150,7 @@ diffFile Opts{..} parentDir ModFile{..} = do
             , std_out = CreatePipe
             , std_err = Inherit
             , close_fds = False
+            , create_group = False
             }
 
 copyFile' :: Opts -> FilePath -> ModFile -> IO ()
