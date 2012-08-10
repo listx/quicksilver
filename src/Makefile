@@ -5,4 +5,4 @@ prof:
 	ghc -O2 -rtsopts -prof -auto-all --make qs -v
 
 clean:
-	rm -rf qs *.o *.hi **/*.o **/*.hi **/**/*.o **/**/*.hi
+	find -type f -iregex ".+\.\(o\|hi\|mix\|tix\|html\)" -exec rm -v {} \;
