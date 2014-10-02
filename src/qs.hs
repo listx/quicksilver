@@ -123,6 +123,7 @@ applyBinaryDiff Opts{..} parentDir ModFile{..} = do
             , std_err = Inherit
             , close_fds = False
             , create_group = False
+			, delegate_ctlc = False
             }
 
 -- After modifying the text, generate a diff of it.
@@ -151,6 +152,7 @@ diffFile Opts{..} parentDir ModFile{..} = do
             , std_err = Inherit
             , close_fds = False
             , create_group = False
+			, delegate_ctlc = False
             }
 
 copyFile' :: Opts -> FilePath -> ModFile -> IO ()
