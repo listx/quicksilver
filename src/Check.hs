@@ -5,6 +5,7 @@ import Control.Monad (when)
 import qualified Data.ByteString.Lazy as BL
 import Data.Digest.Pure.SHA
 import System.Directory
+import Text.Printf
 
 import Data
 import Error
@@ -22,7 +23,13 @@ checkSum :: FilePath -> Integer -> IO ()
 checkSum sourcePath cksum = do
     putStr $ "Checking SHA-1 sum of " ++ enquote sourcePath ++ "... "
     sourceBytes <- BL.readFile sourcePath
-    when (integerDigest (sha1 sourceBytes) /= cksum) $ abort (enquote sourcePath ++ ": SHA-1 mismatch", 2)
+    when (integerDigest (sha1 sourceBytes) /= cksum) $ do
+		errMsg $ unlines
+			[ "SHA-1 mismatch"
+			, "expected: " ++ printf "0x%x" cksum
+			, "     got: " ++ printf "0x%x" (integerDigest $ sha1 sourceBytes)
+			]
+		abort (enquote sourcePath ++ ": SHA-1 mismatch", 2)
     putStrLn "OK"
 
 checkFile :: Opts -> ModFile -> IO ()
