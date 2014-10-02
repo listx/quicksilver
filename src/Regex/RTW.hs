@@ -207,16 +207,40 @@ _RTW_DR_FUNCS = addTrueTest [mausoleum]
             ]
 
 _RTW_DS_FUNCS :: RegexSets
-_RTW_DS_FUNCS = addTrueTest [r1, r2]
-    ++ addTrueTest (noSpies)
-    ++ mineFuncs capsSecs
-    ++ [missingSettlementDescs]
-    ++ addTrueTest [giveRoads]
-    ++ giveRoads'
-    ++ addTrueTest removeExistingOverlappedRes
-    ++ addTrueTest goldMod
-    ++ addTrueTest [elephantsMod]
+_RTW_DS_FUNCS = concat
+    [ addTrueTest (rEnablePlayableFactions)
+    , addTrueTest [r1, r2]
+    , addTrueTest (noSpies)
+    , mineFuncs capsSecs
+    , [missingSettlementDescs]
+    , addTrueTest [giveRoads]
+    , giveRoads'
+    , addTrueTest removeExistingOverlappedRes
+    , addTrueTest goldMod
+    , addTrueTest [elephantsMod]
+	]
     where
+        rEnablePlayableFactions =
+			[
+				[ ("\\tegypt.+?greek_cities\\s+", nil)
+				]
+			,
+				[ ("\\tromans_julii.+?romans_scipii\\s+", only playable_factions)
+				]
+			]
+        playable_factions = concatMap (\f -> "\t" ++ f ++"\r\n")
+            [ "romans_julii"
+            , "romans_brutii"
+            , "romans_scipii"
+            , "egypt"
+            , "seleucid"
+            , "carthage"
+            , "parthia"
+            , "gauls"
+            , "germans"
+            , "britons"
+            , "greek_cities"
+            ]
         -- Rebel spawn rate 40x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
                 , (multRoundInt 40)

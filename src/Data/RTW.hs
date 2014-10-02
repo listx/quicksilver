@@ -99,7 +99,7 @@ rtwInstalledModText =
     , (0x1ce28a66802f22271d493bccc0c8d5f6d1ce53da, _RTW_DCL , ModText _RTW_DCL_FUNCS  ("", ""))
     , (0xa7722e54af17e0902f9060042c50202745d673d4, _RTW_DMR , ModText _RTW_DMR_FUNCS  ("", ""))
     , (0x38629eb7c9dc5ea12782da9a945819057f3e34b6, _RTW_DR,   ModText _RTW_DR_FUNCS   ("", ""))
-    , (0xd3d5925a47bd4326a6a4d8b2d8e72acd8665adbc, _RTW_DS  , ModText _RTW_DS_FUNCS   ("", ""))
+    , (0x5403a058bd49d371ae6cca739b0656043a833181, _RTW_DS  , ModText _RTW_DS_FUNCS   ("", ""))
     , (0x360fdc7e95c0f4e457fb7a150c788b30a22dda67, _RTW_DSN , ModText _RTW_DSN_FUNCS  ("", ""))
     , (0x29aba3632af603dc25d5f94d46257cbf0185935e, _RTW_DSR , ModText _RTW_DSR_FUNCS  ("", ""))
     , (0x5ea7c9c9f381d0d019655e9bf3ee253970eb58a6, _RTW_EDB , ModText _RTW_EDB_FUNCS  ("^\\}\\r\\n", "}\r\n"))
@@ -179,15 +179,6 @@ _RTW_DC     = "descr_character.txt"
 _RTW_DCL    = "descr_cultures.txt"
 _RTW_DMR    = "world/maps/campaign/imperial_campaign/descr_mercenaries.txt"
 _RTW_DR      = "world/maps/base/descr_regions.txt"
-{-
- - NOTE: For descr_strat.txt, the base file is the official file, but modifed so
- - that all 8 unlockable factions are unlocked; this is so that we can lazily
- - use our vanilla (played-through) RTW folder, instead of having to go into
- - descr_strat.txt and changing it back to the original (unplayed, all factions
- - locked) state just for qs to generate the mod.  The SHA for the pristine,
- - unplayed RTW's version for descr_strat.txt is:
- - 0x5403a058bd49d371ae6cca739b0656043a833181
- -}
 _RTW_DS      = "world/maps/campaign/imperial_campaign/descr_strat.txt"
 _RTW_DSN     = "descr_senate.txt"
 _RTW_DSR     = "descr_sm_resources.txt"
