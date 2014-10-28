@@ -13,9 +13,9 @@ import Regex
  - M2TW: Medieval II Total War (1.3)
  -}
 data Game
-    = RTW
-    | M2TW
-    deriving (Data, Typeable, Eq, Show)
+	= RTW
+	| M2TW
+	deriving (Data, Typeable, Eq, Show)
 
 {-
  - Where does the vanilla data come from?
@@ -26,9 +26,9 @@ data Game
  - the official unpacker utility).
  -}
 data DataOrigin
-    = Installed
-    | Unpacked
-    deriving (Eq, Show)
+	= Installed
+	| Unpacked
+	deriving (Eq, Show)
 
 {-
  - Method of creating the modified file.
@@ -37,43 +37,44 @@ data DataOrigin
  - Binary: perform a binary diff on the vanilla file.
  -}
 data Operation
-    = ModText   { regexes :: RegexSets
-                , partition :: (String, String)
-                }
-    | ModBinary { bdiff :: FilePath
-                }
-    | Copy
+	= ModText
+		{ regexes :: RegexSets
+		, partition :: (String, String)
+		}
+	| ModBinary
+		{ bdiff :: FilePath
+		}
+	| Copy
 
 data ModFile = ModFile
-    { sha :: Integer
-    , name :: FilePath
-    , origin :: DataOrigin
-    , operation :: Operation
-    }
+	{ sha :: Integer
+	, name :: FilePath
+	, origin :: DataOrigin
+	, operation :: Operation
+	}
 
 instance Show ModFile where
-    show ModFile{..} =  s' ++ n' ++ o' ++ op'
-        where
-            s' = "sha: " ++ showHex sha ++ " "
-            n' = "name: " ++ show name ++ " "
-            o' = "origin: " ++ o'' ++ " "
-            o'' = case origin of
-                Installed -> show "Installed "
-                _ -> show "Unpacked "
-            op' = "operation: " ++ op''
-            op'' = case operation of
-                ModText _ _ -> "text"
-                ModBinary _ -> "binary"
-                _ -> "copy"
+	show ModFile{..} =  s' ++ n' ++ o' ++ op'
+		where
+		s' = "sha: " ++ showHex sha ++ " "
+		n' = "name: " ++ show name ++ " "
+		o' = "origin: " ++ o'' ++ " "
+		o'' = case origin of
+			Installed -> show "Installed "
+			_ -> show "Unpacked "
+		op' = "operation: " ++ op''
+		op'' = case operation of
+			ModText _ _ -> "text"
+			ModBinary _ -> "binary"
+			_ -> "copy"
 
 data Mod = Mod
-    { modGame :: Game
-    , modName :: String
-    , modVer :: String
-    , readme :: [String]
-    , miscFiles :: [(FilePath, String)]
-    , modFiles :: [ModFile]
-    }
+	{ modGame :: Game
+	, modName :: String
+	, modVer :: String
+	, miscFiles :: [(FilePath, String)]
+	, modFiles :: [ModFile]
+	}
 
 makeModFileModText :: (Integer, String, Operation) -> DataOrigin -> ModFile
 makeModFileModText (a, b, c) o = ModFile a b o c
