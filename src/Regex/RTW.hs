@@ -732,7 +732,6 @@ _RTW_EDU_FUNCS :: RegexSets
 _RTW_EDU_FUNCS = addTrueTest unitTurns
     ++ addTrueTest [r1, slingers]
     ++ addTrueTest missileInfantryAmmo
-    ++ addTrueTest carthElephs
     where
         -- All units take 0 turns to recruit, but they cost cost 1.33x or 1.66x
         -- (initial cost) based on their original turn count.
@@ -793,31 +792,6 @@ _RTW_EDU_FUNCS = addTrueTest unitTurns
                 [ ("^soldier.+?slinger.+?", id)
                 , (multRoundInt 1.5)
                 ]
-        -- Make carthaginian elephants more powerful
-        carthElephs =
-            [
-                -- morale 1.25x, and disciplined
-                [ ("^type.+?carthaginian elephant.+?stat_mental.+?", id)
-                , (multRoundInt 1.25)
-                , (", ", id)
-                , ("normal", only "disciplined")
-                ]
-                ,
-                -- reduce forest penalty down to -1 (orig. -6)
-                [ ("^type.+?carthaginian elephant.+?stat_ground.+?,.+?,.+?", id)
-                , ("-6", only "-1")
-                ]
-                ,
-                -- war/armoured elephants' archers do 2x damage
-                [ ("^type.+?carthaginian elephant.+?stat_pri.+?", id)
-                , (multRoundInt 2)
-                ]
-                ,
-                -- armoured elephants' armour 1.25x
-                [ ("^type.+?carthaginian elephant african cataphract.+?stat_sec_armour.+?", id)
-                , (multRoundInt 1.25)
-                ]
-            ]
 
 _RTW_L_FUNCS :: RegexSets
 _RTW_L_FUNCS = addTrueTest [mausoleum]
