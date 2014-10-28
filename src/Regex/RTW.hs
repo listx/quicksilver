@@ -7,13 +7,16 @@ import Data.Recruit.RTW
 import Util
 
 showResource :: String -> (Int, Int) -> String
-showResource res (x, y) = "resource\t" ++ res ++ ",\t" ++ show x ++ ",\t" ++ show y ++ "\r\n"
+showResource res (x, y) = "resource\t"
+    ++ res ++ ",\t" ++ show x ++ ",\t" ++ show y ++ "\r\n"
 
 addResource :: String -> [(Int, Int)] -> BC.ByteString -> BC.ByteString
-addResource res coords s = BC.append s $ BC.pack (concatMap (showResource res) coords)
+addResource res coords s = BC.append s
+    . BC.pack
+    $ concatMap (showResource res) coords
 
-settlementRegionTable :: [(String, String)]
-settlementRegionTable =
+settlementRegions :: [(String, String)]
+settlementRegions =
     [ ("Alesia"            , "Central_Gaul")
     , ("Alexandria"        , "Nile_Delta")
     , ("Ancyra"            , "Galatia")
@@ -184,7 +187,10 @@ _RTW_DMR_FUNCS = addTrueTest mercPoolAddElephs
     f pool =
         [ ("^pool " ++ pool ++ ".+?regions.+?\\r\\n", add mercEleph)
         ]
-    mercEleph = "\tunit merc elephants,\t\t\t\texp 0 cost 4000 replenish 0.005 - 0.015 max 1 initial 0\r\n"
+    mercEleph = concat
+        [ "\tunit merc elephants,\t\t\t\texp 0 cost 4000"
+        , "replenish 0.005 - 0.015 max 1 initial 0\r\n"
+        ]
     mercRecruit =
         -- Increase costs for mercenary units 1.25x.
         [ ("^\\s+unit.+?cost.+?", id)
@@ -300,10 +306,13 @@ _RTW_DS_FUNCS = concat
     --  Domus_Dulcis_Domus  Locus_Gepidae
     --  Vicus_Venedae       Pripet
     missingSettlementDescs =
-            [ ("Tripolitania.+?}\\r\\n", add $ concatMap makeTown sdescs, alwaysTrue)
+            [
+                ("Tripolitania.+?}\\r\\n"
+                , add $ concatMap makeTown sdescs, alwaysTrue
+                )
             ]
         where
-        makeTown (province, culture) = case lookup province settlementRegionTable of
+        makeTown (province, culture) = case lookup province settlementRegions of
             Just r -> "settlement\r\n{\r\n"
                 ++ "\tlevel town\r\n"
                 ++ "\tregion " ++ r ++ "\r\n\r\n"
@@ -339,14 +348,20 @@ _RTW_DS_FUNCS = concat
         \\t}"
     giveRoads =
         -- remove all vanilla road buildings
-        [ ("^\\s+building\\r\\n\\s+\\{\\r\\n\\s+type\\s+hinterland_roads\\s+roads\\r\\n\\s+\\}\\r\\n", nil)
+        [
+            ( concat
+                [ "^\\s+building\\r\\n\\s+\\{\\r\\n\\s+type\\s+"
+                , "hinterland_roads\\s+roads\\r\\n\\s+\\}\\r\\n"
+                ]
+            , nil)
         ]
     giveRoads' =
         -- add paved_roads
         [
             -- add paved_roads to non-village settlements
             [ ("^settlement\\r\\n.+?level ", id, alwaysTrue)
-            , ("\\w+", id, strElemTest $ map BC.pack ["town", "large_town", "city"])
+            , ("\\w+", id, strElemTest
+                $ map BC.pack ["town", "large_town", "city"])
             , (".+?", id, alwaysTrue)
             , ("\\r\\n\\}", prepend roads, alwaysTrue)
             ]
@@ -362,7 +377,8 @@ _RTW_DS_FUNCS = concat
     removeExistingOverlappedRes = map f $ goldCoords ++ silverCoords
         where
         f (x, y) =
-            [ ("^resource[^\\d]+?" ++ show x ++ "[^\\d]+?" ++ show y ++ "\\r\\n", nil)
+            [ ("^resource[^\\d]+?"
+                ++ show x ++ "[^\\d]+?" ++ show y ++ "\\r\\n", nil)
             ]
     goldMod =
         [
@@ -442,7 +458,7 @@ _RTW_DS_FUNCS = concat
     mineFuncs :: [String] -> RegexSets
     mineFuncs strs = concatMap makeFunc strs
         where
-        makeFunc str = case lookup str settlementRegionTable of
+        makeFunc str = case lookup str settlementRegions of
             Just region -> addTrueTest
                 [
                     [ ("region " ++ region ++ ".+?", id)
@@ -493,8 +509,10 @@ _RTW_DS_FUNCS = concat
         ]
     -- Extra elephants locations (put elephants all over northern Africa)
     elephantsMod =
-            [ ("resources.+?\\r\\n\\r\\n", addResource "elephants" elephantCoords)
-            ]
+        [
+            ( "resources.+?\\r\\n\\r\\n"
+            , addResource "elephants" elephantCoords)
+        ]
 
 _RTW_DSN_FUNCS :: RegexSets
 _RTW_DSN_FUNCS = addTrueTest missionMoney
@@ -511,13 +529,15 @@ _RTW_DSR_FUNCS :: RegexSets
 _RTW_DSR_FUNCS = addTrueTest [r1, r2]
     where
     -- Gold resource worth x5 (to increase mining profit)
-    r1 =    [ ("^type\\s+gold\\r\\ntrade_value\\s+", id)
-            , (multRoundInt 5)
-            ]
+    r1 =
+        [ ("^type\\s+gold\\r\\ntrade_value\\s+", id)
+        , (multRoundInt 5)
+        ]
     -- Silver resource worth x5
-    r2 =    [ ("^type\\s+silver\\r\\ntrade_value\\s+", id)
-            , (multRoundInt 5)
-            ]
+    r2 =
+        [ ("^type\\s+silver\\r\\ntrade_value\\s+", id)
+        , (multRoundInt 5)
+        ]
 
 _RTW_EDB_FUNCS :: RegexSets
 _RTW_EDB_FUNCS = addTrueTest [r1, r2, r2']
@@ -540,7 +560,8 @@ _RTW_EDB_FUNCS = addTrueTest [r1, r2, r2']
     gradFormula n = round $ n + (((n - 400)/400) * 400)
     -- Make a note about the changes in the EDB file (comments)
     r2' =
-        [ ("^;This.+?by hand.+?\\r\\n", prepend $ costsDiffNote "Building cost" old new chg)
+        [ ("^;This.+?by hand.+?\\r\\n", prepend
+            $ costsDiffNote "Building cost" old new chg)
         ]
         where
         old =
@@ -562,18 +583,19 @@ _RTW_EDB_FUNCS = addTrueTest [r1, r2, r2']
     -- For every type of building (barracks, archery range, city hall, etc.), let all levels of
     -- that building be able to recruit all units; no more waiting idly until your city becomes
     -- a Huge City to be able to recruit elite units.
+    diplo = agents "diplomat"
     recruitment =
         [
             [ ("^building\\s+core_building.+?            \\{\\r\\n", id)
-            , ("\\s+recruit.+?", only $ getRecruits Core 0 ++ agents "diplomat")
+            , ("\\s+recruit.+?", only $ getRecruits Core 0 ++ diplo)
             , ("^\\s+}.+?capability.+?\\{\\r\\n", id)
-            , ("\\s+recruit.+?", only $ getRecruits Core town ++ agents "diplomat")
+            , ("\\s+recruit.+?", only $ getRecruits Core town ++ diplo)
             , ("^\\s+}.+?capability.+?\\{\\r\\n", id)
-            , ("\\s+recruit.+?", only $ getRecruits Core largeTown ++ agents "diplomat")
+            , ("\\s+recruit.+?", only $ getRecruits Core largeTown ++ diplo)
             , ("^\\s+upgrade_bodyguard.+?capability.+?\\{\\r\\n", id)
-            , ("\\s+recruit.+?", only $ getRecruits Core city ++ agents "diplomat")
+            , ("\\s+recruit.+?", only $ getRecruits Core city ++ diplo)
             , ("^\\s+upgrade_bodyguard.+?capability.+?\\{\\r\\n", id)
-            , ("\\s+recruit.+?", only $ getRecruits Core largeCity ++ agents "diplomat")
+            , ("\\s+recruit.+?", only $ getRecruits Core largeCity ++ diplo)
             , ("^\\s+upgrade_bodyguard", id)
             ]
         ,
@@ -672,7 +694,8 @@ _RTW_EDB_FUNCS = addTrueTest [r1, r2, r2']
         ++ makeSnippetLast (last levels)
         where
         buildingRegex =
-            ("^building\\s+" ++ show building ++ "\\r\\n.+?            \\{\\r\\n", id)
+            ("^building\\s+" ++ show building
+                ++ "\\r\\n.+?            \\{\\r\\n", id)
         makeSnippetInit level =
             [ ("\\s+recruit.+?", only $ getRecruits building level)
             , ("^\\s+happiness_bonus.+?capability.+?\\{\\r\\n", id)
@@ -681,7 +704,8 @@ _RTW_EDB_FUNCS = addTrueTest [r1, r2, r2']
             [ ("\\s+recruit.+?", only $ getRecruits building level)
             , ("^\\s+happiness_bonus", id)
             ]
-    agents agent = concatMap (\(a, b) -> a ++ "{ " ++ b ++ ", }\r\n") $ zip (repeat agent')
+    agents agent = concatMap (\(a, b) -> a ++ "{ " ++ b ++ ", }\r\n")
+        $ zip (repeat agent')
         [ "barbarian"
         , "carthaginian"
         , "eastern"
@@ -691,7 +715,8 @@ _RTW_EDB_FUNCS = addTrueTest [r1, r2, r2']
         , "roman"
         ]
         where
-        agent' = (replicate 16 ' ') ++ "agent " ++ agent ++ " 0 requires factions "
+        agent' = (replicate 16 ' ') ++ "agent " ++ agent
+            ++ " 0 requires factions "
     mausoleum =
         [
             -- Add mausoleum hidden resource.
@@ -708,15 +733,18 @@ _RTW_EDB_FUNCS = addTrueTest [r1, r2, r2']
             , (".+?capability.+?\\r\\n +}\\r\\n", add mausoleumEffects)
             ]
         ]
-    mausoleumEffects =
-        "            faction_capability\r\n\
-        \            {\r\n\
-        \                construction_time_bonus_military bonus -20 requires hidden_resource mausoleum\r\n\
-        \                construction_time_bonus_defensive bonus -20 requires hidden_resource mausoleum\r\n\
-        \                construction_time_bonus_religious bonus -20 requires hidden_resource mausoleum\r\n\
-        \                construction_time_bonus_other bonus -20 requires hidden_resource mausoleum\r\n\
-        \                population_health_bonus bonus 4 requires hidden_resource mausoleum\r\n\
-        \            }\r\n"
+    mausoleumEffects = concatMap (++"\r\n")
+        ["faction_capability"
+        , "{"
+        , "construction_time_bonus_military bonus -20" ++ req
+        , "construction_time_bonus_defensive bonus -20" ++ req
+        , "construction_time_bonus_religious bonus -20" ++ req
+        , "construction_time_bonus_other bonus -20" ++ req
+        , "population_health_bonus bonus 4" ++ req
+        , "}"
+        ]
+        where
+        req = " requires hidden_resource mausoleum"
 
 _RTW_EDCT_FUNCS :: RegexSets
 _RTW_EDCT_FUNCS = addTrueTest [r1, r2]
@@ -788,7 +816,9 @@ _RTW_EDU_FUNCS = addTrueTest unitTurns
     -- Missile infantry ammo 1.25x; 1.5x for slingers
     missileInfantryAmmo =
         [
-            [ ("^category\\s+infantry\\s+class\\s+missile.+?stat_pri\\s+.+?,.+?,.+?,.+?,\\s+", id)
+            [ (concat
+                ["^category\\s+infantry\\s+class\\s+"
+                , "missile.+?stat_pri\\s+.+?,.+?,.+?,.+?,\\s+"]), id)
             , (multRoundInt 1.25)
             ]
         ,
@@ -812,5 +842,6 @@ _RTW_L_FUNCS = addTrueTest [mausoleum]
     -- Edit Mausoleum Wonder description.
     mausoleum =
         [ ("mausoleum_effects}.+?", id)
-        , ("The.+?\\r\\n", only "The Mausoleum gives a 20% health bonus in all settlements.\r\n")
+        , ("The.+?\\r\\n", only
+            "The Mausoleum gives a 20% health bonus in all settlements.\r\n")
         ]
