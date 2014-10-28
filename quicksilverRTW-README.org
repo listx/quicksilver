@@ -1,0 +1,60 @@
+#+TITLE: Quicksilver RTW Manual
+#+AUTHOR: Linus Arver
+#+STARTUP: indent showall
+
+* Overview
+- There are many changes to speed up gameplay and to make things feel much more dynamic and fluid. The primary aim has been to remove repetitive actions as much as possible.
+* Full list of changes from vanilla RTW (with 1.5 patch)
+- NOTE: \"<NUMBER>x\" simply means that the old value has been multiplied by <NUMBER> to get the new value.
+  - E.g., \"2x\" means that the new value is double what it used to be, or 100% more than before.
+** Buildings
+- All building constructions take 1 turn.
+  - Since this makes the Mausoleum's construction bonus useless, it has been changed to give a factionwide 20% health bonus.
+- The more expensive the building, the more it costs. See the comment in the export_descr_buildings.txt file for details. The cheapest building (which costs 400) is the same, but the most expensive ones cost almost 2x.
+** Campaign Map
+*** Unit speed
+- Campaign movement speed 1.75x (the game engine might only show the green movement boundaries up to a certain point; however, the path arrows will still correctly be green past this point, so it is advised that you hold down the right mouse button to make accurate predictions of movement (and cancel out with a left click)).
+*** Initial provinces and buildings
+- Give paved roads for all settlements (including those factions that cannot build them in vanilla).
+  - All villages start out as barebone towns to allow this.
+  - Also, the 6 undefined settlements (which default to villages in-game) in descr_strat.txt have been changed to barebone towns as well to allow this..
+*** Agents
+- Remove spies (use assassins instead; spies are over-powered anyway with their 'open gate' ability).
+- Diplomats and assassins take 0 turns to recruit.
+**** Assassins
+- Give good assassins a line of sight bonus with increased skill, to emulate spies.
+- Recruitment cost 3x.
+- Upkeep cost 3x.
+*** Other
+- Rebel spawn rate 40x lower
+- Pirate spawn rate 20x lower
+** Recruitment
+- All units take 0 turns to complete.
+  - However, units that originally took 2 turns to complete cost 1.33x (initial cost only), and the Scipii Decere unit which took 3 turns to complete now costs 1.66x.
+- For each building type (walls, barracks, stables, ports, etc.), let all levels of that building recruit the same units. However, we give the more advanced buildings an experience bonus.
+  - Roman gladiators (Julii, Scipii, Senate) are now all recruitable starting at the city level (in vanilla, only Brutii had access to gladiators starting from city level).
+- Elephants now recruitable in all of Northern Africa, Egypt, and Arabia (including mercenaries).
+*** Mercenaries
+- Mercenaries cost 1.25x
+- Mercenaries replenishment rate 3x
+- Mercenaries pool initial 5x
+- Mercenaries pool max 5x
+  - E.g., in Northern Italy (by Arretium), the mercenary pool of samnites caps out at 5 instead of 1.
+** Units
+- General's bodyguard (cavalry) soldiers reduced 0.5x; costs reduced accordingly
+- Missile infantry ammo 1.25x; 1.5x for slingers
+- Slinger soldier count 1.5x
+** Finance
+- Remove corruption trigger based on high treasury (characters do not gain any negative penalties for having a large treasury)
+*** Built-in gold/silver mines for every faction
+- All existing gold and silver resources on the main campaign map have been replaced with purple dyes and incense, respectively. Each faction now has 1 gold resource at its capital and 1 silver resource at its secondary region.
+- All factions start out with pre-built mines (Mining Network) in their capitals and secondary regions.
+  - Thus, mines cannot be built any more by the player, as all the places that could possibly build mines already start out with a mine.
+- The point of this mod is to make each faction's capital and secondary region very valuable. There is an incentive to take an enemy faction's capital before taking their other settlements, for example. It also levels the playing field for those factions without valuable mineable resources, because gold and silver are evenly distributed among factions.
+- Gold and silver mines make 2625 and 1750 denarii each, respectively.
+  - They also make lots of trade income as well (since it's impossible to separate mining income rate from the trade resource value --- unlike in M2TW).
+- For kicks, Rome has 3 gold resources! This makes capturing Rome very tempting... Taking Rome will now be even more challenging than before --- but also that much more rewarding.
+** Senate Missions
+- Senate mission monetary rewards 3x.
+** Other
+- Unlock all playable factions
