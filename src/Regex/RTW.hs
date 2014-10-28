@@ -221,25 +221,36 @@ _RTW_DS_FUNCS = concat
 	]
     where
         rEnablePlayableFactions =
-			[
-				[ ("\\tegypt.+?greek_cities\\s+", nil)
-				]
-			,
-				[ ("\\tromans_julii.+?romans_scipii\\s+", only playable_factions)
-				]
-			]
-        playable_factions = concatMap (\f -> "\t" ++ f ++"\r\n")
-            [ "romans_julii"
-            , "romans_brutii"
-            , "romans_scipii"
-            , "egypt"
-            , "seleucid"
-            , "carthage"
-            , "parthia"
-            , "gauls"
-            , "germans"
-            , "britons"
-            , "greek_cities"
+            [
+                [ ("^playable.+?slave\\r\\nend\\r\\n", only playable_factions)
+                ]
+            ]
+        playable_factions = concatMap (++"\r\n")
+            [ "playable"
+            , " romans_julii"
+            , " romans_brutii"
+            , " romans_scipii"
+            , " egypt"
+            , " seleucid"
+            , " carthage"
+            , " parthia"
+            , " gauls"
+            , " germans"
+            , " britons"
+            , " greek_cities"
+            , " macedon"
+            , " pontus"
+            , " armenia"
+            , " dacia"
+            , " numidia"
+            , " scythia"
+            , " spain"
+            , " thrace"
+            , "end"
+            , "nonplayable"
+            , " romans_senate"
+            , " slave"
+            , "end"
             ]
         -- Rebel spawn rate 40x lower
         r1 =    [ ("^brigand_spawn_value\\s+", id)
