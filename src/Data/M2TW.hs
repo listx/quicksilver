@@ -1,10 +1,11 @@
 module Data.M2TW where
 
 import Data
+import Meta
 import Regex.M2TW
 
 qsM2TW :: Mod
-qsM2TW = Mod M2TW "quicksilverM2TW" "0.02" miscFilesM2TW $
+qsM2TW = Mod M2TW "quicksilverM2TW" _QS_VERSION miscFilesM2TW $
 	-- Text files to mod (from unpacked folder)
 	map (\f -> makeModFileModText f Unpacked) m2twUnpackedModText
 	-- Text files to mod (from installed folder)

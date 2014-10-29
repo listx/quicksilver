@@ -1,10 +1,11 @@
 module Data.RTW where
 
 import Data
+import Meta
 import Regex.RTW
 
 qsRTW :: Mod
-qsRTW = Mod RTW "quicksilverRTW" "0.02" miscFilesRTW $
+qsRTW = Mod RTW "quicksilverRTW" _QS_VERSION  miscFilesRTW $
 	-- Text files to mod
 	map (\f -> makeModFileModText f Installed) rtwInstalledModText
 	++
