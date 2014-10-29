@@ -38,7 +38,9 @@ checkFile Opts{..} ModFile{..}
 	| no_sha = checkExists sourcePath
 	| otherwise = checkSum sourcePath sha
 	where
-	sourcePath = parentDir ++ "/" ++ name
+	sourcePath
+		| elem name ["pack.dat", "pack.idx", "skeletons.dat", "skeletons.idx"] = anims_binary_dir ++ "/" ++ name
+		| otherwise = parentDir ++ "/" ++ name
 	parentDir = if origin == Installed
 		then installed_data_dir
 		else unpacked_data_dir

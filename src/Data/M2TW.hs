@@ -99,9 +99,9 @@ m2twInstalledModText =
 
 m2twInstalledCopy :: [(Integer, String)]
 m2twInstalledCopy =
-	[ (0x82c4a8ce1d5c474b379ca7eed4273f969ebe6f10,
+	[ (0x3e029c761e13359d60ca598d3823a846f6728c0f,
 		"sounds/events.dat")
-	, (0x2ea5c502f5366dec134cc8671bcce2bd7c82b9bc,
+	, (0xa02acab7b5e78ee0f6625140f6f430832f50ef51,
 		"sounds/events.idx")
 	, (0xc444b41da651a0e6499c047d17eec5e74bc10065,
 		"world/maps/base/descr_disasters.txt")
@@ -116,7 +116,7 @@ m2twInstalledCopy =
 	, (0xe06f734e8eed7e9eeadffe54cfa38587084e4f62,
 		"world/maps/base/map_features.tga")
 	, (0x68d1e3897ca6a28c5b0a11848061f5542c9e37a0,
-		"world/maps/base/map_FE.tga")
+		"world/maps/base/map_fe.tga")
 	, (0x8fdbbc638bec5784c725758a5a4fe6ac8ef411a5,
 		"world/maps/base/map_fog.tga")
 	, (0x6634b18c1ac15daa3628aa60d3cf46ed334f83ae,
@@ -168,7 +168,7 @@ m2twInstalledCopy =
 	, (0x04abe551bd467a42396d71f907b3d3efca04aa4b,
 		"world/maps/campaign/imperial_campaign/map_england.tga")
 	, (0xc9d524b1f70a4e33ef50f8fea8f3a85646423349,
-		"world/maps/campaign/imperial_campaign/map_FE.psd")
+		"world/maps/campaign/imperial_campaign/map_fe.psd")
 	, (0x71ff82ad4b5154afa8113f31ce424afe05ab8566,
 		"world/maps/campaign/imperial_campaign/map_france.tga")
 	, (0xb876a382ac4ad15ad41dbf833a2422c93a03ba5e,
@@ -325,10 +325,10 @@ _M2TW_EDG   = "export_descr_guilds.txt"
 _M2TW_EDU   = "export_descr_unit.txt"
 _M2TW_DS    = "world/maps/campaign/imperial_campaign/descr_strat.txt"
 -- Binary files
-_M2TW_PDAT  = "animations/pack.dat"
-_M2TW_PIDX  = "animations/pack.idx"
-_M2TW_SDAT  = "animations/skeletons.dat"
-_M2TW_SIDX  = "animations/skeletons.idx"
+_M2TW_PDAT  = "pack.dat"
+_M2TW_PIDX  = "pack.idx"
+_M2TW_SDAT  = "skeletons.dat"
+_M2TW_SIDX  = "skeletons.idx"
 -- Binary diff sources (should be packaged with qs)
 _M2TW_PDAT' = "bdiff/pack.dat.bdiff"
 _M2TW_PIDX' = "bdiff/pack.idx.bdiff"

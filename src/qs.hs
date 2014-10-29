@@ -93,12 +93,13 @@ createFile Opts{..} fname contents = do
 modSource :: Opts -> ModFile -> IO ()
 modSource opts@Opts{..} mf@ModFile{..} = case operation of
 	ModText _ _ -> editFile opts parentDir mf >> diffFile opts parentDir mf
-	ModBinary _ -> applyBinaryDiff opts parentDir mf
+	ModBinary _ -> applyBinaryDiff opts parentDirAnims mf
 	_ -> copyFile' opts parentDir mf
 	where
 	parentDir = if origin == Installed
 		then installed_data_dir
 		else unpacked_data_dir
+	parentDirAnims = anims_binary_dir
 
 applyBinaryDiff :: Opts -> FilePath -> ModFile -> IO ()
 applyBinaryDiff Opts{..} parentDir ModFile{..} = do
@@ -115,7 +116,7 @@ applyBinaryDiff Opts{..} parentDir ModFile{..} = do
 			[ "xdelta3 -d -s "
 			, dquote sourcePath
 			, " "
-			, dquote (bdiff operation)
+			, dquote ("src/" ++ bdiff operation)
 			, " "
 			, dquote dest
 			]

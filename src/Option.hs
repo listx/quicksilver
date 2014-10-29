@@ -17,6 +17,7 @@ data Opts = Opts
 	{ game :: Game
 	, installed_data_dir :: FilePath
 	, unpacked_data_dir :: FilePath
+	, anims_binary_dir :: FilePath
 	, no_check :: Bool
 	, no_sha :: Bool
 	, out :: FilePath
@@ -35,6 +36,9 @@ qsOpts = Opts
 			[ "(M2TW only) path to the `data' directory"
 			, "created by the official M2TW unpacker.exe tool"
 			]
+
+	, anims_binary_dir = def &= typDir
+		&= help "(M2TW only) path to the vanilla (packed) animations files"
 	, no_check = def
 		&= help'
 			["disable both file existence checks"
