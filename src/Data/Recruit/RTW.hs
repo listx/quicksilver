@@ -65,9 +65,9 @@ instance Show Building where
 town, largeTown, city, largeCity, hugeCity :: Int
 town        = 0 -- town
 largeTown   = 1 -- large_town
-city        = 2 -- city ("Minor City" in-game)
-largeCity   = 3 -- large_city
-hugeCity    = 4 -- huge_city
+city        = 3 -- city ("Minor City" in-game)
+largeCity   = 5 -- large_city
+hugeCity    = 7 -- huge_city
 
 modRecruit :: Int -> RecruitPool -> String
 modRecruit e R{..} = show R
