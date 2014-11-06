@@ -133,6 +133,7 @@ elephantCoords =
 	, (182, 7)   -- Memphis       -- merc pool "Egypt"
 	, (187, 4)   -- Thebes        -- merc pool "Egypt"
 	, (203, 18)  -- Petra         -- merc pool "Syria"; already has elephant merc
+	, (199, 48)  -- Sidon         -- Region Phoenicia
 	, (198, 23)  -- Jerusalem     -- merc pool "Arabia"
 	, (213, 2)   -- Bostra        -- merc pool "Arabia"
 	, (237, 23)  -- Dumatha       -- merc pool "Arabia"
