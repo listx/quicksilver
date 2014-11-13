@@ -20,7 +20,9 @@ mod="quicksilver$mode"
 game_files=($(find $mod/$mod -type f | sort))
 
 mod_files=($(find $mod -type f -regex ".*$mod\.\(bat\|cfg\)$" | sort))
-mod_files+=($(find . -type f -name $mod-README.org))
+# :A gets the absolute path of this script
+# :h gets the directory name only (acts like dirname(1)).
+mod_files+=(${0:A:h}/$mod-README.org)
 
 files=($game_files $mod_files)
 
