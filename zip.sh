@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 if [[ -z "$1" ]]; then
     echo "error; need mode argument (either rtw or m2tw)"
