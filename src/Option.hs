@@ -67,7 +67,11 @@ getOpts = cmdArgs $ qsOpts
 -- Basic option sanity check.
 checkOpts :: Opts -> IO ()
 checkOpts Opts{..}
-	| (null unpacked_data_dir && game == M2TW) = abort
-		("--unpacked-data-path is empty", 1)
-	| (null installed_data_dir) = abort ("--data-path is empty", 1)
+	| (game == M2TW && null unpacked_data_dir)
+		= abort ("--unpacked-data-dir is empty", 1)
+	| (game == M2TW && null anims_binary_dir)
+		= abort ("--anims-binary-dir is empty", 1)
+	| (game == M2TW && null bdiff_dir)
+		= abort ("--bdiff-dir is empty", 1)
+	| (null installed_data_dir) = abort ("--installed-data-dir is empty", 1)
 	| otherwise = return ()
