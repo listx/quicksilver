@@ -3,10 +3,6 @@ all: $(OBJ)
 	cabal build --ghc-options "-O2 -Wall" qs
 	cp dist/build/qs/qs .
 
-nosync: $(OBJ)
-	cabal build --ghc-options "-O2 -Wall" qs
-	cp dist/build/qs/qs .
-
 srclist:
 	$(shell find -type f -regex ".*\.hs" > srclist)
 
