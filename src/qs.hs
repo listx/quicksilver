@@ -116,7 +116,7 @@ applyBinaryDiff Opts{..} parentDir ModFile{..} = do
 			[ "xdelta3 -d -s "
 			, dquote sourcePath
 			, " "
-			, dquote ("src/" ++ bdiff operation)
+			, dquote (bdiff_dir ++ "/" ++ bdiff operation)
 			, " "
 			, dquote dest
 			]

@@ -13,6 +13,7 @@ data Opts = Opts
 	, installed_data_dir :: FilePath
 	, unpacked_data_dir :: FilePath
 	, anims_binary_dir :: FilePath
+	, bdiff_dir :: FilePath
 	, no_check :: Bool
 	, no_sha :: Bool
 	, out :: FilePath
@@ -34,6 +35,10 @@ qsOpts = Opts
 
 	, anims_binary_dir = def &= typDir
 		&= help "(M2TW only) path to the vanilla (packed) animations files"
+	, bdiff_dir = def &= typDir
+		&= help
+"(M2TW only) path to the .bdiff files; in qs's source control, the path is\
+\ `src/bdiff'"
 	, no_check = def
 		&= help'
 			["disable both file existence checks"
